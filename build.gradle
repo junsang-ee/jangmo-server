@@ -23,6 +23,9 @@ dependencies {
     implementation 'org.postgresql:postgresql'
     runtimeOnly 'org.postgresql:postgresql'
 
+    /* Lombok */
+    implementation 'org.projectlombok:lombok'
+
 }
 
 test {
