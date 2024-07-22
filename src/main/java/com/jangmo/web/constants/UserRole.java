@@ -1,5 +1,5 @@
 package com.jangmo.web.constants;
 
 public enum UserRole {
-    ADMIN, MEMBER, MERCENARY
+    ADMIN, MANAGER, DIRECTOR, MEMBER, MERCENARY
 }
