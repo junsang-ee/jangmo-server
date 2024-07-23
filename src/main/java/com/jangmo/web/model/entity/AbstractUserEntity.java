@@ -5,6 +5,7 @@ import com.jangmo.web.constants.MobileCarrierType;
 import com.jangmo.web.constants.UserRole;
 import com.jangmo.web.constants.UserStatus;
 import com.jangmo.web.model.CreationTimeStampEntity;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -36,10 +37,21 @@ public abstract class AbstractUserEntity extends CreationTimeStampEntity {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private UserStatus status;
+    private Gender gender;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Gender gender;
+    private UserStatus status;
+
+    protected AbstractUserEntity(String name, int phoneNumber,
+                                 MobileCarrierType mobileCarrier,
+                                 UserRole role, Gender gender) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.mobileCarrier = mobileCarrier;
+        this.role = role;
+        this.gender = gender;
+        this.status = UserStatus.PENDING;
+    }
 
 }

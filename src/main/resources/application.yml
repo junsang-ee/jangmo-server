@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: jangmo-communitiy-project
+    name: jangmo-community-project
   profiles:
     active: local
   main:
