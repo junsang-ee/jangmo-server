@@ -24,7 +24,7 @@ public class MercenaryEntity extends AbstractUserEntity {
         super(name, phoneNumber, mobileCarrierType, role, gender);
     }
 
-    public static MercenaryEntity of(final MercenaryRegistrationRequest request) {
+    public static MercenaryEntity create(final MercenaryRegistrationRequest request) {
         return MercenaryEntity.builder()
                 .name(request.getName())
                 .phoneNumber(request.getPhoneNumber())

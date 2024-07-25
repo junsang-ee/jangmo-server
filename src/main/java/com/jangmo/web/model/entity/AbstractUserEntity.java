@@ -14,6 +14,8 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
 
+import java.io.Serializable;
+
 import static lombok.AccessLevel.PROTECTED;
 
 @Getter
