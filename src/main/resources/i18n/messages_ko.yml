@@ -1,0 +1,8 @@
+response:
+  success:
+    result:
+      code: "0"
+      message: "성공"
+    empty:
+      code: "1"
+      message: "데이터가 없습니다."

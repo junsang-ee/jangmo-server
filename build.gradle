@@ -30,6 +30,9 @@ dependencies {
     /* Lombok */
     implementation 'org.projectlombok:lombok'
 
+    /* resourceBundle messageSource */
+    implementation 'net.rakugakibox.util:yaml-resource-bundle:1.1'
+
 }
 
 test {

@@ -1,6 +1,8 @@
 package com.jangmo.web.controller;
 
+import com.jangmo.web.controller.base.BaseController;
 import com.jangmo.web.model.dto.request.MemberSignupRequest;
+import com.jangmo.web.model.dto.response.common.ApiSuccessResponse;
 import com.jangmo.web.model.entity.MemberEntity;
 import com.jangmo.web.service.AuthService;
 
@@ -12,13 +14,13 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin("*")
 @RequestMapping("/api/auth")
 @RestController
-public class AuthController {
+public class AuthController extends BaseController {
 
     private final AuthService authService;
 
     @PostMapping("/member/sign-up")
-    public MemberEntity signUp(@RequestBody MemberSignupRequest signup) {
-        return authService.signUp(signup);
+    public ApiSuccessResponse<MemberEntity> signUp(@RequestBody MemberSignupRequest signup) {
+        return wrap(authService.signUp(signup));
     }
 
 }
