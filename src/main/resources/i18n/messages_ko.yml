@@ -6,3 +6,12 @@ response:
     empty:
       code: "1"
       message: "데이터가 없습니다."
+
+  error:
+    request:
+      query.param:
+        code: "100"
+        message: "요청 파라미터 오류 : {0}"
+      body.field:
+        code: "101"
+        message: "요청 바디 필드 오류 : {0}"

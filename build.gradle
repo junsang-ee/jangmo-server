@@ -33,6 +33,9 @@ dependencies {
     /* resourceBundle messageSource */
     implementation 'net.rakugakibox.util:yaml-resource-bundle:1.1'
 
+    /* validation */
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
 }
 
 test {

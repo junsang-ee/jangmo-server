@@ -1,6 +1,6 @@
 package com.jangmo.web.controller.base;
 
-import com.jangmo.web.constants.SuccessMessage;
+import com.jangmo.web.constants.message.SuccessMessage;
 import com.jangmo.web.model.dto.response.common.ApiSuccessResponse;
 import com.jangmo.web.model.dto.response.common.PageResponse;
 import com.jangmo.web.utils.MessageUtil;

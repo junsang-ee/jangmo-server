@@ -1,4 +1,4 @@
-package com.jangmo.web.constants;
+package com.jangmo.web.constants.message;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
