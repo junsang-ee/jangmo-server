@@ -1,4 +1,4 @@
-package com.jangmo.web.model;
+package com.jangmo.web.model.entity.common;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;

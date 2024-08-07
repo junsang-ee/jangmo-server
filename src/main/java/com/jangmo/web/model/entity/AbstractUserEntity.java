@@ -4,7 +4,7 @@ import com.jangmo.web.constants.Gender;
 import com.jangmo.web.constants.MobileCarrierType;
 import com.jangmo.web.constants.UserRole;
 import com.jangmo.web.constants.UserStatus;
-import com.jangmo.web.model.CreationTimeStampEntity;
+import com.jangmo.web.model.entity.common.CreationTimeStampEntity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,8 +13,6 @@ import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
-
-import java.io.Serializable;
 
 import static lombok.AccessLevel.PROTECTED;
 
