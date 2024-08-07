@@ -4,7 +4,7 @@ import com.jangmo.web.constants.Gender;
 import com.jangmo.web.constants.MobileCarrierType;
 import com.jangmo.web.constants.UserRole;
 import com.jangmo.web.constants.UserStatus;
-import com.jangmo.web.model.entity.common.CreationTimeStampEntity;
+import com.jangmo.web.model.entity.common.CreationTimestampEntity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +19,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @NoArgsConstructor(access = PROTECTED)
 @MappedSuperclass
-public abstract class AbstractUserEntity extends CreationTimeStampEntity {
+public abstract class AbstractUserEntity extends CreationTimestampEntity {
 
     @Column(nullable = false)
     private String name;

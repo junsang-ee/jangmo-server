@@ -2,7 +2,7 @@ package com.jangmo.web.model.entity;
 
 import com.jangmo.web.constants.match.MatchStatus;
 import com.jangmo.web.constants.match.MatchType;
-import com.jangmo.web.model.entity.common.CreationTimeStampEntity;
+import com.jangmo.web.model.entity.common.CreationTimestampEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -18,7 +18,7 @@ import static lombok.AccessLevel.PROTECTED;
 @ToString
 @NoArgsConstructor(access = PROTECTED)
 @Entity(name = "match")
-public class MatchEntity extends CreationTimeStampEntity {
+public class MatchEntity extends CreationTimestampEntity {
 
     @Column(nullable = false)
     private LocalDateTime startAt;

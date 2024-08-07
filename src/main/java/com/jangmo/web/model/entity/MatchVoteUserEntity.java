@@ -1,6 +1,6 @@
 package com.jangmo.web.model.entity;
 
-import com.jangmo.web.model.entity.common.CreationTimeStampEntity;
+import com.jangmo.web.model.entity.common.CreationTimestampEntity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +15,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @NoArgsConstructor(access = PROTECTED)
 @Entity(name = "match_vote_user")
-public class MatchVoteUserEntity extends CreationTimeStampEntity {
+public class MatchVoteUserEntity extends CreationTimestampEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member", nullable = false)

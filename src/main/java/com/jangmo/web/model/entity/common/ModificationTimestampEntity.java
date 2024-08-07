@@ -8,7 +8,7 @@ import javax.persistence.MappedSuperclass;
 import java.time.Instant;
 
 @MappedSuperclass
-public abstract class ModificationTimestampEntity extends CreationTimeStampEntity {
+public abstract class ModificationTimestampEntity extends CreationTimestampEntity {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(nullable = false)
     @LastModifiedDate
