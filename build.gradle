@@ -33,6 +33,8 @@ dependencies {
     /* resourceBundle messageSource */
     implementation 'net.rakugakibox.util:yaml-resource-bundle:1.1'
 
+    implementation 'com.google.guava:guava:33.0.0-jre'
+
 }
 
 test {
