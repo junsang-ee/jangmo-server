@@ -5,7 +5,7 @@ import com.jangmo.web.constants.MobileCarrierType;
 import com.jangmo.web.constants.UserRole;
 import com.jangmo.web.constants.UserStatus;
 import com.jangmo.web.model.entity.common.CreationTimestampEntity;
-import lombok.AccessLevel;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
