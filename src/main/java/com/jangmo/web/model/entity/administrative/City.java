@@ -1,6 +1,6 @@
 package com.jangmo.web.model.entity.administrative;
 
-import com.jangmo.web.model.SequentialEntity;
+import com.jangmo.web.model.entity.common.SequentialEntity;
 import lombok.ToString;
 
 import javax.persistence.Entity;
