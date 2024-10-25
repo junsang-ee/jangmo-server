@@ -28,7 +28,8 @@ dependencies {
     runtimeOnly 'org.postgresql:postgresql'
 
     /* Lombok */
-    implementation 'org.projectlombok:lombok'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
 
     /* resourceBundle messageSource */
     implementation 'net.rakugakibox.util:yaml-resource-bundle:1.1'

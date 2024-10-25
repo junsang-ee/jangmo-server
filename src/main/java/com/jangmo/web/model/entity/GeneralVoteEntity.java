@@ -1,5 +1,6 @@
 package com.jangmo.web.model.entity;
 
+import com.jangmo.web.model.entity.common.CreationTimestampEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -12,6 +13,6 @@ import static lombok.AccessLevel.PROTECTED;
 @ToString
 @NoArgsConstructor(access = PROTECTED)
 @Entity(name = "general_vote")
-public class GeneralVoteEntity {
+public class GeneralVoteEntity extends CreationTimestampEntity {
 
 }
