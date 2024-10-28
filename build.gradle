@@ -31,6 +31,10 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
+    /* Test Lombok */
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+
     /* resourceBundle messageSource */
     implementation 'net.rakugakibox.util:yaml-resource-bundle:1.1'
 
