@@ -9,12 +9,10 @@ import static lombok.AccessLevel.PRIVATE;
 @Getter
 @RequiredArgsConstructor(access = PRIVATE)
 public class CityListResponse {
-    private final Long id;
     private final String name;
 
     public static CityListResponse of(final City city) {
         return new CityListResponse(
-                city.getId(),
                 city.getName()
         );
     }

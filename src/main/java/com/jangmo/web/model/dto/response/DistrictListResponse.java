@@ -12,6 +12,8 @@ public class DistrictListResponse {
     private final String name;
 
     public static DistrictListResponse of(final District district) {
-        return new DistrictListResponse(district.getName());
+        return new DistrictListResponse(
+                district.getName()
+        );
     }
 }

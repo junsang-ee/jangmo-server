@@ -10,6 +10,10 @@ public enum ErrorMessage {
     REQUEST_QUERY_PARAM("100"),
     REQUEST_BODY_FIELD("101"),
 
+    /* 1000 ~ 1100 (signup error) */
+    CITY_NOT_FOUND("1010"),
+    DISTRICT_NOT_FOUND("1011"),
+
     UNKNOWN("9999");
 
     @Accessors(fluent = true)

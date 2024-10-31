@@ -1,5 +1,7 @@
 package com.jangmo.web.repository;
 
+import com.jangmo.web.constants.message.ErrorMessage;
+import com.jangmo.web.exception.custom.NotFoundException;
 import com.jangmo.web.model.entity.administrative.City;
 
 import org.junit.jupiter.api.DisplayName;
@@ -28,6 +30,15 @@ public class CityRepositoryTest {
         Optional<City> seoul = cityRepository.findById(1L);
         assertThat(seoul).isPresent();
         assertThat(seoul.get().getName()).isEqualTo(cityName);
+    }
+
+    @DisplayName("city 데이터 not found 테스트")
+    @Test
+    void getCityNotFoundException() {
+        String cityName = "없는 도시명 테스트";
+        City city = cityRepository.findByName(cityName).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.CITY_NOT_FOUND)
+        );
     }
 
     @DisplayName("city 카운팅 테스트")

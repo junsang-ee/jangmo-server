@@ -15,3 +15,11 @@ response:
       body.field:
         code: "101"
         message: "요청 바디 필드 오류 : {0}"
+    city:
+      not.found:
+        code: "1010"
+        message: "해당 시/도는 존재하지 않습니다."
+    district:
+      not.found:
+        code: "1011"
+        message: "해당 시/군/구는 존재하지 않습니다."

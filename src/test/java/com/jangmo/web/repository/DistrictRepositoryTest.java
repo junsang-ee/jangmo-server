@@ -26,7 +26,7 @@ public class DistrictRepositoryTest {
     @DisplayName("district 데이터 확인 테스트")
     @Test
     void getDistrictInfoTest() {
-        City seoul = cityRepository.findById(1L).get();
+        City seoul = cityRepository.findByName("서울특별시").get();
         String districtName = "강남구";
         List<District> gangNam = districtRepository.findByCity(seoul);
         assertThat(gangNam.get(22).getCity()).isEqualTo(seoul);
