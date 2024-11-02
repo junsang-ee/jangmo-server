@@ -5,6 +5,8 @@ import com.jangmo.web.constants.MobileCarrierType;
 import com.jangmo.web.constants.UserRole;
 import com.jangmo.web.model.dto.request.MemberSignupRequest;
 import com.jangmo.web.model.entity.MemberEntity;
+import com.jangmo.web.model.entity.administrative.City;
+import com.jangmo.web.repository.CityRepository;
 import com.jangmo.web.repository.MemberRepository;
 
 import org.junit.jupiter.api.DisplayName;
@@ -31,8 +33,10 @@ public class AuthServiceTest {
     private MemberRepository memberRepository;
 
     @BeforeEach
-    void init() {
-        memberRepository.deleteAll();
+    void init(TestInfo testInfo) {
+        if (testInfo.getDisplayName().equals("Member 회원가입 및 정보 저장")) {
+            memberRepository.deleteAll();
+        }
     }
 
 
@@ -55,7 +59,7 @@ public class AuthServiceTest {
 
         given(memberRepository.save(any(MemberEntity.class))).willReturn(mockMember);
 
-        MemberEntity member = authService.signUp(signup);
+        MemberEntity member = authService.signup(signup);
 
         Assertions.assertEquals(mockMember.getName(), member.getName());
         verify(memberRepository, times(1)).save(any(MemberEntity.class));

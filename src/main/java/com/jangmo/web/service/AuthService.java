@@ -8,7 +8,7 @@ import com.jangmo.web.model.entity.MemberEntity;
 import java.util.List;
 
 public interface AuthService {
-    MemberEntity signUp(MemberSignupRequest signup);
+    MemberEntity signup(MemberSignupRequest signup);
 
     List<CityListResponse> getCities();
 

@@ -24,7 +24,7 @@ public class AuthController extends BaseController {
 
     @PostMapping("/signup")
     public ApiSuccessResponse<MemberEntity> signup(@RequestBody MemberSignupRequest signup) {
-        return wrap(authService.signUp(signup));
+        return wrap(authService.signup(signup));
     }
 
     @GetMapping("/signup/cities")

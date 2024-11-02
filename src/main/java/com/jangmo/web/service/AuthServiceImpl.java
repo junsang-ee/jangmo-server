@@ -31,7 +31,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public MemberEntity signUp(MemberSignupRequest signup) {
+    public MemberEntity signup(MemberSignupRequest signup) {
         MemberEntity member = MemberEntity.create(signup);
         return memberRepository.save(member);
     }
