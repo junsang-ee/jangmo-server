@@ -33,27 +33,27 @@ public class MemberEntity extends AbstractUserEntity implements Serializable {
     private String address;
 
     @Builder
-    protected MemberEntity(String name, int phoneNumber,
+    protected MemberEntity(String name, int mobile,
                            MobileCarrierType mobileCarrier,
                            UserRole role, Gender gender,
                            int birth, String password,
                            String address) {
-        super(name, phoneNumber, mobileCarrier, role, gender);
+        super(name, mobile, mobileCarrier, role, gender);
         this.birth = birth;
         this.password = password;
         this.address = address;
     }
 
-    public static MemberEntity create(final MemberSignupRequest signUp) {
+    public static MemberEntity create(final MemberSignupRequest signup) {
         return MemberEntity.builder()
-                .name(signUp.getName())
-                .phoneNumber(signUp.getPhoneNumber())
-                .mobileCarrier(signUp.getMobileCarrier())
-                .role(signUp.getRole())
-                .gender(signUp.getGender())
-                .birth(signUp.getBirth())
-                .password(signUp.getPassword())
-                .address(signUp.getAddress())
+                .name(signup.getName())
+                .mobile(signup.getMobile())
+                .mobileCarrier(signup.getMobileCarrier())
+                .role(signup.getRole())
+                .gender(signup.getGender())
+                .birth(signup.getBirth())
+                .password(signup.getPassword())
+                .address(signup.getAddress())
                 .build();
     }
 

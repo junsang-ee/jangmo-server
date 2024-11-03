@@ -24,7 +24,7 @@ public abstract class AbstractUserEntity extends CreationTimestampEntity {
     private String name;
 
     @Column(nullable = false)
-    private int phoneNumber;
+    private int mobile;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -42,11 +42,11 @@ public abstract class AbstractUserEntity extends CreationTimestampEntity {
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
-    protected AbstractUserEntity(String name, int phoneNumber,
+    protected AbstractUserEntity(String name, int mobile,
                                  MobileCarrierType mobileCarrier,
                                  UserRole role, Gender gender) {
         this.name = name;
-        this.phoneNumber = phoneNumber;
+        this.mobile = mobile;
         this.mobileCarrier = mobileCarrier;
         this.role = role;
         this.gender = gender;

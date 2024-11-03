@@ -11,7 +11,7 @@ public class MemberSignupRequest {
 
     private String name;
 
-    private int phoneNumber;
+    private int mobile;
 
     private MobileCarrierType mobileCarrier;
 
@@ -28,14 +28,14 @@ public class MemberSignupRequest {
     @Builder
     public MemberSignupRequest(String name, UserRole role, int birth, Gender gender,
                                MobileCarrierType mobileCarrier, String address,
-                               int phoneNumber, String password) {
+                               int mobile, String password) {
         this.name = name;
         this.role = role;
         this.birth = birth;
         this.gender = gender;
         this.mobileCarrier = mobileCarrier;
         this.address = address;
-        this.phoneNumber = phoneNumber;
+        this.mobile = mobile;
         this.password = password;
     }
 
