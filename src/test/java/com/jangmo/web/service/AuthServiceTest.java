@@ -51,7 +51,7 @@ public class AuthServiceTest {
                 .gender(Gender.MALE)
                 .mobileCarrier(MobileCarrierType.KT)
                 .address("서울시 관악구")
-                .phoneNumber(01043053451)
+                .mobile(01043053451)
                 .password("testPassword")
                 .build();
 
