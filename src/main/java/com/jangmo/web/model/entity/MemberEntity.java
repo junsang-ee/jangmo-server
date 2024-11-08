@@ -21,7 +21,7 @@ import static lombok.AccessLevel.PROTECTED;
 @ToString
 @NoArgsConstructor(access = PROTECTED)
 @Entity(name = "member")
-public class MemberEntity extends AbstractUserEntity implements Serializable {
+public class MemberEntity extends UserEntity implements Serializable {
 
     @Column(nullable = false)
     private int birth;
@@ -32,8 +32,7 @@ public class MemberEntity extends AbstractUserEntity implements Serializable {
     @Column(nullable = false)
     private String address;
 
-    @Builder
-    protected MemberEntity(String name, int mobile,
+    private MemberEntity(String name, int mobile,
                            MobileCarrierType mobileCarrier,
                            UserRole role, Gender gender,
                            int birth, String password,
@@ -45,16 +44,15 @@ public class MemberEntity extends AbstractUserEntity implements Serializable {
     }
 
     public static MemberEntity create(final MemberSignupRequest signup) {
-        return MemberEntity.builder()
-                .name(signup.getName())
-                .mobile(signup.getMobile())
-                .mobileCarrier(signup.getMobileCarrier())
-                .role(signup.getRole())
-                .gender(signup.getGender())
-                .birth(signup.getBirth())
-                .password(signup.getPassword())
-                .address(signup.getAddress())
-                .build();
+        return new MemberEntity(
+                signup.getName(),
+                signup.getMobile(),
+                signup.getMobileCarrier(),
+                signup.getRole(),
+                signup.getGender(),
+                signup.getBirth(),
+                signup.getPassword(),
+                signup.getAddress()
+        );
     }
-
 }

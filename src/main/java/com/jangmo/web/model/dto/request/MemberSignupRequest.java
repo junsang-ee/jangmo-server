@@ -3,7 +3,9 @@ package com.jangmo.web.model.dto.request;
 import com.jangmo.web.constants.Gender;
 import com.jangmo.web.constants.MobileCarrierType;
 import com.jangmo.web.constants.UserRole;
-import lombok.*;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
@@ -24,19 +26,5 @@ public class MemberSignupRequest {
     private String address;
 
     private UserRole role;
-
-    @Builder
-    public MemberSignupRequest(String name, UserRole role, int birth, Gender gender,
-                               MobileCarrierType mobileCarrier, String address,
-                               int mobile, String password) {
-        this.name = name;
-        this.role = role;
-        this.birth = birth;
-        this.gender = gender;
-        this.mobileCarrier = mobileCarrier;
-        this.address = address;
-        this.mobile = mobile;
-        this.password = password;
-    }
 
 }

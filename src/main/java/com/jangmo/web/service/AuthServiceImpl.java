@@ -3,14 +3,17 @@ package com.jangmo.web.service;
 import com.jangmo.web.constants.message.ErrorMessage;
 import com.jangmo.web.exception.custom.NotFoundException;
 import com.jangmo.web.model.dto.request.MemberSignupRequest;
+import com.jangmo.web.model.dto.request.MercenaryRegistrationRequest;
 import com.jangmo.web.model.dto.response.CityListResponse;
 import com.jangmo.web.model.dto.response.DistrictListResponse;
 import com.jangmo.web.model.entity.MemberEntity;
+import com.jangmo.web.model.entity.MercenaryEntity;
 import com.jangmo.web.model.entity.administrative.City;
 import com.jangmo.web.repository.CityRepository;
 import com.jangmo.web.repository.DistrictRepository;
 import com.jangmo.web.repository.MemberRepository;
 
+import com.jangmo.web.repository.MercenaryRepository;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
@@ -25,15 +28,24 @@ public class AuthServiceImpl implements AuthService {
 
     private final MemberRepository memberRepository;
 
+    private final MercenaryRepository mercenaryRepository;
+
     private final CityRepository cityRepository;
 
     private final DistrictRepository districtRepository;
 
     @Override
     @Transactional
-    public MemberEntity signup(MemberSignupRequest signup) {
+    public MemberEntity signupMember(MemberSignupRequest signup) {
         MemberEntity member = MemberEntity.create(signup);
         return memberRepository.save(member);
+    }
+
+    @Override
+    @Transactional
+    public MercenaryEntity registerMercenary(MercenaryRegistrationRequest request) {
+        MercenaryEntity mercenary = MercenaryEntity.create(request);
+        return mercenaryRepository.save(mercenary);
     }
 
     @Override
