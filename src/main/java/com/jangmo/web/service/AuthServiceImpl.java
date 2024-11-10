@@ -2,7 +2,7 @@ package com.jangmo.web.service;
 
 import com.jangmo.web.constants.message.ErrorMessage;
 import com.jangmo.web.exception.custom.NotFoundException;
-import com.jangmo.web.model.dto.request.MemberSignupRequest;
+import com.jangmo.web.model.dto.request.MemberSignUpRequest;
 import com.jangmo.web.model.dto.request.MercenaryRegistrationRequest;
 import com.jangmo.web.model.dto.response.CityListResponse;
 import com.jangmo.web.model.dto.response.DistrictListResponse;
@@ -36,7 +36,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public MemberEntity signupMember(MemberSignupRequest signup) {
+    public MemberEntity signupMember(MemberSignUpRequest signup) {
         MemberEntity member = MemberEntity.create(signup);
         return memberRepository.save(member);
     }

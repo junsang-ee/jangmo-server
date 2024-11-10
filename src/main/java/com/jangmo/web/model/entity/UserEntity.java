@@ -17,7 +17,7 @@ import static javax.persistence.InheritanceType.JOINED;
 @NoArgsConstructor(access = PROTECTED)
 @Inheritance(strategy = JOINED)
 @Entity(name = "\"user\"")
-public abstract class UserEntity extends CreationTimestampEntity {
+public class UserEntity extends CreationTimestampEntity {
 
     @Column(nullable = false)
     private String name;

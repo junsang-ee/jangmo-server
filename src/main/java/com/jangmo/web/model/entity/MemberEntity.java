@@ -3,12 +3,9 @@ package com.jangmo.web.model.entity;
 import com.jangmo.web.constants.Gender;
 import com.jangmo.web.constants.MobileCarrierType;
 import com.jangmo.web.constants.UserRole;
-import com.jangmo.web.model.dto.request.MemberSignupRequest;
+import com.jangmo.web.model.dto.request.MemberSignUpRequest;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,17 +30,16 @@ public class MemberEntity extends UserEntity implements Serializable {
     private String address;
 
     private MemberEntity(String name, int mobile,
-                           MobileCarrierType mobileCarrier,
-                           UserRole role, Gender gender,
-                           int birth, String password,
-                           String address) {
+                         MobileCarrierType mobileCarrier,
+                         UserRole role, Gender gender, int birth,
+                         String password, String address) {
         super(name, mobile, mobileCarrier, role, gender);
         this.birth = birth;
         this.password = password;
         this.address = address;
     }
 
-    public static MemberEntity create(final MemberSignupRequest signup) {
+    public static MemberEntity create(final MemberSignUpRequest signup) {
         return new MemberEntity(
                 signup.getName(),
                 signup.getMobile(),

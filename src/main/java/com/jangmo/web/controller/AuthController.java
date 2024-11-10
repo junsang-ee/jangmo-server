@@ -1,7 +1,7 @@
 package com.jangmo.web.controller;
 
 import com.jangmo.web.controller.base.BaseController;
-import com.jangmo.web.model.dto.request.MemberSignupRequest;
+import com.jangmo.web.model.dto.request.MemberSignUpRequest;
 import com.jangmo.web.model.dto.request.MercenaryRegistrationRequest;
 import com.jangmo.web.model.dto.response.CityListResponse;
 import com.jangmo.web.model.dto.response.DistrictListResponse;
@@ -29,7 +29,7 @@ public class AuthController extends BaseController {
     private final UserService userService;
 
     @PostMapping("/signup/member")
-    public ApiSuccessResponse<MemberEntity> signupMember(@RequestBody MemberSignupRequest signup) {
+    public ApiSuccessResponse<MemberEntity> signupMember(@RequestBody MemberSignUpRequest signup) {
         return wrap(authService.signupMember(signup));
     }
 
