@@ -8,20 +8,28 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
+
 @Getter
 @NoArgsConstructor
 public class MercenaryRegistrationRequest {
 
+    @NotNull
     private String name;
 
+    @NotNull
     private int mobile;
 
+    @NotNull
     private MobileCarrierType mobileCarrier;
 
+    @NotNull
     private UserRole role;
 
+    @NotNull
     private Gender gender;
 
+    @NotNull
     private MercenaryRetentionStatus retentionStatus;
 
 }

@@ -3,10 +3,8 @@ package com.jangmo.web.service;
 import com.jangmo.web.constants.Gender;
 import com.jangmo.web.constants.MobileCarrierType;
 import com.jangmo.web.constants.UserRole;
-import com.jangmo.web.model.dto.request.MemberSignupRequest;
-import com.jangmo.web.model.entity.MemberEntity;
-import com.jangmo.web.model.entity.administrative.City;
-import com.jangmo.web.repository.CityRepository;
+import com.jangmo.web.model.dto.request.MemberSignUpRequest;
+import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.repository.MemberRepository;
 
 import org.junit.jupiter.api.DisplayName;
@@ -44,22 +42,22 @@ public class AuthServiceTest {
     @Test
     @Transactional
     void memberSignupTest() {
-        MemberSignupRequest signup = MemberSignupRequest.builder()
-                .name("testMember")
-                .role(UserRole.MEMBER)
-                .birth(19940316)
-                .gender(Gender.MALE)
-                .mobileCarrier(MobileCarrierType.KT)
-                .address("서울시 관악구")
-                .mobile(01043053451)
-                .password("testPassword")
-                .build();
+        MemberSignUpRequest signup = new MemberSignUpRequest(
+                "testMember",
+                01043053451,
+                MobileCarrierType.KT,
+                Gender.MALE,
+                19940316,
+                "testPassword",
+                "testPassword",
+                UserRole.MEMBER
+        );
 
         MemberEntity mockMember = MemberEntity.create(signup);
 
         given(memberRepository.save(any(MemberEntity.class))).willReturn(mockMember);
 
-        MemberEntity member = authService.signup(signup);
+        MemberEntity member = authService.signupMember(signup);
 
         Assertions.assertEquals(mockMember.getName(), member.getName());
         verify(memberRepository, times(1)).save(any(MemberEntity.class));

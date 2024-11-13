@@ -1,7 +1,7 @@
 package com.jangmo.web.service;
 
-import com.jangmo.web.model.entity.MemberEntity;
-import com.jangmo.web.model.entity.MercenaryEntity;
+import com.jangmo.web.model.entity.user.MemberEntity;
+import com.jangmo.web.model.entity.user.MercenaryEntity;
 import com.jangmo.web.repository.MemberRepository;
 import com.jangmo.web.repository.MercenaryRepository;
 import lombok.RequiredArgsConstructor;

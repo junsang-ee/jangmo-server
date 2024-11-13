@@ -3,6 +3,7 @@ package com.jangmo.web.model.entity;
 import com.jangmo.web.constants.match.MatchStatus;
 import com.jangmo.web.constants.match.MatchType;
 import com.jangmo.web.model.entity.common.CreationTimestampEntity;
+import com.jangmo.web.model.entity.user.MemberEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;

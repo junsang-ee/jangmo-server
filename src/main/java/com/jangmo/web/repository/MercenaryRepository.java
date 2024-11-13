@@ -1,6 +1,6 @@
 package com.jangmo.web.repository;
 
-import com.jangmo.web.model.entity.MercenaryEntity;
+import com.jangmo.web.model.entity.user.MercenaryEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

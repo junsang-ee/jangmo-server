@@ -2,6 +2,8 @@ package com.jangmo.web.model.entity;
 
 import com.jangmo.web.model.entity.common.CreationTimestampEntity;
 
+import com.jangmo.web.model.entity.user.MemberEntity;
+import com.jangmo.web.model.entity.user.MercenaryEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

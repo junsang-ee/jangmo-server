@@ -1,6 +1,7 @@
 package com.jangmo.web.model.entity;
 
 import com.jangmo.web.model.entity.common.ModificationTimestampEntity;
+import com.jangmo.web.model.entity.user.MemberEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

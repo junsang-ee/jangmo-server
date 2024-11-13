@@ -6,9 +6,8 @@ import com.jangmo.web.model.dto.request.MercenaryRegistrationRequest;
 import com.jangmo.web.model.dto.response.CityListResponse;
 import com.jangmo.web.model.dto.response.DistrictListResponse;
 import com.jangmo.web.model.dto.response.common.ApiSuccessResponse;
-import com.jangmo.web.model.entity.MemberEntity;
-import com.jangmo.web.model.entity.MercenaryEntity;
-import com.jangmo.web.model.entity.UserEntity;
+import com.jangmo.web.model.entity.user.MemberEntity;
+import com.jangmo.web.model.entity.user.MercenaryEntity;
 import com.jangmo.web.service.AuthService;
 
 import com.jangmo.web.service.UserService;
@@ -47,11 +46,5 @@ public class AuthController extends BaseController {
     public ApiSuccessResponse<List<DistrictListResponse>> districts(@PathVariable String cityName) {
         return wrap(authService.getDistrictsByCityName(cityName));
     }
-
-    @GetMapping("/signup/user/test")
-    public ApiSuccessResponse<UserEntity> getUserTest() {
-        return wrap(userService.getUser());
-    }
-
 
 }
