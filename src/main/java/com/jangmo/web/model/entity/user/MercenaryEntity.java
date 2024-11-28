@@ -25,7 +25,7 @@ public class MercenaryEntity extends UserEntity {
     @Enumerated(EnumType.STRING)
     private MercenaryRetentionStatus retentionStatus;
 
-    private MercenaryEntity(String name, int mobile,
+    private MercenaryEntity(String name, String mobile,
                             MobileCarrierType mobileCarrierType,
                             UserRole role, Gender gender,
                             MercenaryRetentionStatus retentionStatus) {

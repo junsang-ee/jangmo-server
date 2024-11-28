@@ -29,7 +29,7 @@ public class MemberEntity extends UserEntity implements Serializable {
     @Column(nullable = false)
     private String address;
 
-    private MemberEntity(String name, int mobile,
+    private MemberEntity(String name, String mobile,
                          MobileCarrierType mobileCarrier,
                          UserRole role, Gender gender, int birth,
                          String password, String address) {

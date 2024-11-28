@@ -18,7 +18,7 @@ public class MemberSignUpRequest {
     private String name;
 
     @NotNull
-    private int mobile;
+    private String mobile;
 
     @NotNull
     private MobileCarrierType mobileCarrier;

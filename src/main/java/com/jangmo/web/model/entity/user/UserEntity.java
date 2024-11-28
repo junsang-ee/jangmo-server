@@ -16,14 +16,15 @@ import static javax.persistence.InheritanceType.JOINED;
 @Getter
 @NoArgsConstructor(access = PROTECTED)
 @Inheritance(strategy = JOINED)
-@Entity(name = "\"user\"")
+@Table(name = "\"user\"")
+@Entity(name = "user")
 public class UserEntity extends CreationTimestampEntity {
 
     @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
-    private int mobile;
+    private String mobile;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -42,7 +43,7 @@ public class UserEntity extends CreationTimestampEntity {
     private UserStatus status;
 
 
-    protected UserEntity(String name, int mobile,
+    protected UserEntity(String name, String mobile,
                          MobileCarrierType mobileCarrier,
                          UserRole role, Gender gender) {
         this.name = name;
@@ -51,5 +52,9 @@ public class UserEntity extends CreationTimestampEntity {
         this.role = role;
         this.gender = gender;
         this.status = UserStatus.PENDING;
+    }
+
+    public void updateStatus(UserStatus status) {
+        this.status = status;
     }
 }
