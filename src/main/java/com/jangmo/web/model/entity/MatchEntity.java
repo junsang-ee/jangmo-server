@@ -11,6 +11,7 @@ import lombok.ToString;
 import javax.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -19,13 +20,7 @@ import static lombok.AccessLevel.PROTECTED;
 @ToString
 @NoArgsConstructor(access = PROTECTED)
 @Entity(name = "match")
-public class MatchEntity extends CreationTimestampEntity {
-
-    @Column(nullable = false)
-    private LocalDateTime startAt;
-
-    @Column(nullable = false)
-    private LocalDateTime endAt;
+public class MatchEntity extends CreationUserEntity {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -35,9 +30,11 @@ public class MatchEntity extends CreationTimestampEntity {
     @Enumerated(EnumType.STRING)
     private MatchType type;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by", nullable = false, updatable = false)
-    private MemberEntity createdBy;
+//    @OneToMany(mappedBy = "match", cascade = CascadeType.REMOVE)
+//    private List<MatchUserEntity> players;
+
+    @OneToOne(mappedBy = "match", fetch = FetchType.LAZY)
+    private MatchVoteEntity matchVote;
 
 
 }

@@ -23,3 +23,12 @@ response:
       not.found:
         code: "1011"
         message: "해당 시/군/구는 존재하지 않습니다."
+
+    auth:
+      code:
+        invalid:
+          code: "4010"
+          message: "잘못된 인증 코드 입니다."
+        expired:
+          code: "4011"
+          message: "인증 시간이 만료되었습니다. 인증 코드를 재발급받으세요."

@@ -14,6 +14,9 @@ public enum ErrorMessage {
     CITY_NOT_FOUND("1010"),
     DISTRICT_NOT_FOUND("1011"),
 
+    AUTH_CODE_INVALID("4010"),
+    AUTH_CODE_EXPIRED("4011"),
+
     UNKNOWN("9999");
 
     @Accessors(fluent = true)

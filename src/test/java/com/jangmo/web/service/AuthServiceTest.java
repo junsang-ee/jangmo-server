@@ -44,7 +44,7 @@ public class AuthServiceTest {
     void memberSignupTest() {
         MemberSignUpRequest signup = new MemberSignUpRequest(
                 "testMember",
-                01043053451,
+                "01043053451",
                 MobileCarrierType.KT,
                 Gender.MALE,
                 19940316,

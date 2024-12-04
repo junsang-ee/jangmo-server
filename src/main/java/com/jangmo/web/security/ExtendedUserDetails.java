@@ -11,8 +11,8 @@ import org.springframework.security.core.userdetails.User;
 public class ExtendedUserDetails extends User {
     private final String id;
 
-    public ExtendedUserDetails(String id, int phoneNumber, UserRole role){
-        super(String.valueOf(phoneNumber), "", AuthorityUtils.createAuthorityList("ROLE_" + role.name()));
+    public ExtendedUserDetails(String id, String mobile, UserRole role){
+        super(String.valueOf(mobile), "", AuthorityUtils.createAuthorityList("ROLE_" + role.name()));
         this.id = id;
     }
 

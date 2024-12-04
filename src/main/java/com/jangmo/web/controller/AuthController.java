@@ -3,6 +3,8 @@ package com.jangmo.web.controller;
 import com.jangmo.web.controller.base.BaseController;
 import com.jangmo.web.model.dto.request.MemberSignUpRequest;
 import com.jangmo.web.model.dto.request.MercenaryRegistrationRequest;
+import com.jangmo.web.model.dto.request.MobileRequest;
+import com.jangmo.web.model.dto.request.VerificationRequest;
 import com.jangmo.web.model.dto.response.CityListResponse;
 import com.jangmo.web.model.dto.response.DistrictListResponse;
 import com.jangmo.web.model.dto.response.common.ApiSuccessResponse;
@@ -16,9 +18,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RequiredArgsConstructor
-@CrossOrigin("*")
 @RequestMapping("/api/auth")
 @RestController
 public class AuthController extends BaseController {
@@ -36,6 +38,19 @@ public class AuthController extends BaseController {
     public ApiSuccessResponse<MercenaryEntity> signupMercenary(@RequestBody MercenaryRegistrationRequest registration) {
         return wrap(authService.registerMercenary(registration));
     }
+
+    @PostMapping("/signup/mobile/send-code")
+    public ApiSuccessResponse<Object> sendCode(@RequestBody MobileRequest request) {
+        authService.sendAuthCode(request);
+        return wrap(null);
+    }
+
+    @PostMapping("/signup/mobile/verify-code")
+    public ApiSuccessResponse<Objects> verifyCode(@RequestBody VerificationRequest request) {
+        authService.verifyCode(request);
+        return wrap(null);
+    }
+
 
     @GetMapping("/signup/cities")
     public ApiSuccessResponse<List<CityListResponse>> cities() {
