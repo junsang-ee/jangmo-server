@@ -1,5 +1,6 @@
 package com.jangmo.web.model.entity.administrative;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.jangmo.web.model.entity.common.SequentialEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,6 +20,7 @@ public class District extends SequentialEntity {
     @Column(nullable = false)
     private String name;
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "city", nullable = false)
     private City city;

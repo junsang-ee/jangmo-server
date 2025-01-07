@@ -28,12 +28,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<MercenaryEntity> findMercenaryByMobile(int mobile) {
+    public Optional<MercenaryEntity> findMercenaryByMobile(String mobile) {
         return mercenaryRepository.findByMobile(mobile);
     }
 
     @Override
-    public Optional<MemberEntity> findMemberByMobile(int mobile) {
+    public Optional<MemberEntity> findMemberByMobile(String mobile) {
         return memberRepository.findByMobile(mobile);
     }
 }

@@ -1,5 +1,7 @@
 package com.jangmo.web.model.entity.administrative;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jangmo.web.model.entity.common.SequentialEntity;
 import lombok.*;
 
@@ -18,6 +20,7 @@ public class City extends SequentialEntity {
     @Column(nullable = false)
     private String name;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "city")
     private List<District> districts;
 

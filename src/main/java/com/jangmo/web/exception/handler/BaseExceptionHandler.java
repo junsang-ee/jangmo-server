@@ -7,6 +7,10 @@ import com.jangmo.web.utils.MessageUtil;
 import org.springframework.lang.Nullable;
 
 public class BaseExceptionHandler {
+
+    public String getMessage(String target) {
+        return MessageUtil.getMessage(target);
+    }
     public String getMessage(String target, @Nullable String[] args) {
         return MessageUtil.getMessage(target, args);
     }

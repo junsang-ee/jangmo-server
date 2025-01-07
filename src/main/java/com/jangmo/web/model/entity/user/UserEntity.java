@@ -28,10 +28,6 @@ public class UserEntity extends CreationTimestampEntity {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private MobileCarrierType mobileCarrier;
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
     private UserRole role;
 
     @Column(nullable = false)
@@ -44,11 +40,9 @@ public class UserEntity extends CreationTimestampEntity {
 
 
     protected UserEntity(String name, String mobile,
-                         MobileCarrierType mobileCarrier,
                          UserRole role, Gender gender) {
         this.name = name;
         this.mobile = mobile;
-        this.mobileCarrier = mobileCarrier;
         this.role = role;
         this.gender = gender;
         this.status = UserStatus.PENDING;

@@ -15,7 +15,7 @@ public class ExtendedUserDetailServiceImpl implements ExtendedUserDetailsService
     private final Supplier<UserService> serviceSupplier;
 
     @Override
-    public UserDetails loadUserByMobile(int mobile) throws UsernameNotFoundException {
+    public UserDetails loadUserByMobile(String mobile) throws UsernameNotFoundException {
         return serviceSupplier.get().findMemberByMobile(mobile).map(this::convertToMember)
                 .or(
                     () -> serviceSupplier.get().findMercenaryByMobile(mobile).map(this::convertToMercenary)

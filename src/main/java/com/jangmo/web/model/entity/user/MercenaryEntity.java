@@ -26,10 +26,9 @@ public class MercenaryEntity extends UserEntity {
     private MercenaryRetentionStatus retentionStatus;
 
     private MercenaryEntity(String name, String mobile,
-                            MobileCarrierType mobileCarrierType,
                             UserRole role, Gender gender,
                             MercenaryRetentionStatus retentionStatus) {
-        super(name, mobile, mobileCarrierType, role, gender);
+        super(name, mobile, role, gender);
         this.retentionStatus = retentionStatus;
     }
 
@@ -37,8 +36,7 @@ public class MercenaryEntity extends UserEntity {
         return new MercenaryEntity(
                 registration.getName(),
                 registration.getMobile(),
-                registration.getMobileCarrier(),
-                registration.getRole(),
+                UserRole.MERCENARY,
                 registration.getGender(),
                 registration.getRetentionStatus()
         );

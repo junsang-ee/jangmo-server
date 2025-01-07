@@ -9,10 +9,14 @@ import static lombok.AccessLevel.PRIVATE;
 @Getter
 @RequiredArgsConstructor(access = PRIVATE)
 public class DistrictListResponse {
+
+    private final Long districtId;
+
     private final String name;
 
     public static DistrictListResponse of(final District district) {
         return new DistrictListResponse(
+                district.getId(),
                 district.getName()
         );
     }

@@ -10,7 +10,7 @@ public interface UserService {
 
     Optional<MercenaryEntity> findMercenaryById(String mercenaryId);
 
-    Optional<MercenaryEntity> findMercenaryByMobile(int mobile);
+    Optional<MercenaryEntity> findMercenaryByMobile(String mobile);
 
-    Optional<MemberEntity> findMemberByMobile(int mobile);
+    Optional<MemberEntity> findMemberByMobile(String mobile);
 }

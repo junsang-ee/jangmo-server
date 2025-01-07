@@ -1,41 +1,44 @@
 package com.jangmo.web.model.dto.request;
 
+import com.jangmo.web.config.validator.ValidFields;
 import com.jangmo.web.constants.Gender;
-import com.jangmo.web.constants.MobileCarrierType;
-import com.jangmo.web.constants.UserRole;
-import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
+import java.time.LocalDate;
 
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class MemberSignUpRequest {
 
-    @NotNull
-    private String name;
+    @NotBlank(message = "이름은 필수 항목입니다.")
+    @ValidFields(field = "name")
+    private final String name;
 
-    @NotNull
-    private String mobile;
+    @NotBlank(message = "휴대폰 번호는 필수 항목입니다.")
+    @ValidFields(field = "mobile")
+    private final String mobile;
 
-    @NotNull
-    private MobileCarrierType mobileCarrier;
+    @NotNull(message = "성별은 필수 항목입니다.")
+    private final Gender gender;
 
-    @NotNull
-    private Gender gender;
+    @Past(message = "생년월일은 현재보다 과거 날짜여야 합니다.")
+    @NotNull(message = "생년월일은 필수 항목입니다.")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private final LocalDate birth;
 
-    @NotNull
-    private int birth;
+    @NotBlank(message = "비밀번호는 필수 항목입니다.")
+    @ValidFields(field = "password")
+    private final String password;
 
-    @NotNull
-    private String password;
+    @NotNull(message = "시/도는 필수 항목입니다.")
+    private final Long cityId;
 
-    @NotNull
-    private String address;
-
-    @NotNull
-    private UserRole role;
+    @NotNull(message = "시/군/구는 필수 항목입니다.")
+    private final Long districtId;
 
 }
