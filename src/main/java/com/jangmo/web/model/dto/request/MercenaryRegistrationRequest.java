@@ -11,21 +11,21 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Getter
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class MercenaryRegistrationRequest {
 
     @NotBlank(message = "이름은 필수 항목입니다.")
     @ValidFields(field = "name")
-    private final String name;
+    private String name;
 
     @NotBlank(message = "휴대폰 번호는 필수 항목입니다.")
     @ValidFields(field = "mobile")
-    private final String mobile;
+    private String mobile;
 
     @NotNull(message = "성별은 필수 항목입니다.")
-    private final Gender gender;
+    private Gender gender;
 
     @NotNull
-    private final MercenaryRetentionStatus retentionStatus;
+    private MercenaryRetentionStatus retentionStatus;
 
 }
