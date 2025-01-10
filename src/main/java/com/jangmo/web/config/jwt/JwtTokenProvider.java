@@ -28,12 +28,12 @@ public class JwtTokenProvider {
     private final ExtendedUserDetailsService userService;
 
     public String create(String userAgent, String id, UserRole role) {
-        Claims claims = Jwts.claims().subject(id).build();
-        claims.put("role", role.name());
-        claims.put("agent", userAgent);
         Date issuedAt = new Date();
         Date expireAt = new Date(issuedAt.getTime() + jwtConfig.getValidTime().toMillis());
-        return Jwts.builder().claims(claims)
+        return Jwts.builder()
+                .subject(id)
+                .claim("role", role.name())
+                .claim("agent", userAgent)
                 .issuedAt(issuedAt)
                 .expiration(expireAt)
                 .signWith(jwtConfig.getSecretKey(), Jwts.SIG.HS256)
