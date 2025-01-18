@@ -34,9 +34,12 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
-    /* Test Lombok */
+    /* Test Module Lombok */
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
+
+    /* Test Module mockito-inline */
+    testImplementation 'org.mockito:mockito-inline:5.0.0'
 
     /* Cache */
     implementation 'org.springframework.boot:spring-boot-starter-cache'

@@ -10,6 +10,7 @@ import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class MemberSignUpRequest {
 
     @NotBlank(message = "이름은 필수 항목입니다.")

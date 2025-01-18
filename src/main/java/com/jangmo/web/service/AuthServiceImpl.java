@@ -15,6 +15,7 @@ import com.jangmo.web.model.dto.request.MemberLoginRequest;
 
 import com.jangmo.web.model.dto.response.CityListResponse;
 import com.jangmo.web.model.dto.response.DistrictListResponse;
+import com.jangmo.web.model.dto.response.MemberSignupResponse;
 import com.jangmo.web.model.entity.administrative.District;
 import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.model.entity.user.MercenaryEntity;
@@ -28,6 +29,7 @@ import com.jangmo.web.service.cache.CacheService;
 import com.jangmo.web.service.sms.SmsService;
 
 import com.jangmo.web.utils.EncryptUtil;
+
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
@@ -58,7 +60,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public MemberEntity signupMember(MemberSignUpRequest signup) {
+    public MemberSignupResponse signupMember(MemberSignUpRequest signup) {
         City city = getCity(signup.getCityId());
         District district = getDistrict(signup.getDistrictId());
         MemberEntity member = MemberEntity.create(
@@ -66,7 +68,9 @@ public class AuthServiceImpl implements AuthService {
                 city,
                 district
         );
-        return memberRepository.save(member);
+        return MemberSignupResponse.of(
+                memberRepository.save(member)
+        );
     }
 
     @Override
@@ -141,8 +145,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private void checkAccount(MemberEntity member, String password) {
-        UserStatus status = member.getStatus();
         if (EncryptUtil.matches(password, member.getPassword())) {
+            UserStatus status = member.getStatus();
             if (status == UserStatus.DISABLED)
                 throw new AuthException(ErrorMessage.AUTH_DISABLED);
             if (status == UserStatus.PENDING)

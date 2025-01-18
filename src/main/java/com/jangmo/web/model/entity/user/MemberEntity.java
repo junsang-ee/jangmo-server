@@ -6,6 +6,7 @@ import com.jangmo.web.model.dto.request.MemberSignUpRequest;
 
 import com.jangmo.web.model.entity.administrative.City;
 import com.jangmo.web.model.entity.administrative.District;
+import com.jangmo.web.utils.EncryptUtil;
 import lombok.*;
 
 import javax.persistence.Entity;
@@ -58,7 +59,7 @@ public class MemberEntity extends UserEntity implements Serializable {
                 signup.getMobile(),
                 signup.getGender(),
                 signup.getBirth(),
-                signup.getPassword(),
+                EncryptUtil.encode(signup.getPassword()),
                 city,
                 district
         );

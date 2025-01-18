@@ -2,7 +2,9 @@ package com.jangmo.web.service;
 
 import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.model.entity.user.MercenaryEntity;
+import com.jangmo.web.model.entity.user.UserEntity;
 
+import javax.swing.text.html.Option;
 import java.util.Optional;
 
 public interface UserService {
@@ -13,4 +15,8 @@ public interface UserService {
     Optional<MercenaryEntity> findMercenaryByMobile(String mobile);
 
     Optional<MemberEntity> findMemberByMobile(String mobile);
+
+    Optional<UserEntity> findByMobile(String mobile);
+
+    Optional<UserEntity> findById(String id);
 }

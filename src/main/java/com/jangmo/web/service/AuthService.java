@@ -7,13 +7,13 @@ import com.jangmo.web.model.dto.request.VerificationRequest;
 import com.jangmo.web.model.dto.request.MemberLoginRequest;
 import com.jangmo.web.model.dto.response.CityListResponse;
 import com.jangmo.web.model.dto.response.DistrictListResponse;
-import com.jangmo.web.model.entity.user.MemberEntity;
+import com.jangmo.web.model.dto.response.MemberSignupResponse;
 import com.jangmo.web.model.entity.user.MercenaryEntity;
 
 import java.util.List;
 
 public interface AuthService {
-    MemberEntity signupMember(MemberSignUpRequest signup);
+    MemberSignupResponse signupMember(MemberSignUpRequest signup);
 
     MercenaryEntity registerMercenary(MercenaryRegistrationRequest request);
 

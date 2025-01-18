@@ -8,9 +8,9 @@ import com.jangmo.web.model.dto.request.MobileRequest;
 import com.jangmo.web.model.dto.request.VerificationRequest;
 import com.jangmo.web.model.dto.response.CityListResponse;
 import com.jangmo.web.model.dto.response.DistrictListResponse;
+import com.jangmo.web.model.dto.response.MemberSignupResponse;
 import com.jangmo.web.model.dto.response.common.ApiSuccessResponse;
 import com.jangmo.web.model.dto.response.common.TokenResponse;
-import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.model.entity.user.MercenaryEntity;
 import com.jangmo.web.service.AuthService;
 
@@ -34,7 +34,7 @@ public class AuthController extends BaseController {
     private final UserService userService;
 
     @PostMapping("/signup/member")
-    public ApiSuccessResponse<MemberEntity> signupMember(@Valid @RequestBody MemberSignUpRequest signup) {
+    public ApiSuccessResponse<MemberSignupResponse> signupMember(@Valid @RequestBody MemberSignUpRequest signup) {
         return wrap(authService.signupMember(signup));
     }
 
