@@ -1,17 +1,13 @@
 package com.jangmo.web.controller;
 
 import com.jangmo.web.controller.base.BaseController;
-import com.jangmo.web.model.dto.request.MemberSignUpRequest;
-import com.jangmo.web.model.dto.request.MercenaryRegistrationRequest;
-import com.jangmo.web.model.dto.request.MemberLoginRequest;
-import com.jangmo.web.model.dto.request.MobileRequest;
-import com.jangmo.web.model.dto.request.VerificationRequest;
+import com.jangmo.web.model.dto.request.*;
 import com.jangmo.web.model.dto.response.CityListResponse;
 import com.jangmo.web.model.dto.response.DistrictListResponse;
 import com.jangmo.web.model.dto.response.MemberSignupResponse;
+import com.jangmo.web.model.dto.response.MercenaryRegistrationResponse;
 import com.jangmo.web.model.dto.response.common.ApiSuccessResponse;
 import com.jangmo.web.model.dto.response.common.TokenResponse;
-import com.jangmo.web.model.entity.user.MercenaryEntity;
 import com.jangmo.web.service.AuthService;
 
 import com.jangmo.web.service.UserService;
@@ -39,7 +35,7 @@ public class AuthController extends BaseController {
     }
 
     @PostMapping("/register/mercenary")
-    public ApiSuccessResponse<MercenaryEntity> registerMercenary(@RequestBody MercenaryRegistrationRequest registration) {
+    public ApiSuccessResponse<MercenaryRegistrationResponse> registerMercenary(@RequestBody MercenaryRegistrationRequest registration) {
         return wrap(authService.registerMercenary(registration));
     }
 
@@ -67,9 +63,16 @@ public class AuthController extends BaseController {
 
     @PostMapping("/login/member")
     public ApiSuccessResponse<TokenResponse> loginMember(HttpServletRequest request,
-                                                         @Valid @RequestBody MemberLoginRequest loginRequest) {
+                                                         @Valid @RequestBody MemberLoginRequest login) {
         String userAgent = request.getHeader("User-Agent");
-        return wrap(new TokenResponse(authService.loginMember(userAgent, loginRequest)));
+        return wrap(new TokenResponse(authService.loginMember(userAgent, login)));
+    }
+
+    @PostMapping("/login/mercenary")
+    public ApiSuccessResponse<TokenResponse> loginMercenary(HttpServletRequest request,
+                                                            @Valid @RequestBody MercenaryLoginRequest login) {
+        String userAgent = request.getHeader("User-Agent");
+        return wrap(new TokenResponse(authService.loginMercenary(userAgent, login)));
     }
 
 }

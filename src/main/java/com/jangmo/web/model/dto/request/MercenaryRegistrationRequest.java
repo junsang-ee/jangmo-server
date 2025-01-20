@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class MercenaryRegistrationRequest {
 
     @NotBlank(message = "이름은 필수 항목입니다.")
@@ -25,7 +26,7 @@ public class MercenaryRegistrationRequest {
     @NotNull(message = "성별은 필수 항목입니다.")
     private Gender gender;
 
-    @NotNull
+    @NotNull(message = "게임 참석 후 계정 유지 여부는 필수 항목입니다.")
     private MercenaryRetentionStatus retentionStatus;
 
 }

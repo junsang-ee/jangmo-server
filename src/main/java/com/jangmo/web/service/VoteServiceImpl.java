@@ -1,7 +1,7 @@
 package com.jangmo.web.service;
 
 import com.jangmo.web.constants.UserRole;
-import com.jangmo.web.constants.UserStatus;
+import com.jangmo.web.constants.MemberStatus;
 import com.jangmo.web.model.dto.request.MatchVoteCreateRequest;
 import com.jangmo.web.model.entity.MatchVoteEntity;
 import com.jangmo.web.model.entity.MatchVoteUserEntity;
@@ -32,9 +32,9 @@ public class VoteServiceImpl implements VoteService {
     }
 
     private void addVoters(MatchVoteEntity matchVote) {
-        List<UserEntity> users = userRepository.findByRoleNotAndStatus(
-                UserRole.MERCENARY,
-                UserStatus.ENABLED
+        List<UserEntity> users = userRepository.findUserByMemberStatusAndRoleNot(
+                MemberStatus.ENABLED,
+                UserRole.MERCENARY
         );
         for (UserEntity user : users) {
             MatchVoteUserEntity voter = MatchVoteUserEntity.create(user, matchVote);

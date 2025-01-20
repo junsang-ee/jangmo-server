@@ -16,6 +16,9 @@ public class ValidFieldsImpl implements ConstraintValidator<ValidFields, String>
 
     private final static String MOBILE_REGEX = "^\\d{11}$";
 
+    private final static String MERCENARY_CODE_REGEX = "^[A-Za-z0-9!@#$%^&*()\\-_=+]{10}$";
+
+    private final static String VALID_CODE_REGEX = "^\\d{6}$";
     private String fieldName;
 
     @Override
@@ -30,6 +33,8 @@ public class ValidFieldsImpl implements ConstraintValidator<ValidFields, String>
             case "mobile": validMobile(value); break;
             case "password": validPassword(value); break;
             case "name": validName(value); break;
+            case "validCode": validCode(value); break;
+            case "mercenaryCode": validMercenaryCode(value); break;
             default: break;
         }
 
@@ -49,5 +54,15 @@ public class ValidFieldsImpl implements ConstraintValidator<ValidFields, String>
     private void validName(String name) {
         if (!name.matches(NAME_REGEX))
             throw new FieldValidationException(ErrorMessage.REQUEST_INVALID_NAME);
+    }
+
+    private void validCode(String code) {
+        if (!code.matches(VALID_CODE_REGEX))
+            throw new FieldValidationException(ErrorMessage.REQUEST_INVALID_CODE);
+    }
+
+    private void validMercenaryCode(String mercenaryCode) {
+        if (!mercenaryCode.matches(MERCENARY_CODE_REGEX))
+            throw new FieldValidationException(ErrorMessage.REQUEST_INVALID_MERCENARY_CODE);
     }
 }

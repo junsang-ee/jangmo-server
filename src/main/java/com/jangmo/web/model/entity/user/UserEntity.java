@@ -1,9 +1,8 @@
 package com.jangmo.web.model.entity.user;
 
 import com.jangmo.web.constants.Gender;
-import com.jangmo.web.constants.MobileCarrierType;
 import com.jangmo.web.constants.UserRole;
-import com.jangmo.web.constants.UserStatus;
+import com.jangmo.web.constants.MemberStatus;
 import com.jangmo.web.model.entity.common.CreationTimestampEntity;
 
 import lombok.*;
@@ -34,10 +33,6 @@ public class UserEntity extends CreationTimestampEntity {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private UserStatus status;
-
 
     protected UserEntity(String name, String mobile,
                          UserRole role, Gender gender) {
@@ -45,10 +40,6 @@ public class UserEntity extends CreationTimestampEntity {
         this.mobile = mobile;
         this.role = role;
         this.gender = gender;
-        this.status = UserStatus.PENDING;
     }
 
-    public void updateStatus(UserStatus status) {
-        this.status = status;
-    }
 }

@@ -1,30 +1,26 @@
 package com.jangmo.web.service;
 
 import com.jangmo.web.config.jwt.JwtTokenProvider;
-import com.jangmo.web.constants.UserStatus;
+import com.jangmo.web.constants.MemberStatus;
+import com.jangmo.web.constants.MercenaryStatus;
 import com.jangmo.web.constants.cache.CacheType;
 import com.jangmo.web.constants.message.ErrorMessage;
 import com.jangmo.web.exception.custom.AuthException;
 import com.jangmo.web.exception.custom.InvalidStateException;
 import com.jangmo.web.exception.custom.NotFoundException;
-import com.jangmo.web.model.dto.request.MemberSignUpRequest;
-import com.jangmo.web.model.dto.request.MercenaryRegistrationRequest;
-import com.jangmo.web.model.dto.request.MobileRequest;
-import com.jangmo.web.model.dto.request.VerificationRequest;
-import com.jangmo.web.model.dto.request.MemberLoginRequest;
+import com.jangmo.web.model.dto.request.*;
 
 import com.jangmo.web.model.dto.response.CityListResponse;
 import com.jangmo.web.model.dto.response.DistrictListResponse;
 import com.jangmo.web.model.dto.response.MemberSignupResponse;
+import com.jangmo.web.model.dto.response.MercenaryRegistrationResponse;
 import com.jangmo.web.model.entity.administrative.District;
 import com.jangmo.web.model.entity.user.MemberEntity;
+import com.jangmo.web.model.entity.user.MercenaryCodeEntity;
 import com.jangmo.web.model.entity.user.MercenaryEntity;
 import com.jangmo.web.model.entity.administrative.City;
-import com.jangmo.web.repository.CityRepository;
-import com.jangmo.web.repository.DistrictRepository;
-import com.jangmo.web.repository.MemberRepository;
+import com.jangmo.web.repository.*;
 
-import com.jangmo.web.repository.MercenaryRepository;
 import com.jangmo.web.service.cache.CacheService;
 import com.jangmo.web.service.sms.SmsService;
 
@@ -36,6 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -46,6 +43,8 @@ public class AuthServiceImpl implements AuthService {
     private final MemberRepository memberRepository;
 
     private final MercenaryRepository mercenaryRepository;
+
+    private final MercenaryCodeRepository mercenaryCodeRepository;
 
     private final CityRepository cityRepository;
 
@@ -75,9 +74,11 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public MercenaryEntity registerMercenary(MercenaryRegistrationRequest request) {
+    public MercenaryRegistrationResponse registerMercenary(MercenaryRegistrationRequest request) {
         MercenaryEntity mercenary = MercenaryEntity.create(request);
-        return mercenaryRepository.save(mercenary);
+        return MercenaryRegistrationResponse.of(
+                mercenaryRepository.save(mercenary)
+        );
     }
 
     @Override
@@ -121,8 +122,17 @@ public class AuthServiceImpl implements AuthService {
         MemberEntity member = memberRepository.findByMobile(request.getMobile()).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND)
         );
-        checkAccount(member, request.getPassword());
+        validMember(member, request.getPassword());
         return jwtTokenProvider.create(userAgent, member.getId(), member.getRole());
+    }
+
+    @Override
+    public String loginMercenary(String userAgent, MercenaryLoginRequest request) {
+        MercenaryEntity mercenary = mercenaryRepository.findByMobile(request.getMobile()).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.MERCENARY_NOT_FOUND)
+        );
+        validMercenary(mercenary, request.getMercenaryCode());
+        return jwtTokenProvider.create(userAgent, mercenary.getId(), mercenary.getRole());
     }
 
     private String getRandomCode() {
@@ -144,17 +154,38 @@ public class AuthServiceImpl implements AuthService {
         );
     }
 
-    private void checkAccount(MemberEntity member, String password) {
-        if (EncryptUtil.matches(password, member.getPassword())) {
-            UserStatus status = member.getStatus();
-            if (status == UserStatus.DISABLED)
-                throw new AuthException(ErrorMessage.AUTH_DISABLED);
-            if (status == UserStatus.PENDING)
-                throw new AuthException(ErrorMessage.AUTH_PENDING);
-            if (status == UserStatus.RETIRED)
-                throw new AuthException(ErrorMessage.AUTH_RETIRED);
-        } else
+    private void validMember(MemberEntity member, String password) {
+        if (!EncryptUtil.matches(password, member.getPassword()))
             throw new InvalidStateException(ErrorMessage.AUTH_PASSWORD_INVALID);
+        MemberStatus status = member.getStatus();
+        if (status == MemberStatus.DISABLED)
+            throw new AuthException(ErrorMessage.AUTH_DISABLED);
+        else if (status == MemberStatus.PENDING)
+            throw new AuthException(ErrorMessage.AUTH_PENDING);
+        else if (status == MemberStatus.RETIRED)
+            throw new AuthException(ErrorMessage.AUTH_RETIRED);
+    }
+
+    private void validMercenary(MercenaryEntity mercenary, String code) {
+        MercenaryCodeEntity codeEntity =
+                mercenaryCodeRepository.findByMercenary(mercenary).orElse(null);
+        MercenaryStatus status = mercenary.getStatus();
+        if (codeEntity == null) {
+            if (status == MercenaryStatus.PENDING)
+                throw new AuthException(ErrorMessage.AUTH_PENDING);
+            if (status == MercenaryStatus.DISABLED)
+                throw new AuthException(ErrorMessage.AUTH_DISABLED);
+            if (status == MercenaryStatus.EXPIRED)
+                throw new AuthException(ErrorMessage.AUTH_MERCENARY_EXPIRED);
+        }
+        if (status == MercenaryStatus.ENABLED) {
+            if (Objects.requireNonNull(codeEntity).getCode() == null) {
+                throw new NotFoundException(ErrorMessage.MERCENARY_CODE_NOT_FOUND);
+            }
+            if (!EncryptUtil.matches(code, codeEntity.getCode())) {
+                throw new AuthException(ErrorMessage.AUTH_MERCENARY_CODE_INVALID);
+            }
+        }
     }
 
 }

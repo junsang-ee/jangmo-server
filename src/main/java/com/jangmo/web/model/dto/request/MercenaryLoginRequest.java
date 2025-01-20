@@ -10,13 +10,12 @@ import javax.validation.constraints.NotBlank;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemberLoginRequest {
-
+public class MercenaryLoginRequest {
     @NotBlank(message = "휴대폰 번호는 필수 항목입니다.")
     @ValidFields(field = "mobile")
     private String mobile;
 
-    @NotBlank(message = "비밀번호는 필수 항목입니다.")
-    @ValidFields(field = "password")
-    private String password;
+    @NotBlank(message = "용병 코드는 필수 항목입니다.")
+    @ValidFields(field = "mercenaryCode")
+    private String mercenaryCode;
 }

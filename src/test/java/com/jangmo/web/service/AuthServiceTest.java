@@ -1,7 +1,7 @@
 package com.jangmo.web.service;
 
 import com.jangmo.web.constants.Gender;
-import com.jangmo.web.constants.UserStatus;
+import com.jangmo.web.constants.MemberStatus;
 import com.jangmo.web.model.dto.request.MemberLoginRequest;
 import com.jangmo.web.model.dto.request.MemberSignUpRequest;
 import com.jangmo.web.model.dto.response.MemberSignupResponse;
@@ -127,7 +127,7 @@ public class AuthServiceTest {
         } catch (Exception ignored) {
         }
 
-        mockMember.updateStatus(UserStatus.ENABLED);
+        mockMember.updateStatus(MemberStatus.ENABLED);
 
         try (MockedStatic<EncryptUtil> mockedStatic = Mockito.mockStatic(EncryptUtil.class)) {
             mockedStatic.when(

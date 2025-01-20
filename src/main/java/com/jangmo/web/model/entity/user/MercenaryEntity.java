@@ -1,9 +1,6 @@
 package com.jangmo.web.model.entity.user;
 
-import com.jangmo.web.constants.Gender;
-import com.jangmo.web.constants.MercenaryRetentionStatus;
-import com.jangmo.web.constants.MobileCarrierType;
-import com.jangmo.web.constants.UserRole;
+import com.jangmo.web.constants.*;
 import com.jangmo.web.model.dto.request.MercenaryRegistrationRequest;
 
 import lombok.Getter;
@@ -25,11 +22,15 @@ public class MercenaryEntity extends UserEntity {
     @Enumerated(EnumType.STRING)
     private MercenaryRetentionStatus retentionStatus;
 
+    @Column(nullable = false)
+    private MercenaryStatus status;
+
     private MercenaryEntity(String name, String mobile,
                             UserRole role, Gender gender,
                             MercenaryRetentionStatus retentionStatus) {
         super(name, mobile, role, gender);
         this.retentionStatus = retentionStatus;
+        this.status = MercenaryStatus.PENDING;
     }
 
     public static MercenaryEntity create(final MercenaryRegistrationRequest registration) {
@@ -40,6 +41,10 @@ public class MercenaryEntity extends UserEntity {
                 registration.getGender(),
                 registration.getRetentionStatus()
         );
+    }
+
+    public void updateStatus(MercenaryStatus status) {
+        this.status = status;
     }
 
 

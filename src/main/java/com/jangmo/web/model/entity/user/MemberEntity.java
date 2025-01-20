@@ -1,6 +1,7 @@
 package com.jangmo.web.model.entity.user;
 
 import com.jangmo.web.constants.Gender;
+import com.jangmo.web.constants.MemberStatus;
 import com.jangmo.web.constants.UserRole;
 import com.jangmo.web.model.dto.request.MemberSignUpRequest;
 
@@ -9,11 +10,7 @@ import com.jangmo.web.model.entity.administrative.District;
 import com.jangmo.web.utils.EncryptUtil;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.FetchType;
+import javax.persistence.*;
 
 
 import java.io.Serializable;
@@ -33,6 +30,10 @@ public class MemberEntity extends UserEntity implements Serializable {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private MemberStatus status;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "city", nullable = false)
     private City city;
@@ -47,6 +48,7 @@ public class MemberEntity extends UserEntity implements Serializable {
         super(name, mobile, UserRole.MEMBER, gender);
         this.birth = birth;
         this.password = password;
+        this.status = MemberStatus.PENDING;
         this.city = city;
         this.district = district;
     }
@@ -63,5 +65,9 @@ public class MemberEntity extends UserEntity implements Serializable {
                 city,
                 district
         );
+    }
+
+    public void updateStatus(MemberStatus status) {
+        this.status = status;
     }
 }
