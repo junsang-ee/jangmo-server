@@ -1,6 +1,7 @@
 package com.jangmo.web.model.entity.user;
 
 import com.jangmo.web.model.entity.common.SequentialEntity;
+import com.jangmo.web.utils.EncryptUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,7 +30,7 @@ public class MercenaryCodeEntity extends SequentialEntity {
     public static MercenaryCodeEntity create(final MercenaryEntity mercenary, final String code) {
         return new MercenaryCodeEntity(
                 mercenary,
-                code
+                EncryptUtil.encode(code)
         );
     }
 

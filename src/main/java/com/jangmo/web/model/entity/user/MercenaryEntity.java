@@ -23,6 +23,7 @@ public class MercenaryEntity extends UserEntity {
     private MercenaryRetentionStatus retentionStatus;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private MercenaryStatus status;
 
     private MercenaryEntity(String name, String mobile,

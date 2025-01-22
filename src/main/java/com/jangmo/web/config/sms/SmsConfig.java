@@ -16,5 +16,7 @@ public class SmsConfig {
 
     private String sender;
 
-    private String content;
+    private String authContent;
+
+    private String mercenaryContent;
 }

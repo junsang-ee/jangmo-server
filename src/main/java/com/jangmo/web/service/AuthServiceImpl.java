@@ -1,8 +1,10 @@
 package com.jangmo.web.service;
 
 import com.jangmo.web.config.jwt.JwtTokenProvider;
+import com.jangmo.web.config.sms.SmsProvider;
 import com.jangmo.web.constants.MemberStatus;
 import com.jangmo.web.constants.MercenaryStatus;
+import com.jangmo.web.constants.SmsType;
 import com.jangmo.web.constants.cache.CacheType;
 import com.jangmo.web.constants.message.ErrorMessage;
 import com.jangmo.web.exception.custom.AuthException;
@@ -22,7 +24,6 @@ import com.jangmo.web.model.entity.administrative.City;
 import com.jangmo.web.repository.*;
 
 import com.jangmo.web.service.cache.CacheService;
-import com.jangmo.web.service.sms.SmsService;
 
 import com.jangmo.web.utils.EncryptUtil;
 
@@ -50,7 +51,7 @@ public class AuthServiceImpl implements AuthService {
 
     private final DistrictRepository districtRepository;
 
-    private final SmsService smsService;
+    private final SmsProvider smsProvider;
 
     private final CacheService cacheService;
 
@@ -101,7 +102,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public String sendAuthCode(MobileRequest request) {
         String code = getRandomCode();
-        smsService.send(request.getMobile(), code);
+        smsProvider.send(request.getMobile(), code, SmsType.AUTH);
         return code;
     }
 
@@ -168,7 +169,7 @@ public class AuthServiceImpl implements AuthService {
 
     private void validMercenary(MercenaryEntity mercenary, String code) {
         MercenaryCodeEntity codeEntity =
-                mercenaryCodeRepository.findByMercenary(mercenary).orElse(null);
+                mercenaryCodeRepository.findByMercenary(mercenary).orElseGet(() -> null);
         MercenaryStatus status = mercenary.getStatus();
         if (codeEntity == null) {
             if (status == MercenaryStatus.PENDING)

@@ -61,6 +61,9 @@ response:
         expired:
           code: "4005"
           message: "접근 기간이 마감된 용병 계정입니다. 용병 코드를 재발급 받으세요."
+        already.enabled:
+          code: "4006"
+          message: "해당 용병은 정상 이용 가능한 계정입니다."
       code:
         invalid:
           code: "4010"
@@ -74,6 +77,9 @@ response:
       not.found:
         code: "5000"
         message: "해당 회원을 찾을 수 없습니다."
+      already:
+        enabled: "6000"
+        message: "해당 회원은 정상 이용 가능한 계정입니다."
     mercenary:
       not.found:
         code: "5001"
@@ -82,3 +88,17 @@ response:
         not.found:
           code: "5002"
           message: "해당 용병의 코드가 존재하지 않습니다. 관리자에게 문의하세요."
+      already:
+        enabled:
+          code: "6001"
+          message: "해당 용병은 정상 이용 가능한 계정입니다."
+        code.exists:
+          code: "6002"
+          message: "해당 용병은 코드가 존재합니다. 용병 코드 삭제가 선행되어야 합니다."
+      needs:
+        code.reissue:
+          code: "6003"
+          message: "코드 재발급이 필요한 용병 계정입니다."
+        status:
+          code: "6004"
+          message: "상태 변경이 필요한 용병 계정입니다."

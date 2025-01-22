@@ -16,7 +16,7 @@ public class ValidFieldsImpl implements ConstraintValidator<ValidFields, String>
 
     private final static String MOBILE_REGEX = "^\\d{11}$";
 
-    private final static String MERCENARY_CODE_REGEX = "^[A-Za-z0-9!@#$%^&*()\\-_=+]{10}$";
+    private final static String MERCENARY_CODE_REGEX = "^[A-Za-z0-9]{10}$";
 
     private final static String VALID_CODE_REGEX = "^\\d{6}$";
     private String fieldName;

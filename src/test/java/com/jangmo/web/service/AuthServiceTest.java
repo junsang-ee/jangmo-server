@@ -4,19 +4,22 @@ import com.jangmo.web.config.jwt.JwtConfig;
 import com.jangmo.web.constants.Gender;
 import com.jangmo.web.constants.MemberStatus;
 import com.jangmo.web.constants.MercenaryRetentionStatus;
+import com.jangmo.web.constants.MercenaryStatus;
 import com.jangmo.web.model.dto.request.MemberLoginRequest;
 import com.jangmo.web.model.dto.request.MemberSignUpRequest;
+import com.jangmo.web.model.dto.request.MercenaryLoginRequest;
 import com.jangmo.web.model.dto.request.MercenaryRegistrationRequest;
 import com.jangmo.web.model.dto.response.MemberSignupResponse;
+import com.jangmo.web.model.dto.response.MercenaryRegistrationResponse;
 import com.jangmo.web.model.entity.administrative.City;
 import com.jangmo.web.model.entity.administrative.District;
 import com.jangmo.web.model.entity.user.MemberEntity;
+import com.jangmo.web.model.entity.user.MercenaryCodeEntity;
 import com.jangmo.web.model.entity.user.MercenaryEntity;
-import com.jangmo.web.repository.CityRepository;
-import com.jangmo.web.repository.DistrictRepository;
-import com.jangmo.web.repository.MemberRepository;
+import com.jangmo.web.repository.*;
 import com.jangmo.web.utils.AgeUtil;
 
+import com.jangmo.web.utils.CodeGeneratorUtil;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -40,6 +43,8 @@ import javax.crypto.SecretKey;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 @Slf4j
 @RequiredArgsConstructor
@@ -48,6 +53,12 @@ public class AuthServiceTest {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private MercenaryRepository mercenaryRepository;
+
+    @Autowired
+    private MercenaryCodeRepository mercenaryCodeRepository;
 
     @Autowired
     private CityRepository cityRepository;
@@ -64,7 +75,8 @@ public class AuthServiceTest {
 
     @BeforeEach
     void init(TestInfo testInfo) {
-        if (testInfo.getDisplayName().equals("Member 로그인 테스트")) {
+        if (testInfo.getDisplayName().equals("Member 로그인 테스트") ||
+            testInfo.getDisplayName().equals("Mercenary 로그인 테스트")) {
             ReflectionTestUtils.setField(
                     jwtConfig,
                     "secret",
@@ -93,20 +105,24 @@ public class AuthServiceTest {
         MemberEntity member = MemberEntity.create(signup, city, district);
 
         MemberSignupResponse response = authService.signupMember(signup);
+        MemberEntity savedMember = memberRepository.findByMobile(signup.getMobile()).orElseThrow();
         int old = AgeUtil.calculate(member.getBirth());
 
         log.info("member name : " + member.getName() +
-                 ", member old : " + old +
+                 ", member old : " + AgeUtil.calculate(member.getBirth()) +
                  ", member mobile : " + member.getMobile());
 
         log.info("response name : " + response.getName() +
                  ", response old : " + response.getOld() +
                  ", response mobile : " + response.getMobile());
 
-        Assertions.assertEquals(member.getName(), response.getName());
-        Assertions.assertEquals(member.getMobile(), response.getMobile());
+        log.info("savedMember name : " + savedMember.getName() +
+                ", savedMember mobile : " + savedMember.getMobile());
+        assertNotNull(savedMember);
+        assertEquals(member.getName(), response.getName());
+        assertEquals(member.getMobile(), response.getMobile());
 
-        Assertions.assertEquals(old, response.getOld());
+        assertEquals(old, response.getOld());
 
     }
 
@@ -125,8 +141,6 @@ public class AuthServiceTest {
                 1L,
                 1L
         );
-        City city = cityRepository.findById(signup.getCityId()).orElseThrow();
-        District district = districtRepository.findById(signup.getDistrictId()).orElseThrow();
 
         authService.signupMember(signup);
         MemberEntity signupMember = memberRepository.findByMobile("01043053451").orElseThrow();
@@ -151,7 +165,76 @@ public class AuthServiceTest {
                 .getSubject();
 
         log.info("userId : " + userId);
-        Assertions.assertEquals(signupMember.getId(), userId);
+        assertEquals(signupMember.getId(), userId);
     }
+
+    @DisplayName("Mercenary 등록 테스트")
+    @Test
+    @Transactional
+    void mercenaryRegistrationTest() {
+        MercenaryRegistrationRequest request = new MercenaryRegistrationRequest(
+                "testName",
+                "01043053451",
+                Gender.MALE,
+                MercenaryRetentionStatus.KEEP
+        );
+        MercenaryEntity mercenary = MercenaryEntity.create(request);
+        MercenaryRegistrationResponse response = authService.registerMercenary(request);
+        MercenaryEntity savedMercenary = mercenaryRepository.findByMobile(request.getMobile()).orElseThrow();
+
+        log.info("mercenary name : " + mercenary.getName() +
+                ", mercenary mobile : " + mercenary.getMobile());
+
+        log.info("response name : " + response.getName() +
+                ", response mobile : " + response.getMobile());
+        assertNotNull(savedMercenary);
+        assertEquals(mercenary.getName(), response.getName());
+        assertEquals(mercenary.getMobile(), response.getMobile());
+    }
+
+    @DisplayName("Mercenary 로그인 테스트")
+    @Test
+    @Transactional
+    void mercenaryLoginTest() {
+        MercenaryRegistrationRequest request = new MercenaryRegistrationRequest(
+                "testName",
+                "01043053451",
+                Gender.MALE,
+                MercenaryRetentionStatus.KEEP
+        );
+
+        MercenaryEntity mercenary = mercenaryRepository.save(MercenaryEntity.create(request));
+
+        /** Check registration */
+        assertNotNull(mercenaryRepository.findByMobile(request.getMobile()));
+
+        mercenary.updateStatus(MercenaryStatus.ENABLED);
+        String code = CodeGeneratorUtil.getMercenaryCode();
+        MercenaryCodeEntity codeEntity = MercenaryCodeEntity.create(mercenary, code);
+        mercenaryCodeRepository.save(codeEntity);
+
+        assertNotNull(mercenaryCodeRepository.findByMercenary(mercenary));
+
+        /** Login Mercenary */
+        String userAgent = "Mozilla/5.0 ...";
+        MercenaryLoginRequest login = new MercenaryLoginRequest(
+                "01043053451", code
+        );
+        String token = authService.loginMercenary(userAgent, login);
+        assertNotNull(token);
+
+        String secret = "dGVzdF9qc29uX3dlYl90b2tlbl9zZWNyZXRfa2V5X2Zvcl9obWFj";
+        SecretKey secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+
+        String mercenaryId = Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject();
+
+        assertEquals(mercenary.getId(), mercenaryId);
+    }
+
 
 }
