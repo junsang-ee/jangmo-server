@@ -30,7 +30,9 @@ response:
         code:
           code: "113"
           message: "인증 코드는 6자리의 숫자여야 합니다."
-
+        mercenary.code:
+          code: "114"
+          message: "용병 코드는 숫자, 영문(대/소문자)만을 포함하며, 10자리여야 합니다."
 
     city:
       not.found:

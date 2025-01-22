@@ -15,6 +15,8 @@ public enum ErrorMessage {
     REQUEST_INVALID_CODE("113"),
     REQUEST_INVALID_MERCENARY_CODE("114"),
 
+    INTERNAL_SERVER_ERROR("500"),
+
     /* 1000 ~ 1100 (signup error) */
     CITY_NOT_FOUND("1010"),
     DISTRICT_NOT_FOUND("1011"),

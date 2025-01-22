@@ -31,8 +31,6 @@ public class SmsProvider {
     }
 
     public void send(String to, String code, SmsType type) {
-        log.info("to : " + to);
-        log.info("code : " + code);
         String content = "";
         if (type == SmsType.AUTH) {
             content = smsConfig.getAuthContent().replace(
