@@ -17,8 +17,14 @@ public class ManagerController extends BaseController {
     private final UserManagementService userManagementService;
 
     @PatchMapping("/mercenary/{mercenaryId}/approve")
-    public ApiSuccessResponse<Object> approve(@PathVariable String mercenaryId) {
+    public ApiSuccessResponse<Object> approveMercenary(@PathVariable String mercenaryId) {
         userManagementService.approveMercenary(mercenaryId);
+        return wrap(null);
+    }
+
+    @PatchMapping("/member/{memberId}/approve")
+    public ApiSuccessResponse<Object> approveMember(@PathVariable String memberId) {
+        userManagementService.approveMember(memberId);
         return wrap(null);
     }
 

@@ -74,33 +74,45 @@ response:
           code: "4011"
           message: "인증 시간이 만료되었습니다. 인증 코드를 재발급 받으세요."
 
-
-    member:
+    user:
       not.found:
         code: "5000"
-        message: "해당 회원을 찾을 수 없습니다."
-      already:
-        enabled: "6000"
-        message: "해당 회원은 정상 이용 가능한 계정입니다."
-    mercenary:
+        message: "해당 유저를 찾을 수 없습니다."
+    member:
       not.found:
         code: "5001"
+        message: "해당 회원을 찾을 수 없습니다."
+      already.enabled:
+        code: "6000"
+        message: "해당 회원은 정상 이용 가능한 계정입니다."
+      disabled:
+        code: " 6001"
+        message: "해당 회원은 이용 제한된 회원입니다."
+      retired:
+        code: "6002"
+        message: "해당 회원은 탈퇴한 회원입니다."
+    mercenary:
+      not.found:
+        code: "5002"
         message: "해당 용병을 찾을 수 없습니다."
       code:
         not.found:
-          code: "5002"
+          code: "5003"
           message: "해당 용병의 코드가 존재하지 않습니다. 관리자에게 문의하세요."
+      disabled:
+        code: "6010"
+        message: "해당 용병은 이용 제한된 용병입니다."
       already:
         enabled:
-          code: "6001"
+          code: "6011"
           message: "해당 용병은 정상 이용 가능한 계정입니다."
         code.exists:
-          code: "6002"
+          code: "6012"
           message: "해당 용병은 코드가 존재합니다. 용병 코드 삭제가 선행되어야 합니다."
       needs:
         code.reissue:
-          code: "6003"
+          code: "6013"
           message: "코드 재발급이 필요한 용병 계정입니다."
         status:
-          code: "6004"
+          code: "6014"
           message: "상태 변경이 필요한 용병 계정입니다."

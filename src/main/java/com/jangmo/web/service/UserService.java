@@ -1,5 +1,6 @@
 package com.jangmo.web.service;
 
+import com.jangmo.web.model.dto.response.UserDetailResponse;
 import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.model.entity.user.MercenaryEntity;
 import com.jangmo.web.model.entity.user.UserEntity;
@@ -19,4 +20,6 @@ public interface UserService {
     Optional<UserEntity> findByMobile(String mobile);
 
     Optional<UserEntity> findById(String id);
+
+    UserDetailResponse getDetail(String userId);
 }

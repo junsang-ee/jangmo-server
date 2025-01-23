@@ -1,14 +1,16 @@
 package com.jangmo.web.service.admin;
 
 import com.jangmo.web.config.sms.SmsProvider;
+import com.jangmo.web.constants.MemberStatus;
 import com.jangmo.web.constants.MercenaryStatus;
 import com.jangmo.web.constants.SmsType;
 import com.jangmo.web.constants.message.ErrorMessage;
-import com.jangmo.web.exception.custom.AuthException;
 import com.jangmo.web.exception.custom.InvalidStateException;
 import com.jangmo.web.exception.custom.NotFoundException;
+import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.model.entity.user.MercenaryCodeEntity;
 import com.jangmo.web.model.entity.user.MercenaryEntity;
+import com.jangmo.web.repository.MemberRepository;
 import com.jangmo.web.repository.MercenaryCodeRepository;
 import com.jangmo.web.repository.MercenaryRepository;
 import com.jangmo.web.utils.CodeGeneratorUtil;
@@ -28,6 +30,8 @@ public class UserManagementServiceImpl implements UserManagementService {
 
     private final MercenaryCodeRepository mercenaryCodeRepository;
 
+    private final MemberRepository memberRepository;
+
     private final SmsProvider smsProvider;
 
     @Override
@@ -36,12 +40,10 @@ public class UserManagementServiceImpl implements UserManagementService {
         MercenaryEntity mercenary = mercenaryRepository.findById(mercenaryId).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.MERCENARY_NOT_FOUND)
         );
-        log.info("mobile1 :: " + mercenary.getMobile());
-
         MercenaryStatus status = mercenary.getStatus();
 
         if (status == MercenaryStatus.DISABLED)
-            throw new AuthException(ErrorMessage.AUTH_DISABLED);
+            throw new InvalidStateException(ErrorMessage.MERCENARY_DISABLED);
 
         MercenaryCodeEntity codeEntity =
                 mercenaryCodeRepository.findByMercenary(mercenary).orElseGet(() -> null);
@@ -67,8 +69,23 @@ public class UserManagementServiceImpl implements UserManagementService {
                 mercenaryCode
         );
         mercenaryCodeRepository.save(mercenaryCodeEntity);
-        log.info("mobile2 :: " + mercenary.getMobile());
         smsProvider.send(mercenary.getMobile(), mercenaryCode, SmsType.MERCENARY);
     }
 
+    @Override
+    @Transactional
+    public void approveMember(String memberId) {
+        MemberEntity member = memberRepository.findById(memberId).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND)
+        );
+        MemberStatus status = member.getStatus();
+        if (status == MemberStatus.DISABLED)
+            throw new InvalidStateException(ErrorMessage.MEMBER_DISABLED);
+        else if (status == MemberStatus.ENABLED)
+            throw new InvalidStateException(ErrorMessage.MEMBER_ALREADY_ENABLED);
+        else if (status == MemberStatus.RETIRED)
+            throw new InvalidStateException(ErrorMessage.MEMBER_RETIRED);
+
+        member.updateStatus(MemberStatus.ENABLED);
+    }
 }

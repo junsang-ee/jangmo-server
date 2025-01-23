@@ -24,14 +24,12 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
-import org.junit.jupiter.api.Assertions;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,31 +45,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 @Slf4j
-@RequiredArgsConstructor
 @SpringBootTest
 public class AuthServiceTest {
 
-    @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
-    private MercenaryRepository mercenaryRepository;
-
-    @Autowired
-    private MercenaryCodeRepository mercenaryCodeRepository;
-
-    @Autowired
-    private CityRepository cityRepository;
-
-    @Autowired
-    private DistrictRepository districtRepository;
-
-    @Autowired
-    private AuthServiceImpl authService;
-
-    @Autowired
-    private JwtConfig jwtConfig;
-
+    @Autowired MemberRepository memberRepository;
+    @Autowired MercenaryRepository mercenaryRepository;
+    @Autowired MercenaryCodeRepository mercenaryCodeRepository;
+    @Autowired CityRepository cityRepository;
+    @Autowired DistrictRepository districtRepository;
+    @Autowired AuthServiceImpl authService;
+    @Autowired JwtConfig jwtConfig;
 
     @BeforeEach
     void init(TestInfo testInfo) {
@@ -93,7 +76,7 @@ public class AuthServiceTest {
         LocalDate birth = LocalDate.of(1994, 3, 16);
         MemberSignUpRequest signup = new MemberSignUpRequest(
                 "testMember",
-                "01043053451",
+                "01012341234",
                 Gender.MALE,
                 birth,
                 "by0398467!@",
@@ -134,7 +117,7 @@ public class AuthServiceTest {
         String rawPassword = "rawPassword";
         MemberSignUpRequest signup = new MemberSignUpRequest(
                 "testMember",
-                "01043053451",
+                "01012341234",
                 Gender.MALE,
                 birth,
                 rawPassword,
@@ -143,10 +126,10 @@ public class AuthServiceTest {
         );
 
         authService.signupMember(signup);
-        MemberEntity signupMember = memberRepository.findByMobile("01043053451").orElseThrow();
+        MemberEntity signupMember = memberRepository.findByMobile(signup.getMobile()).orElseThrow();
         signupMember.updateStatus(MemberStatus.ENABLED);
 
-        MemberLoginRequest loginRequest = new MemberLoginRequest("01043053451", rawPassword);
+        MemberLoginRequest loginRequest = new MemberLoginRequest("01012341234", rawPassword);
         String userAgent = "Mozilla/5.0 ...";
         String token = authService.loginMember(userAgent, loginRequest);
 
@@ -172,15 +155,15 @@ public class AuthServiceTest {
     @Test
     @Transactional
     void mercenaryRegistrationTest() {
-        MercenaryRegistrationRequest request = new MercenaryRegistrationRequest(
+        MercenaryRegistrationRequest registration = new MercenaryRegistrationRequest(
                 "testName",
-                "01043053451",
+                "01012341234",
                 Gender.MALE,
                 MercenaryRetentionStatus.KEEP
         );
-        MercenaryEntity mercenary = MercenaryEntity.create(request);
-        MercenaryRegistrationResponse response = authService.registerMercenary(request);
-        MercenaryEntity savedMercenary = mercenaryRepository.findByMobile(request.getMobile()).orElseThrow();
+        MercenaryEntity mercenary = MercenaryEntity.create(registration);
+        MercenaryRegistrationResponse response = authService.registerMercenary(registration);
+        MercenaryEntity savedMercenary = mercenaryRepository.findByMobile(registration.getMobile()).orElseThrow();
 
         log.info("mercenary name : " + mercenary.getName() +
                 ", mercenary mobile : " + mercenary.getMobile());
@@ -198,7 +181,7 @@ public class AuthServiceTest {
     void mercenaryLoginTest() {
         MercenaryRegistrationRequest request = new MercenaryRegistrationRequest(
                 "testName",
-                "01043053451",
+                "01012341234",
                 Gender.MALE,
                 MercenaryRetentionStatus.KEEP
         );
@@ -218,7 +201,7 @@ public class AuthServiceTest {
         /** Login Mercenary */
         String userAgent = "Mozilla/5.0 ...";
         MercenaryLoginRequest login = new MercenaryLoginRequest(
-                "01043053451", code
+                "01012341234", code
         );
         String token = authService.loginMercenary(userAgent, login);
         assertNotNull(token);
