@@ -33,6 +33,10 @@ public class WebSecurityConfiguration {
             "/api/admin/**"
     };
 
+    public static final String[] MANAGER_ANT_PATH = {
+            "/api/manager/**"
+    };
+
     @Bean
     public BCryptPasswordEncoder encodePassword() {
         return new BCryptPasswordEncoder();
@@ -43,6 +47,7 @@ public class WebSecurityConfiguration {
         return http.authorizeRequests()
                 .antMatchers(PERMIT_ANT_PATH).permitAll()
                 .antMatchers(ADMIN_ANT_PATH).hasRole("ADMIN")
+                .antMatchers(MANAGER_ANT_PATH).hasAnyRole("ADMIN", "MANAGER")
                 .anyRequest().authenticated()
                 .and().cors()
                 .and().csrf().disable()

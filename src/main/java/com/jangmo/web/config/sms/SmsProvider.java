@@ -42,7 +42,6 @@ public class SmsProvider {
             );
         }
 
-
         Message message = new Message();
         message.setFrom(smsConfig.getSender());
         message.setTo(to);
