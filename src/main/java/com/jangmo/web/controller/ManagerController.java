@@ -2,7 +2,7 @@ package com.jangmo.web.controller;
 
 import com.jangmo.web.controller.base.BaseController;
 import com.jangmo.web.model.dto.response.common.ApiSuccessResponse;
-import com.jangmo.web.service.admin.UserManagementService;
+import com.jangmo.web.service.management.UserManagementService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.PatchMapping;
