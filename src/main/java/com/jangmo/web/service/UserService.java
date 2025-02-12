@@ -1,5 +1,6 @@
 package com.jangmo.web.service;
 
+import com.jangmo.web.model.dto.request.MemberUpdatePasswordRequest;
 import com.jangmo.web.model.dto.response.UserDetailResponse;
 import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.model.entity.user.MercenaryEntity;
@@ -22,4 +23,10 @@ public interface UserService {
     Optional<UserEntity> findById(String id);
 
     UserDetailResponse getDetail(String userId);
+
+    UserEntity updatePassword(String memberId, String oldPassword, String newPassword);
+
+
+
+
 }

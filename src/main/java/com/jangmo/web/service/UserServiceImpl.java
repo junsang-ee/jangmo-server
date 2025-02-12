@@ -1,6 +1,8 @@
 package com.jangmo.web.service;
 
 import com.jangmo.web.constants.message.ErrorMessage;
+import com.jangmo.web.exception.custom.AuthException;
+import com.jangmo.web.exception.custom.InvalidStateException;
 import com.jangmo.web.exception.custom.NotFoundException;
 import com.jangmo.web.model.dto.response.UserDetailResponse;
 import com.jangmo.web.model.entity.user.MemberEntity;
@@ -9,8 +11,10 @@ import com.jangmo.web.model.entity.user.UserEntity;
 import com.jangmo.web.repository.MemberRepository;
 import com.jangmo.web.repository.MercenaryRepository;
 import com.jangmo.web.repository.UserRepository;
+import com.jangmo.web.utils.EncryptUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -60,5 +64,30 @@ public class UserServiceImpl implements UserService {
                 () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND)
         );
         return UserDetailResponse.of(user);
+    }
+
+    @Override
+    @Transactional
+    public UserEntity updatePassword(String memberId, String oldPassword, String newPassword) {
+        MemberEntity member = memberRepository.findById(memberId).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND)
+        );
+        if (oldPassword != null)
+            checkMemberAccount(member, oldPassword, newPassword);
+        return null;
+    }
+
+    private void checkMemberAccount(MemberEntity member, String oldPassword, String newPassword) {
+        if (EncryptUtil.matches(oldPassword, member.getPassword())) {
+            switch (member.getStatus()) {
+                case DISABLED:
+                    throw new AuthException(ErrorMessage.AUTH_DISABLED);
+                case RETIRED:
+                    throw new AuthException(ErrorMessage.AUTH_RETIRED);
+                case PENDING:
+                    throw new AuthException(ErrorMessage.AUTH_UNAUTHENTICATED);
+            }
+        }
+        throw new InvalidStateException(ErrorMessage.AUTH_PASSWORD_INVALID);
     }
 }

@@ -6,10 +6,7 @@ import com.jangmo.web.model.dto.request.MercenaryRegistrationRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.*;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -25,6 +22,12 @@ public class MercenaryEntity extends UserEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private MercenaryStatus status;
+
+    @OneToOne(mappedBy = "mercenary",
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY)
+    private MercenaryTransientEntity mercenaryTransient;
 
     private MercenaryEntity(String name, String mobile,
                             UserRole role, Gender gender,

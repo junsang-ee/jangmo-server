@@ -7,9 +7,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-//import javax.persistence.*;
-
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.OneToOne;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 
 import java.time.LocalDate;
 
@@ -36,17 +40,23 @@ public class MatchEntity extends CreationUserEntity {
     @JoinColumn(name = "match_vote")
     private MatchVoteEntity matchVote;
 
-    private MatchEntity(UserEntity user, LocalDate matchAt, MatchType type) {
+    private MatchEntity(UserEntity user,
+                        LocalDate matchAt,
+                        MatchType type,
+                        MatchVoteEntity matchVote) {
         super(user);
         this.matchAt = matchAt;
         this.type = type;
+        this.matchVote = matchVote;
         this.status = MatchStatus.PENDING;
     }
 
     public static MatchEntity create(final UserEntity user,
                                      final LocalDate matchAt,
-                                     final MatchType type) {
-        return new MatchEntity(user, matchAt, type);
+                                     final MatchType type,
+                                     final MatchVoteEntity matchVote) {
+        return new MatchEntity(user, matchAt, type, matchVote);
     }
+
 }
 

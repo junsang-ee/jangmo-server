@@ -2,7 +2,6 @@ package com.jangmo.web.service;
 
 import com.jangmo.web.config.jwt.JwtTokenProvider;
 import com.jangmo.web.config.sms.SmsProvider;
-import com.jangmo.web.constants.MemberStatus;
 import com.jangmo.web.constants.MercenaryStatus;
 import com.jangmo.web.constants.SmsType;
 import com.jangmo.web.constants.cache.CacheType;
@@ -18,9 +17,9 @@ import com.jangmo.web.model.dto.response.MemberSignupResponse;
 import com.jangmo.web.model.dto.response.MercenaryRegistrationResponse;
 import com.jangmo.web.model.entity.administrative.District;
 import com.jangmo.web.model.entity.user.MemberEntity;
-import com.jangmo.web.model.entity.user.MercenaryCodeEntity;
 import com.jangmo.web.model.entity.user.MercenaryEntity;
 import com.jangmo.web.model.entity.administrative.City;
+import com.jangmo.web.model.entity.user.MercenaryTransientEntity;
 import com.jangmo.web.repository.*;
 
 import com.jangmo.web.service.cache.CacheService;
@@ -45,11 +44,11 @@ public class AuthServiceImpl implements AuthService {
 
     private final MercenaryRepository mercenaryRepository;
 
-    private final MercenaryCodeRepository mercenaryCodeRepository;
-
     private final CityRepository cityRepository;
 
     private final DistrictRepository districtRepository;
+
+    private final MercenaryTransientRepository mercenaryTransientRepository;
 
     private final SmsProvider smsProvider;
 
@@ -156,34 +155,39 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private void validMember(MemberEntity member, String password) {
-        if (!EncryptUtil.matches(password, member.getPassword()))
-            throw new InvalidStateException(ErrorMessage.AUTH_PASSWORD_INVALID);
-        MemberStatus status = member.getStatus();
-        if (status == MemberStatus.DISABLED)
-            throw new AuthException(ErrorMessage.AUTH_DISABLED);
-        else if (status == MemberStatus.PENDING)
-            throw new AuthException(ErrorMessage.AUTH_PENDING);
-        else if (status == MemberStatus.RETIRED)
-            throw new AuthException(ErrorMessage.AUTH_RETIRED);
+        if (EncryptUtil.matches(password, member.getPassword())) {
+            switch (member.getStatus()) {
+                case DISABLED:
+                    throw new AuthException(ErrorMessage.AUTH_DISABLED);
+                case PENDING:
+                    throw new AuthException(ErrorMessage.AUTH_UNAUTHENTICATED);
+                case RETIRED:
+                    throw new AuthException(ErrorMessage.AUTH_RETIRED);
+                default: return;
+            }
+        }
+        throw new InvalidStateException(ErrorMessage.AUTH_PASSWORD_INVALID);
     }
 
     private void validMercenary(MercenaryEntity mercenary, String code) {
-        MercenaryCodeEntity codeEntity =
-                mercenaryCodeRepository.findByMercenary(mercenary).orElseGet(() -> null);
+        MercenaryTransientEntity transientEntity =
+                mercenaryTransientRepository.findByMercenary(mercenary).orElseGet(() -> null);
         MercenaryStatus status = mercenary.getStatus();
-        if (codeEntity == null) {
-            if (status == MercenaryStatus.PENDING)
-                throw new AuthException(ErrorMessage.AUTH_PENDING);
-            if (status == MercenaryStatus.DISABLED)
-                throw new AuthException(ErrorMessage.AUTH_DISABLED);
-            if (status == MercenaryStatus.EXPIRED)
-                throw new AuthException(ErrorMessage.AUTH_MERCENARY_EXPIRED);
+        if (transientEntity == null) {
+            switch (mercenary.getStatus()) {
+                case PENDING:
+                    throw new AuthException(ErrorMessage.AUTH_UNAUTHENTICATED);
+                case DISABLED:
+                    throw new AuthException(ErrorMessage.AUTH_DISABLED);
+                case EXPIRED:
+                    throw new AuthException(ErrorMessage.AUTH_MERCENARY_EXPIRED);
+            }
         }
         if (status == MercenaryStatus.ENABLED) {
-            if (Objects.requireNonNull(codeEntity).getCode() == null) {
+            if (Objects.requireNonNull(transientEntity).getCode() == null) {
                 throw new NotFoundException(ErrorMessage.MERCENARY_CODE_NOT_FOUND);
             }
-            if (!EncryptUtil.matches(code, codeEntity.getCode())) {
+            if (!EncryptUtil.matches(code, transientEntity.getCode())) {
                 throw new AuthException(ErrorMessage.AUTH_MERCENARY_CODE_INVALID);
             }
         }

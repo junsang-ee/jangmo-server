@@ -19,27 +19,37 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity(name = "match_vote")
 public class MatchVoteEntity extends CreationUserEntity {
 
-    @Column(nullable = false)
+    @Column(name = "match_at", nullable = false)
     private LocalDate matchAt;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "match", nullable = false)
     private MatchEntity match;
 
     @OneToMany(mappedBy = "matchVote",
-            cascade = CascadeType.ALL,
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
             orphanRemoval = true)
     private List<MatchVoteUserEntity> voters;
 
-    private MatchVoteEntity(UserEntity writer,
+    private MatchVoteEntity(UserEntity user,
                             MatchVoteCreateRequest request) {
-        super(writer);
+        super(user);
         this.matchAt = request.getMatchAt();
+        this.match = MatchEntity.create(
+                user,
+                request.getMatchAt(),
+                request.getMatchType(),
+                this
+        );
     }
 
-    public static MatchVoteEntity create(final UserEntity writer,
+    public static MatchVoteEntity create(final UserEntity createdBy,
                                          final MatchVoteCreateRequest request) {
-        return new MatchVoteEntity(writer, request);
+        return new MatchVoteEntity(createdBy, request);
+    }
+
+    public void setVoters(List<MatchVoteUserEntity> voters) {
+        this.voters = voters;
     }
 
     public void addVoter(MatchVoteUserEntity voter) {

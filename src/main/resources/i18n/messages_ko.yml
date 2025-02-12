@@ -50,22 +50,25 @@ response:
       disabled:
         code: "4001"
         message: "이용 제한된 계정입니다."
-      pending:
+      unauthenticated:
         code: "4002"
         message: "관리자 승인이 필요한 계정입니다."
       retired:
         code: "4003"
         message: "탈퇴한 계정입니다."
+      already.enabled:
+        code: "4004"
+        message: "정상 이용 가능한 계정입니다."
       mercenary:
         code.invalid:
-          code: "4004"
+          code: "4005"
           message: "용병코드가 일치하지 않습니다."
         expired:
-          code: "4005"
-          message: "접근 기간이 마감된 용병 계정입니다. 용병 코드를 재발급 받으세요."
-        already.enabled:
           code: "4006"
-          message: "해당 용병은 정상 이용 가능한 계정입니다."
+          message: "용병 코드 재발급이 필요한 용병 계정입니다."
+        privacy:
+          code: "4007"
+          message: "개인 정보 파기로 삭제되어야 하는 용병 계정입니다."
       code:
         invalid:
           code: "4010"
@@ -82,9 +85,6 @@ response:
       not.found:
         code: "5001"
         message: "해당 회원을 찾을 수 없습니다."
-      already.enabled:
-        code: "6000"
-        message: "해당 회원은 정상 이용 가능한 계정입니다."
       disabled:
         code: " 6001"
         message: "해당 회원은 이용 제한된 회원입니다."
@@ -99,6 +99,9 @@ response:
         not.found:
           code: "5003"
           message: "해당 용병의 코드가 존재하지 않습니다. 관리자에게 문의하세요."
+        already.exists:
+          code: "6012"
+          message: "해당 용병은 코드가 존재합니다. 기존 용병 코드를 삭제해주세요."
       disabled:
         code: "6010"
         message: "해당 용병은 이용 제한된 용병입니다."
@@ -106,9 +109,10 @@ response:
         enabled:
           code: "6011"
           message: "해당 용병은 정상 이용 가능한 계정입니다."
-        code.exists:
+      match:
+        already.exists:
           code: "6012"
-          message: "해당 용병은 코드가 존재합니다. 용병 코드 삭제가 선행되어야 합니다."
+          message: "해당 용병은 이미 매칭된 매치가 있습니다. 매치를 삭제해주세요."
       needs:
         code.reissue:
           code: "6013"
