@@ -172,7 +172,7 @@ public class AuthServiceImpl implements AuthService {
     private void validMercenary(MercenaryEntity mercenary, String code) {
         MercenaryTransientEntity transientEntity =
                 mercenaryTransientRepository.findByMercenary(mercenary).orElseGet(() -> null);
-        MercenaryStatus status = mercenary.getStatus();
+
         if (transientEntity == null) {
             switch (mercenary.getStatus()) {
                 case PENDING:
@@ -183,13 +183,12 @@ public class AuthServiceImpl implements AuthService {
                     throw new AuthException(ErrorMessage.AUTH_MERCENARY_EXPIRED);
             }
         }
-        if (status == MercenaryStatus.ENABLED) {
-            if (Objects.requireNonNull(transientEntity).getCode() == null) {
-                throw new NotFoundException(ErrorMessage.MERCENARY_CODE_NOT_FOUND);
-            }
-            if (!EncryptUtil.matches(code, transientEntity.getCode())) {
-                throw new AuthException(ErrorMessage.AUTH_MERCENARY_CODE_INVALID);
-            }
+
+        if (Objects.requireNonNull(transientEntity).getCode() == null) {
+            throw new NotFoundException(ErrorMessage.MERCENARY_CODE_NOT_FOUND);
+        }
+        if (!EncryptUtil.matches(code, transientEntity.getCode())) {
+            throw new AuthException(ErrorMessage.AUTH_MERCENARY_CODE_INVALID);
         }
     }
 

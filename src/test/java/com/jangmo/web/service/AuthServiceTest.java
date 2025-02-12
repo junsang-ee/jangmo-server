@@ -5,18 +5,31 @@ import com.jangmo.web.constants.Gender;
 import com.jangmo.web.constants.MemberStatus;
 import com.jangmo.web.constants.MercenaryRetentionStatus;
 import com.jangmo.web.constants.MercenaryStatus;
-import com.jangmo.web.model.dto.request.MemberLoginRequest;
+import com.jangmo.web.constants.match.MatchType;
+import com.jangmo.web.constants.message.ErrorMessage;
+import com.jangmo.web.exception.custom.NotFoundException;
+
 import com.jangmo.web.model.dto.request.MemberSignUpRequest;
-import com.jangmo.web.model.dto.request.MercenaryLoginRequest;
+import com.jangmo.web.model.dto.request.MemberLoginRequest;
 import com.jangmo.web.model.dto.request.MercenaryRegistrationRequest;
+import com.jangmo.web.model.dto.request.MatchVoteCreateRequest;
+import com.jangmo.web.model.dto.request.MercenaryLoginRequest;
+
+import com.jangmo.web.model.dto.response.MatchVoteCreateResponse;
 import com.jangmo.web.model.dto.response.MemberSignupResponse;
 import com.jangmo.web.model.dto.response.MercenaryRegistrationResponse;
+import com.jangmo.web.model.entity.MatchEntity;
+import com.jangmo.web.model.entity.MatchVoteEntity;
 import com.jangmo.web.model.entity.administrative.City;
 import com.jangmo.web.model.entity.administrative.District;
 import com.jangmo.web.model.entity.user.MemberEntity;
-import com.jangmo.web.model.entity.user.MercenaryCodeEntity;
 import com.jangmo.web.model.entity.user.MercenaryEntity;
+import com.jangmo.web.model.entity.user.MercenaryTransientEntity;
+
 import com.jangmo.web.repository.*;
+
+import com.jangmo.web.service.manager.UserManagementServiceImpl;
+import com.jangmo.web.service.manager.VoteServiceImpl;
 import com.jangmo.web.utils.AgeUtil;
 
 import com.jangmo.web.utils.CodeGeneratorUtil;
@@ -39,6 +52,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.crypto.SecretKey;
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -50,10 +64,17 @@ public class AuthServiceTest {
 
     @Autowired MemberRepository memberRepository;
     @Autowired MercenaryRepository mercenaryRepository;
-    @Autowired MercenaryCodeRepository mercenaryCodeRepository;
     @Autowired CityRepository cityRepository;
     @Autowired DistrictRepository districtRepository;
+    @Autowired MatchVoteRepository matchVoteRepository;
+
+    @Autowired MercenaryTransientRepository mercenaryTransientRepository;
+
     @Autowired AuthServiceImpl authService;
+
+    @Autowired UserManagementServiceImpl userManagementService;
+
+    @Autowired VoteServiceImpl voteService;
     @Autowired JwtConfig jwtConfig;
 
     @BeforeEach
@@ -83,8 +104,12 @@ public class AuthServiceTest {
                 1L,
                 1L
         );
-        City city = cityRepository.findById(1L).orElseThrow();
-        District district = districtRepository.findById(1L).orElseThrow();
+        City city = cityRepository.findById(1L).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.CITY_NOT_FOUND)
+        );
+        District district = districtRepository.findById(1L).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.DISTRICT_NOT_FOUND)
+        );
         MemberEntity member = MemberEntity.create(signup, city, district);
 
         MemberSignupResponse response = authService.signupMember(signup);
@@ -179,32 +204,71 @@ public class AuthServiceTest {
     @Test
     @Transactional
     void mercenaryLoginTest() {
-        MercenaryRegistrationRequest request = new MercenaryRegistrationRequest(
+
+        /** Create Mercenary, Check Exists Mercenary */
+        MercenaryRegistrationRequest registration = new MercenaryRegistrationRequest(
                 "testName",
                 "01012341234",
                 Gender.MALE,
                 MercenaryRetentionStatus.KEEP
         );
 
-        MercenaryEntity mercenary = mercenaryRepository.save(MercenaryEntity.create(request));
+        MercenaryEntity mercenary = mercenaryRepository.save(
+                MercenaryEntity.create(registration)
+        );
+        assertNotNull(mercenaryRepository.findByMobile(registration.getMobile()));
 
-        /** Check registration */
-        assertNotNull(mercenaryRepository.findByMobile(request.getMobile()));
+        LocalDate now = LocalDate.now();
+
+        /** Create matchVote, match */
+        MemberEntity admin = memberRepository.findByMobile("01043053451").get();
+
+        MatchVoteCreateRequest matchVoteCreateRequest = new MatchVoteCreateRequest(
+                MatchType.REGULAR, now
+        );
+
+        MatchVoteCreateResponse matchVoteResponse = voteService.createMatchVote(
+                admin.getId(),
+                matchVoteCreateRequest
+        );
+        assertNotNull(matchVoteResponse);
+        MatchVoteEntity matchVote = matchVoteRepository.findByMatchAt(matchVoteResponse.getMatchAt()).get(0);
+        assertNotNull(matchVote);
+        assertNotNull(matchVote.getMatch());
+
+        String mercenaryCode = CodeGeneratorUtil.getMercenaryCode();
+
+        MatchEntity match = matchVote.getMatch();
+
+        MercenaryTransientEntity transientEntity = mercenaryTransientRepository.save(
+                MercenaryTransientEntity.create(
+                        mercenary,
+                        mercenaryCode,
+                        match
+                )
+        );
+        assertNotNull(transientEntity);
+        assertNotNull(transientEntity.getCode());
+        assertNotNull(transientEntity.getMatch());
+
+        assertEquals(transientEntity.getMatch(), match);
+
+        log.info("transientEntity matchId : {}", transientEntity.getMercenary().getId());
+        log.info("match Id : {}", match.getId());
 
         mercenary.updateStatus(MercenaryStatus.ENABLED);
-        String code = CodeGeneratorUtil.getMercenaryCode();
-        MercenaryCodeEntity codeEntity = MercenaryCodeEntity.create(mercenary, code);
-        mercenaryCodeRepository.save(codeEntity);
+        assertEquals(mercenary.getStatus(), MercenaryStatus.ENABLED);
+        log.info("mercenary status : " + mercenary.getStatus());
 
-        assertNotNull(mercenaryCodeRepository.findByMercenary(mercenary));
-
-        /** Login Mercenary */
         String userAgent = "Mozilla/5.0 ...";
-        MercenaryLoginRequest login = new MercenaryLoginRequest(
-                "01012341234", code
+        MercenaryLoginRequest loginRequest = new MercenaryLoginRequest(
+                registration.getMobile(),
+                mercenaryCode
         );
-        String token = authService.loginMercenary(userAgent, login);
+        String token = authService.loginMercenary(userAgent, loginRequest);
         assertNotNull(token);
+
+
 
         String secret = "dGVzdF9qc29uX3dlYl90b2tlbl9zZWNyZXRfa2V5X2Zvcl9obWFj";
         SecretKey secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
@@ -217,6 +281,8 @@ public class AuthServiceTest {
                 .getSubject();
 
         assertEquals(mercenary.getId(), mercenaryId);
+        log.info("mercenary getId : {}", mercenary.getId());
+        log.info("mercenaryId : {}", mercenaryId);
     }
 
 
