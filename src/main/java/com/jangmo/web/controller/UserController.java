@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import lombok.RequiredArgsConstructor;
 
+import javax.validation.Valid;
+
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
 @RestController
@@ -27,9 +29,9 @@ public class UserController extends BaseController {
         return wrap(userService.getDetail(userId));
     }
 
-    @PatchMapping("/member/{memberId}/password")
+    @PatchMapping("/member/password")
     public ApiSuccessResponse<Object> updatePassword(@AuthenticationPrincipal(expression = "id") String memberId,
-                                                     @RequestBody MemberUpdatePasswordRequest request) {
+                                                     @Valid @RequestBody MemberUpdatePasswordRequest request) {
         userService.updatePassword(memberId, request.getOldPassword(), request.getNewPassword());
         return wrap(null);
     }
