@@ -70,4 +70,8 @@ public class MemberEntity extends UserEntity implements Serializable {
     public void updateStatus(MemberStatus status) {
         this.status = status;
     }
+
+    public void updatePassword(String newPassword) {
+        this.password = EncryptUtil.encode(newPassword);
+    }
 }

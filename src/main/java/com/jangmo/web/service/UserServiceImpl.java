@@ -12,9 +12,11 @@ import com.jangmo.web.repository.MemberRepository;
 import com.jangmo.web.repository.MercenaryRepository;
 import com.jangmo.web.repository.UserRepository;
 import com.jangmo.web.utils.EncryptUtil;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
 
@@ -68,16 +70,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserEntity updatePassword(String memberId, String oldPassword, String newPassword) {
+    public void updatePassword(String memberId, String oldPassword, String newPassword) {
         MemberEntity member = memberRepository.findById(memberId).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND)
         );
-        if (oldPassword != null)
-            checkMemberAccount(member, oldPassword, newPassword);
-        return null;
+        if (oldPassword != null) {
+            checkMemberAccount(member, oldPassword);
+        }
+        member.updatePassword(newPassword);
     }
 
-    private void checkMemberAccount(MemberEntity member, String oldPassword, String newPassword) {
+    private void checkMemberAccount(MemberEntity member, String oldPassword) {
         if (EncryptUtil.matches(oldPassword, member.getPassword())) {
             switch (member.getStatus()) {
                 case DISABLED:
@@ -86,6 +89,7 @@ public class UserServiceImpl implements UserService {
                     throw new AuthException(ErrorMessage.AUTH_RETIRED);
                 case PENDING:
                     throw new AuthException(ErrorMessage.AUTH_UNAUTHENTICATED);
+                default: return;
             }
         }
         throw new InvalidStateException(ErrorMessage.AUTH_PASSWORD_INVALID);

@@ -24,7 +24,7 @@ public interface UserService {
 
     UserDetailResponse getDetail(String userId);
 
-    UserEntity updatePassword(String memberId, String oldPassword, String newPassword);
+    void updatePassword(String memberId, String oldPassword, String newPassword);
 
 
 
