@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.Valid;
 
 
 @RequiredArgsConstructor
@@ -61,7 +62,7 @@ public class ManagerController extends BaseController {
 
     @PostMapping("/vote/match")
     public ApiSuccessResponse<MatchVoteCreateResponse> createMatchVote(@AuthenticationPrincipal(expression = "id") String userId,
-                                                                       @RequestBody MatchVoteCreateRequest request) {
+                                                                       @Valid @RequestBody MatchVoteCreateRequest request) {
         return wrap(voteService.createMatchVote(userId, request));
     }
 
