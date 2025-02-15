@@ -8,6 +8,7 @@ import com.jangmo.web.model.dto.request.MercenaryMatchRequest;
 import com.jangmo.web.model.dto.response.MatchVoteCreateResponse;
 import com.jangmo.web.model.dto.response.common.ApiSuccessResponse;
 
+import com.jangmo.web.model.entity.user.UserEntity;
 import com.jangmo.web.service.manager.UserManagementService;
 import com.jangmo.web.service.manager.VoteService;
 
@@ -15,15 +16,10 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 
 @RequiredArgsConstructor
@@ -71,7 +67,10 @@ public class ManagerController extends BaseController {
         return wrap(null);
     }
 
-
+    @GetMapping("/approval/users")
+    public ApiSuccessResponse<List<UserEntity>> getApprovalUsers() {
+        return wrap(userManagementService.getApprovalUsers());
+    }
 
 
 }

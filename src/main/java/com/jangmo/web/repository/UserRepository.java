@@ -14,15 +14,21 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, String> {
 
-    @Query("SELECT u " +
+    @Query(value = "SELECT u " +
              "FROM user u " +
              "JOIN member m ON u.id = m.id " +
             "WHERE m.status = :status " +
-              "AND u.role != :role")
+              "AND u.role != :role", nativeQuery = true)
     List<UserEntity> findUserByMemberStatusAndRoleNot(
             @Param("status") MemberStatus status,
             @Param("role") UserRole role
     );
 
     Optional<UserEntity> findByMobile(String mobile);
+
+    @Query(value = "SELECT u FROM user u " +
+        "LEFT JOIN member mem ON u.id = mem.id " +
+        "LEFT JOIN mercenary mer ON u.id = mer.id " +
+            "WHERE mem.status = 'PENDING' or mer.status = 'PENDING'", nativeQuery = true)
+    List<UserEntity> findApprovalUsers();
 }

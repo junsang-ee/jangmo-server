@@ -13,6 +13,7 @@ import com.jangmo.web.model.entity.MatchEntity;
 import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.model.entity.user.MercenaryEntity;
 import com.jangmo.web.model.entity.user.MercenaryTransientEntity;
+import com.jangmo.web.model.entity.user.UserEntity;
 import com.jangmo.web.repository.*;
 
 import com.jangmo.web.utils.CodeGeneratorUtil;
@@ -21,6 +22,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -34,6 +37,8 @@ public class UserManagementServiceImpl implements UserManagementService {
     private final MemberRepository memberRepository;
 
     private final MatchRepository matchRepository;
+
+    private final UserRepository userRepository;
 
     private final SmsProvider smsProvider;
 
@@ -90,6 +95,11 @@ public class UserManagementServiceImpl implements UserManagementService {
                 throw new AuthException(ErrorMessage.AUTH_RETIRED);
         }
         member.updateStatus(MemberStatus.ENABLED);
+    }
+
+    @Override
+    public List<UserEntity> getApprovalUsers() {
+        return userRepository.findApprovalUsers();
     }
 
     private void activateMercenary(MercenaryEntity mercenary, MatchEntity match) {
