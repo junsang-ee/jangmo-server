@@ -2,7 +2,6 @@ package com.jangmo.web.model.entity.user;
 
 import com.jangmo.web.constants.Gender;
 import com.jangmo.web.constants.UserRole;
-import com.jangmo.web.constants.MemberStatus;
 import com.jangmo.web.model.entity.MatchVoteUserEntity;
 import com.jangmo.web.model.entity.common.CreationTimestampEntity;
 
@@ -48,6 +47,10 @@ public class UserEntity extends CreationTimestampEntity {
         this.mobile = mobile;
         this.role = role;
         this.gender = gender;
+    }
+
+    public void updateRole(UserRole role) {
+        this.role = role;
     }
 
 }
