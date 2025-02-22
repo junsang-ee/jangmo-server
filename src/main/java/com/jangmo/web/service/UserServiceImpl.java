@@ -4,6 +4,8 @@ import com.jangmo.web.constants.message.ErrorMessage;
 import com.jangmo.web.exception.custom.AuthException;
 import com.jangmo.web.exception.custom.InvalidStateException;
 import com.jangmo.web.exception.custom.NotFoundException;
+import com.jangmo.web.model.dto.response.MemberDetailResponse;
+import com.jangmo.web.model.dto.response.MercenaryDetailResponse;
 import com.jangmo.web.model.dto.response.UserDetailResponse;
 import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.model.entity.user.MercenaryEntity;
@@ -69,6 +71,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public MemberDetailResponse getMemberDetail(String memberId) {
+        MemberEntity member = memberRepository.findById(memberId).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND)
+        );
+        return MemberDetailResponse.of(member);
+    }
+
+    @Override
+    public MercenaryDetailResponse getMercenaryDetail(String mercenaryId) {
+        MercenaryEntity mercenary = mercenaryRepository.findById(mercenaryId).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.MERCENARY_NOT_FOUND)
+        );
+        return MercenaryDetailResponse.of(mercenary);
+    }
+
+    @Override
     @Transactional
     public void updatePassword(String memberId, String oldPassword, String newPassword) {
         MemberEntity member = memberRepository.findById(memberId).orElseThrow(
@@ -93,5 +111,11 @@ public class UserServiceImpl implements UserService {
             }
         }
         throw new InvalidStateException(ErrorMessage.AUTH_PASSWORD_INVALID);
+    }
+
+    private UserEntity getUser(String userId) {
+        return userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND)
+        );
     }
 }
