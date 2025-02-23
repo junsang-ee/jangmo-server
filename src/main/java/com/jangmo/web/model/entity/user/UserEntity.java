@@ -2,14 +2,17 @@ package com.jangmo.web.model.entity.user;
 
 import com.jangmo.web.constants.Gender;
 import com.jangmo.web.constants.UserRole;
-import com.jangmo.web.model.entity.MatchVoteUserEntity;
 import com.jangmo.web.model.entity.common.CreationTimestampEntity;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-
-import java.util.List;
+import javax.persistence.Inheritance;
+import javax.persistence.Table;
+import javax.persistence.Entity;
+import javax.persistence.Column;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
 
 import static lombok.AccessLevel.PROTECTED;
 import static javax.persistence.InheritanceType.JOINED;
@@ -34,12 +37,6 @@ public class UserEntity extends CreationTimestampEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Gender gender;
-
-    @OneToMany(mappedBy = "voter",
-            cascade = CascadeType.REMOVE,
-            orphanRemoval = true)
-    private List<MatchVoteUserEntity> matchVoters;
-
 
     protected UserEntity(String name, String mobile,
                          UserRole role, Gender gender) {
