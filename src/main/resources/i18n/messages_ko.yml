@@ -16,7 +16,6 @@ response:
         field:
           code: "101"
           message: "요청 입력 값 오류 : {0}"
-
       invalid:
         mobile:
           code: "110"
