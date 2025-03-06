@@ -2,6 +2,7 @@ package com.jangmo.web.controller;
 
 import com.jangmo.web.controller.base.BaseController;
 import com.jangmo.web.model.dto.request.MemberUpdatePasswordRequest;
+import com.jangmo.web.model.dto.response.MemberDetailResponse;
 import com.jangmo.web.model.dto.response.UserDetailResponse;
 import com.jangmo.web.model.dto.response.common.ApiSuccessResponse;
 import com.jangmo.web.service.UserService;
@@ -34,6 +35,11 @@ public class UserController extends BaseController {
                                                      @Valid @RequestBody MemberUpdatePasswordRequest request) {
         userService.updatePassword(memberId, request.getOldPassword(), request.getNewPassword());
         return wrap(null);
+    }
+
+    @GetMapping("/member/detail")
+    public ApiSuccessResponse<MemberDetailResponse> getMemberDetail(@AuthenticationPrincipal(expression = "id") String memberId) {
+        return wrap(userService.getMemberDetail(memberId));
     }
 
 
