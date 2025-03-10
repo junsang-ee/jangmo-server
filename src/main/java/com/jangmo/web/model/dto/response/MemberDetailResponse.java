@@ -24,8 +24,10 @@ public class MemberDetailResponse {
     private final Gender gender;
     private final UserRole role;
     private final Instant createdAt;
-    private final City city;
-    private final District district;
+    private final Long cityId;
+    private final String cityName;
+    private final Long districtId;
+    private final String districtName;
 
     public static MemberDetailResponse of(final MemberEntity member) {
         return new MemberDetailResponse(
@@ -35,8 +37,10 @@ public class MemberDetailResponse {
                 member.getGender(),
                 member.getRole(),
                 member.getCreatedAt(),
-                member.getCity(),
-                member.getDistrict()
+                member.getCity().getId(),
+                member.getCity().getName(),
+                member.getDistrict().getId(),
+                member.getDistrict().getName()
         );
     }
 }

@@ -34,11 +34,11 @@ public class MemberEntity extends UserEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private MemberStatus status;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "city", nullable = false)
     private City city;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "district", nullable = false)
     private District district;
 
