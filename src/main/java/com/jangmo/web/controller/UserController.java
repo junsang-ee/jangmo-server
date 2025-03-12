@@ -1,6 +1,7 @@
 package com.jangmo.web.controller;
 
 import com.jangmo.web.controller.base.BaseController;
+import com.jangmo.web.model.dto.request.MemberUpdateAddressRequest;
 import com.jangmo.web.model.dto.request.MemberUpdatePasswordRequest;
 import com.jangmo.web.model.dto.response.MemberDetailResponse;
 import com.jangmo.web.model.dto.response.UserDetailResponse;
@@ -20,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 import javax.validation.Valid;
 
 @RequiredArgsConstructor
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 @RestController
 public class UserController extends BaseController {
     private final UserService userService;
@@ -30,16 +31,22 @@ public class UserController extends BaseController {
         return wrap(userService.getDetail(userId));
     }
 
-    @PatchMapping("/member/password")
+    @PatchMapping("/members/password")
     public ApiSuccessResponse<Object> updatePassword(@AuthenticationPrincipal(expression = "id") String memberId,
                                                      @Valid @RequestBody MemberUpdatePasswordRequest request) {
         userService.updatePassword(memberId, request.getOldPassword(), request.getNewPassword());
         return wrap(null);
     }
 
-    @GetMapping("/member/detail")
+    @GetMapping("/members/me")
     public ApiSuccessResponse<MemberDetailResponse> getMemberDetail(@AuthenticationPrincipal(expression = "id") String memberId) {
         return wrap(userService.getMemberDetail(memberId));
+    }
+
+    @PatchMapping("/members/address")
+    public ApiSuccessResponse<Object> updateAddress(@AuthenticationPrincipal(expression = "id") String memberId,
+                                                    @Valid @RequestBody MemberUpdateAddressRequest address) {
+        return null;
     }
 
 
