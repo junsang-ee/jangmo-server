@@ -10,10 +10,10 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class MemberUpdateAddressRequest {
 
-    @NotNull
+    @NotNull(message = "시/도는 필수 항목입니다.")
     private Long cityId;
 
-    @NotNull
+    @NotNull(message = "시/군/구는 필수 항목입니다.")
     private Long districtId;
 
 }

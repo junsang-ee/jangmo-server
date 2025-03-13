@@ -31,7 +31,7 @@ import java.util.List;
 
 
 @RequiredArgsConstructor
-@RequestMapping("/api/manager")
+@RequestMapping("/api/managers")
 @RestController
 public class ManagerController extends BaseController {
 
@@ -39,43 +39,43 @@ public class ManagerController extends BaseController {
 
     private final UserManagementService userManagementService;
 
-    @PatchMapping("/mercenary/{mercenaryId}/approve")
+    @PatchMapping("/mercenaries/{mercenaryId}/approve")
     public ApiSuccessResponse<Object> approveMercenary(@PathVariable String mercenaryId,
                                                        @RequestBody MercenaryMatchRequest matchRequest) {
         userManagementService.approveMercenary(mercenaryId, matchRequest.getMatchId());
         return wrap(null);
     }
 
-    @PatchMapping("/member/{memberId}/approve")
+    @PatchMapping("/members/{memberId}/approve")
     public ApiSuccessResponse<Object> approveMember(@PathVariable String memberId) {
         userManagementService.approveMember(memberId);
         return wrap(null);
     }
 
-    @PatchMapping("/member/{memberId}/status/{status}")
+    @PatchMapping("/members/{memberId}/status/{status}")
     public ApiSuccessResponse<Object> updateMemberStatus(@PathVariable String memberId,
                                                          @PathVariable MemberStatus status) {
         return wrap(null);
     }
 
-    @PatchMapping("/mercenary/{mercenaryId}/status/{status}")
+    @PatchMapping("/mercenaries/{mercenaryId}/status/{status}")
     public ApiSuccessResponse<Object> updateMercenaryStatus(@PathVariable String mercenaryId,
                                                             @PathVariable MercenaryStatus status) {
         return wrap(null);
     }
 
-    @PostMapping("/vote/match")
+    @PostMapping("/votes/matches")
     public ApiSuccessResponse<MatchVoteCreateResponse> createMatchVote(@AuthenticationPrincipal(expression = "id") String userId,
                                                                        @Valid @RequestBody MatchVoteCreateRequest request) {
         return wrap(voteService.createMatchVote(userId, request));
     }
 
-    @DeleteMapping("/vote/{voteId}")
+    @DeleteMapping("/votes/{voteId}")
     public ApiSuccessResponse<Object> deleteVote(@PathVariable String voteId) {
         return wrap(null);
     }
 
-    @GetMapping("/approval/users")
+    @GetMapping("/users/pending-approval")
     public ApiSuccessResponse<List<UserEntity>> getApprovalUsers() {
         return wrap(userManagementService.getApprovalUsers());
     }

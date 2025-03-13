@@ -46,7 +46,8 @@ public class UserController extends BaseController {
     @PatchMapping("/members/address")
     public ApiSuccessResponse<Object> updateAddress(@AuthenticationPrincipal(expression = "id") String memberId,
                                                     @Valid @RequestBody MemberUpdateAddressRequest address) {
-        return null;
+        userService.updateAddress(memberId, address.getCityId(), address.getDistrictId());
+        return wrap(null);
     }
 
 

@@ -7,12 +7,12 @@ import com.jangmo.web.exception.custom.NotFoundException;
 import com.jangmo.web.model.dto.response.MemberDetailResponse;
 import com.jangmo.web.model.dto.response.MercenaryDetailResponse;
 import com.jangmo.web.model.dto.response.UserDetailResponse;
+import com.jangmo.web.model.entity.administrative.City;
+import com.jangmo.web.model.entity.administrative.District;
 import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.model.entity.user.MercenaryEntity;
 import com.jangmo.web.model.entity.user.UserEntity;
-import com.jangmo.web.repository.MemberRepository;
-import com.jangmo.web.repository.MercenaryRepository;
-import com.jangmo.web.repository.UserRepository;
+import com.jangmo.web.repository.*;
 import com.jangmo.web.utils.EncryptUtil;
 
 import org.springframework.stereotype.Service;
@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
+import java.lang.reflect.Member;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -31,6 +32,10 @@ public class UserServiceImpl implements UserService {
     private final MercenaryRepository mercenaryRepository;
 
     private final UserRepository userRepository;
+
+    private final CityRepository cityRepository;
+
+    private final DistrictRepository districtRepository;
 
     @Override
     public Optional<MemberEntity> findMemberById(String memberId) {
@@ -72,9 +77,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public MemberDetailResponse getMemberDetail(String memberId) {
-        MemberEntity member = memberRepository.findById(memberId).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND)
-        );
+        MemberEntity member = getMember(memberId);
         return MemberDetailResponse.of(member);
     }
 
@@ -98,6 +101,19 @@ public class UserServiceImpl implements UserService {
         member.updatePassword(newPassword);
     }
 
+    @Override
+    @Transactional
+    public void updateAddress(String memberId, Long cityId, Long districtId) {
+        MemberEntity member = getMember(memberId);
+        City city = cityRepository.findById(cityId).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.DISTRICT_NOT_FOUND)
+        );
+        District district = districtRepository.findById(districtId).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.DISTRICT_NOT_FOUND)
+        );
+        member.updateAddress(city, district);
+    }
+
     private void checkMemberAccount(MemberEntity member, String oldPassword) {
         if (EncryptUtil.matches(oldPassword, member.getPassword())) {
             switch (member.getStatus()) {
@@ -116,6 +132,12 @@ public class UserServiceImpl implements UserService {
     private UserEntity getUser(String userId) {
         return userRepository.findById(userId).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND)
+        );
+    }
+
+    private MemberEntity getMember(String memberId) {
+        return memberRepository.findById(memberId).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND)
         );
     }
 }

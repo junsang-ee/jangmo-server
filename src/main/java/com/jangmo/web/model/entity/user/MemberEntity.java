@@ -74,4 +74,9 @@ public class MemberEntity extends UserEntity implements Serializable {
     public void updatePassword(String newPassword) {
         this.password = EncryptUtil.encode(newPassword);
     }
+
+    public void updateAddress(City city, District district) {
+        this.city = city;
+        this.district = district;
+    }
 }

@@ -32,6 +32,8 @@ public interface UserService {
 
     void updatePassword(String memberId, String oldPassword, String newPassword);
 
+    void updateAddress(String memberId, Long cityId, Long districtId);
+
 
 
 
