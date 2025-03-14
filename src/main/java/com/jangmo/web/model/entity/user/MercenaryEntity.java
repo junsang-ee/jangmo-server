@@ -14,8 +14,9 @@ import javax.persistence.Column;
 import javax.persistence.Enumerated;
 import javax.persistence.EnumType;
 import javax.persistence.OneToOne;
-import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.CascadeType;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -35,6 +36,7 @@ public class MercenaryEntity extends UserEntity {
     @OneToOne(cascade = CascadeType.REMOVE,
             orphanRemoval = true,
             fetch = FetchType.LAZY)
+    @JoinColumn(name = "mercenary_transient")
     private MercenaryTransientEntity mercenaryTransient;
 
     private MercenaryEntity(String name, String mobile,
@@ -60,7 +62,9 @@ public class MercenaryEntity extends UserEntity {
         this.status = status;
     }
 
-
+    public void updateTransient(MercenaryTransientEntity mercenaryTransient) {
+        this.mercenaryTransient = mercenaryTransient;
+    }
 
 
 }

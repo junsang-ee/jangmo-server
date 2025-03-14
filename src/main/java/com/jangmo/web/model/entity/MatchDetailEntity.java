@@ -5,9 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.CascadeType;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import java.time.LocalDateTime;
@@ -27,7 +30,8 @@ public class MatchDetailEntity extends CreationTimestampEntity {
     @Column(nullable = false)
     private LocalDateTime endAt;
 
-    @Column(nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ground", nullable = false)
     private GroundEntity ground;
 
     @OneToMany(mappedBy = "match", cascade = CascadeType.REMOVE)

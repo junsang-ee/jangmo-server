@@ -31,7 +31,6 @@ import com.jangmo.web.repository.MemberRepository;
 import com.jangmo.web.repository.MercenaryRepository;
 import com.jangmo.web.repository.CityRepository;
 import com.jangmo.web.repository.DistrictRepository;
-import com.jangmo.web.repository.MercenaryTransientRepository;
 
 import com.jangmo.web.service.cache.CacheService;
 
@@ -58,8 +57,6 @@ public class AuthServiceImpl implements AuthService {
     private final CityRepository cityRepository;
 
     private final DistrictRepository districtRepository;
-
-    private final MercenaryTransientRepository mercenaryTransientRepository;
 
     private final SmsProvider smsProvider;
 
@@ -179,8 +176,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private void validMercenary(MercenaryEntity mercenary, String code) {
-        MercenaryTransientEntity transientEntity =
-                mercenaryTransientRepository.findByMercenary(mercenary).orElseGet(() -> null);
+        MercenaryTransientEntity transientEntity = mercenary.getMercenaryTransient();
 
         if (transientEntity == null) {
             switch (mercenary.getStatus()) {

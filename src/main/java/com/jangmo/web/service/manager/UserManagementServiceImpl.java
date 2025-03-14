@@ -54,21 +54,12 @@ public class UserManagementServiceImpl implements UserManagementService {
         MercenaryEntity mercenary = mercenaryRepository.findById(mercenaryId).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.MERCENARY_NOT_FOUND)
         );
+        if (mercenary.getMercenaryTransient() != null)
+            throw new InvalidStateException(ErrorMessage.MERCENARY_ALREADY_TRANSIENT_EXISTS);
 
         MatchEntity match = matchRepository.findById(matchId).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.MATCH_NOT_FOUND)
         );
-
-        MercenaryTransientEntity transientEntity =
-                mercenaryTransientRepository.findByMercenary(mercenary).orElseGet(() -> null);
-
-        if (transientEntity != null) {
-            if (transientEntity.getMatch() != null)
-                throw new InvalidStateException(ErrorMessage.MERCENARY_MATCH_ALREADY_EXISTS);
-
-            if (transientEntity.getCode() != null)
-                throw new InvalidStateException(ErrorMessage.MERCENARY_CODE_ALREADY_EXISTS);
-        }
 
         switch (mercenary.getStatus()) {
             case DISABLED:
@@ -104,14 +95,15 @@ public class UserManagementServiceImpl implements UserManagementService {
         return userRepository.findApprovalUsers();
     }
 
+    @Transactional
     private void activateMercenary(MercenaryEntity mercenary, MatchEntity match) {
         String mercenaryCode = CodeGeneratorUtil.getMercenaryCode();
         MercenaryTransientEntity mercenaryTransient = MercenaryTransientEntity.create(
-                mercenary,
                 mercenaryCode,
                 match
         );
         mercenaryTransientRepository.save(mercenaryTransient);
+        mercenary.updateTransient(mercenaryTransient);
         smsProvider.send(
                 mercenary.getMobile(),
                 mercenaryCode,

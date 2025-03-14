@@ -5,6 +5,7 @@ import com.jangmo.web.constants.UserRole;
 import com.jangmo.web.model.entity.common.CreationTimestampEntity;
 import com.jangmo.web.model.entity.user.UserEntity;
 
+import com.jangmo.web.model.entity.vote.MatchVoteEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;

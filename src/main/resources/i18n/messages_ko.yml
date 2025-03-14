@@ -98,9 +98,6 @@ response:
         not.found:
           code: "5003"
           message: "해당 용병의 코드가 존재하지 않습니다. 관리자에게 문의하세요."
-        already.exists:
-          code: "6012"
-          message: "해당 용병은 코드가 존재합니다. 기존 용병 코드를 삭제해주세요."
       disabled:
         code: "6010"
         message: "해당 용병은 이용 제한된 용병입니다."
@@ -108,10 +105,9 @@ response:
         enabled:
           code: "6011"
           message: "해당 용병은 정상 이용 가능한 계정입니다."
-      match:
-        already.exists:
+        transient.exists:
           code: "6012"
-          message: "해당 용병은 이미 매칭된 매치가 있습니다. 매치를 삭제해주세요."
+          message: "해당 용병은 이미 일회성 데이터가 존재합니다. 기존 용병코드 및 매칭된 매치 데이터를 삭제해주세요."
       needs:
         code.reissue:
           code: "6013"

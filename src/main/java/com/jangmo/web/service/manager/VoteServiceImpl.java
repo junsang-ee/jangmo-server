@@ -6,7 +6,7 @@ import com.jangmo.web.constants.message.ErrorMessage;
 import com.jangmo.web.exception.custom.NotFoundException;
 import com.jangmo.web.model.dto.request.MatchVoteCreateRequest;
 import com.jangmo.web.model.dto.response.MatchVoteCreateResponse;
-import com.jangmo.web.model.entity.MatchVoteEntity;
+import com.jangmo.web.model.entity.vote.MatchVoteEntity;
 import com.jangmo.web.model.entity.MatchVoteUserEntity;
 import com.jangmo.web.model.entity.user.UserEntity;
 import com.jangmo.web.repository.MatchVoteRepository;
