@@ -14,7 +14,12 @@ import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.model.entity.user.MercenaryEntity;
 import com.jangmo.web.model.entity.user.MercenaryTransientEntity;
 import com.jangmo.web.model.entity.user.UserEntity;
-import com.jangmo.web.repository.*;
+
+import com.jangmo.web.repository.MercenaryRepository;
+import com.jangmo.web.repository.MercenaryTransientRepository;
+import com.jangmo.web.repository.MemberRepository;
+import com.jangmo.web.repository.MatchRepository;
+import com.jangmo.web.repository.UserRepository;
 
 import com.jangmo.web.utils.CodeGeneratorUtil;
 import lombok.RequiredArgsConstructor;
@@ -88,11 +93,8 @@ public class UserManagementServiceImpl implements UserManagementService {
         MemberEntity member = memberRepository.findById(memberId).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND)
         );
-        switch (member.getStatus()) {
-            case DISABLED:
-                throw new AuthException(ErrorMessage.AUTH_DISABLED);
-            case RETIRED:
-                throw new AuthException(ErrorMessage.AUTH_RETIRED);
+        if (member.getStatus() == MemberStatus.DISABLED) {
+            throw new AuthException(ErrorMessage.AUTH_DISABLED);
         }
         member.updateStatus(MemberStatus.ENABLED);
     }

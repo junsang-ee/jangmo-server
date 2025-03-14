@@ -4,12 +4,18 @@ import com.jangmo.web.constants.Gender;
 import com.jangmo.web.constants.MatchParticipationStatus;
 import com.jangmo.web.constants.UserRole;
 import com.jangmo.web.model.entity.common.CreationTimestampEntity;
-import com.jangmo.web.model.entity.user.UserEntity;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.ManyToOne;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.Column;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
 
 import static lombok.AccessLevel.PROTECTED;
 

@@ -1,9 +1,10 @@
 package com.jangmo.web.model.entity.administrative;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jangmo.web.model.entity.common.SequentialEntity;
-import lombok.*;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

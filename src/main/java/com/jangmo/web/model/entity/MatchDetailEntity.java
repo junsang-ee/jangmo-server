@@ -27,6 +27,9 @@ public class MatchDetailEntity extends CreationTimestampEntity {
     @Column(nullable = false)
     private LocalDateTime endAt;
 
+    @Column(nullable = false)
+    private GroundEntity ground;
+
     @OneToMany(mappedBy = "match", cascade = CascadeType.REMOVE)
     private List<MatchUserEntity> players;
 

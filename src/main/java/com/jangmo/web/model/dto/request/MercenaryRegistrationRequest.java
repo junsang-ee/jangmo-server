@@ -3,9 +3,10 @@ package com.jangmo.web.model.dto.request;
 import com.jangmo.web.config.validator.ValidFields;
 import com.jangmo.web.constants.Gender;
 import com.jangmo.web.constants.MercenaryRetentionStatus;
-import com.jangmo.web.constants.MobileCarrierType;
-import com.jangmo.web.constants.UserRole;
-import lombok.*;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;

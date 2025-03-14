@@ -34,6 +34,8 @@ public interface UserService {
 
     void updateAddress(String memberId, Long cityId, Long districtId);
 
+    void retireMember(String memberId);
+
 
 
 

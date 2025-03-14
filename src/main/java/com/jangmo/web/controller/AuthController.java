@@ -1,7 +1,14 @@
 package com.jangmo.web.controller;
 
 import com.jangmo.web.controller.base.BaseController;
-import com.jangmo.web.model.dto.request.*;
+
+import com.jangmo.web.model.dto.request.MemberSignUpRequest;
+import com.jangmo.web.model.dto.request.MercenaryRegistrationRequest;
+import com.jangmo.web.model.dto.request.MobileRequest;
+import com.jangmo.web.model.dto.request.VerificationRequest;
+import com.jangmo.web.model.dto.request.MemberLoginRequest;
+import com.jangmo.web.model.dto.request.MercenaryLoginRequest;
+
 import com.jangmo.web.model.dto.response.CityListResponse;
 import com.jangmo.web.model.dto.response.DistrictListResponse;
 import com.jangmo.web.model.dto.response.MemberSignupResponse;
@@ -13,7 +20,12 @@ import com.jangmo.web.service.AuthService;
 import com.jangmo.web.service.UserService;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Objects;

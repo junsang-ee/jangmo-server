@@ -10,11 +10,12 @@ import com.jangmo.web.service.UserService;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import lombok.RequiredArgsConstructor;
 
@@ -50,5 +51,10 @@ public class UserController extends BaseController {
         return wrap(null);
     }
 
+    @DeleteMapping("/members/retire")
+    public ApiSuccessResponse<Object> retireMember(@AuthenticationPrincipal(expression = "id") String memberId) {
+        userService.retireMember(memberId);
+        return wrap(null);
+    }
 
 }

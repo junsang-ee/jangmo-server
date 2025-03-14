@@ -2,14 +2,20 @@ package com.jangmo.web.service;
 
 import com.jangmo.web.config.jwt.JwtTokenProvider;
 import com.jangmo.web.config.sms.SmsProvider;
-import com.jangmo.web.constants.MercenaryStatus;
+
 import com.jangmo.web.constants.SmsType;
 import com.jangmo.web.constants.cache.CacheType;
 import com.jangmo.web.constants.message.ErrorMessage;
 import com.jangmo.web.exception.custom.AuthException;
 import com.jangmo.web.exception.custom.InvalidStateException;
 import com.jangmo.web.exception.custom.NotFoundException;
-import com.jangmo.web.model.dto.request.*;
+
+import com.jangmo.web.model.dto.request.MemberSignUpRequest;
+import com.jangmo.web.model.dto.request.MercenaryRegistrationRequest;
+import com.jangmo.web.model.dto.request.MobileRequest;
+import com.jangmo.web.model.dto.request.VerificationRequest;
+import com.jangmo.web.model.dto.request.MemberLoginRequest;
+import com.jangmo.web.model.dto.request.MercenaryLoginRequest;
 
 import com.jangmo.web.model.dto.response.CityListResponse;
 import com.jangmo.web.model.dto.response.DistrictListResponse;
@@ -20,7 +26,12 @@ import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.model.entity.user.MercenaryEntity;
 import com.jangmo.web.model.entity.administrative.City;
 import com.jangmo.web.model.entity.user.MercenaryTransientEntity;
-import com.jangmo.web.repository.*;
+
+import com.jangmo.web.repository.MemberRepository;
+import com.jangmo.web.repository.MercenaryRepository;
+import com.jangmo.web.repository.CityRepository;
+import com.jangmo.web.repository.DistrictRepository;
+import com.jangmo.web.repository.MercenaryTransientRepository;
 
 import com.jangmo.web.service.cache.CacheService;
 
@@ -161,8 +172,6 @@ public class AuthServiceImpl implements AuthService {
                     throw new AuthException(ErrorMessage.AUTH_DISABLED);
                 case PENDING:
                     throw new AuthException(ErrorMessage.AUTH_UNAUTHENTICATED);
-                case RETIRED:
-                    throw new AuthException(ErrorMessage.AUTH_RETIRED);
                 default: return;
             }
         }

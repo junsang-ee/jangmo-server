@@ -8,10 +8,18 @@ import com.jangmo.web.model.dto.request.MemberSignUpRequest;
 import com.jangmo.web.model.entity.administrative.City;
 import com.jangmo.web.model.entity.administrative.District;
 import com.jangmo.web.utils.EncryptUtil;
-import lombok.*;
 
-import javax.persistence.*;
+import lombok.Getter;
+import lombok.ToString;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.Entity;
+import javax.persistence.Column;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
+import javax.persistence.ManyToOne;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 
 import java.io.Serializable;
 import java.time.LocalDate;

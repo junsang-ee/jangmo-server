@@ -26,7 +26,12 @@ import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.model.entity.user.MercenaryEntity;
 import com.jangmo.web.model.entity.user.MercenaryTransientEntity;
 
-import com.jangmo.web.repository.*;
+import com.jangmo.web.repository.MemberRepository;
+import com.jangmo.web.repository.MercenaryRepository;
+import com.jangmo.web.repository.CityRepository;
+import com.jangmo.web.repository.DistrictRepository;
+import com.jangmo.web.repository.MatchVoteRepository;
+import com.jangmo.web.repository.MercenaryTransientRepository;
 
 import com.jangmo.web.service.manager.UserManagementServiceImpl;
 import com.jangmo.web.service.manager.VoteServiceImpl;

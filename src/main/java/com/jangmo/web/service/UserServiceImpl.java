@@ -12,7 +12,13 @@ import com.jangmo.web.model.entity.administrative.District;
 import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.model.entity.user.MercenaryEntity;
 import com.jangmo.web.model.entity.user.UserEntity;
-import com.jangmo.web.repository.*;
+
+import com.jangmo.web.repository.MemberRepository;
+import com.jangmo.web.repository.MercenaryRepository;
+import com.jangmo.web.repository.UserRepository;
+import com.jangmo.web.repository.CityRepository;
+import com.jangmo.web.repository.DistrictRepository;
+
 import com.jangmo.web.utils.EncryptUtil;
 
 import org.springframework.stereotype.Service;
@@ -20,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import java.lang.reflect.Member;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -114,13 +119,17 @@ public class UserServiceImpl implements UserService {
         member.updateAddress(city, district);
     }
 
+    @Override
+    @Transactional
+    public void retireMember(String memberId) {
+        memberRepository.deleteById(memberId);
+    }
+
     private void checkMemberAccount(MemberEntity member, String oldPassword) {
         if (EncryptUtil.matches(oldPassword, member.getPassword())) {
             switch (member.getStatus()) {
                 case DISABLED:
                     throw new AuthException(ErrorMessage.AUTH_DISABLED);
-                case RETIRED:
-                    throw new AuthException(ErrorMessage.AUTH_RETIRED);
                 case PENDING:
                     throw new AuthException(ErrorMessage.AUTH_UNAUTHENTICATED);
                 default: return;
