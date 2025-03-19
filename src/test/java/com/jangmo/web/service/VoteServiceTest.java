@@ -6,7 +6,7 @@ import com.jangmo.web.exception.custom.NotFoundException;
 import com.jangmo.web.model.dto.request.MatchVoteCreateRequest;
 import com.jangmo.web.model.dto.response.MatchVoteCreateResponse;
 import com.jangmo.web.model.entity.MatchEntity;
-import com.jangmo.web.model.entity.MatchVoteEntity;
+import com.jangmo.web.model.entity.vote.MatchVoteEntity;
 import com.jangmo.web.model.entity.user.UserEntity;
 import com.jangmo.web.repository.MatchRepository;
 import com.jangmo.web.repository.MatchVoteRepository;
@@ -49,8 +49,12 @@ public class VoteServiceTest {
                 () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND)
         );
         LocalDate now = LocalDate.now();
+        LocalDate matchAt = now.plusDays(2);
+        LocalDate endAt = now.plusDays(1);
         MatchVoteCreateRequest createRequest = new MatchVoteCreateRequest(
-                MatchType.REGULAR, now
+                MatchType.REGULAR,
+                matchAt,
+                endAt
         );
         MatchVoteCreateResponse response = voteService.createMatchVote(admin.getId(), createRequest);
         List<MatchVoteEntity> matchVoteList = matchVoteRepository.findByMatchAt(now);

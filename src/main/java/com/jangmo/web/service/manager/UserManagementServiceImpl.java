@@ -1,14 +1,18 @@
 package com.jangmo.web.service.manager;
 
 import com.jangmo.web.config.sms.SmsProvider;
+
 import com.jangmo.web.constants.MemberStatus;
 import com.jangmo.web.constants.MercenaryRetentionStatus;
 import com.jangmo.web.constants.MercenaryStatus;
-import com.jangmo.web.constants.SmsType;
 import com.jangmo.web.constants.message.ErrorMessage;
+import com.jangmo.web.constants.UserRole;
+import com.jangmo.web.constants.SmsType;
+
 import com.jangmo.web.exception.custom.AuthException;
 import com.jangmo.web.exception.custom.InvalidStateException;
 import com.jangmo.web.exception.custom.NotFoundException;
+import com.jangmo.web.model.dto.response.UserListResponse;
 import com.jangmo.web.model.entity.MatchEntity;
 import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.model.entity.user.MercenaryEntity;
@@ -25,8 +29,11 @@ import com.jangmo.web.utils.CodeGeneratorUtil;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -93,6 +100,15 @@ public class UserManagementServiceImpl implements UserManagementService {
     @Override
     public List<UserEntity> getApprovalUsers() {
         return userRepository.findApprovalUsers();
+    }
+
+    @Override
+    public Page<UserListResponse> getUsers(String myId, Pageable pageable) {
+        return userRepository.findByIdNotAndRoleNot(
+                myId,
+                UserRole.ADMIN,
+                pageable
+        ).map(UserListResponse::of);
     }
 
     @Transactional

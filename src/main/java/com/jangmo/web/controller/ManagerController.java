@@ -6,14 +6,17 @@ import com.jangmo.web.controller.base.BaseController;
 import com.jangmo.web.model.dto.request.MatchVoteCreateRequest;
 import com.jangmo.web.model.dto.request.MercenaryMatchRequest;
 import com.jangmo.web.model.dto.response.MatchVoteCreateResponse;
+import com.jangmo.web.model.dto.response.UserListResponse;
 import com.jangmo.web.model.dto.response.common.ApiSuccessResponse;
 
+import com.jangmo.web.model.dto.response.common.PageResponse;
 import com.jangmo.web.model.entity.user.UserEntity;
 import com.jangmo.web.service.manager.UserManagementService;
 import com.jangmo.web.service.manager.VoteService;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +41,13 @@ public class ManagerController extends BaseController {
     private final VoteService voteService;
 
     private final UserManagementService userManagementService;
+
+    @GetMapping("/users")
+    public ApiSuccessResponse<PageResponse<UserListResponse>> userList(@AuthenticationPrincipal(expression = "id") String myId,
+                                                                       Pageable pageable) {
+        return page(userManagementService.getUsers(myId, pageable));
+    }
+
 
     @PatchMapping("/mercenaries/{mercenaryId}/approve")
     public ApiSuccessResponse<Object> approveMercenary(@PathVariable String mercenaryId,

@@ -2,7 +2,10 @@ package com.jangmo.web.repository;
 
 import com.jangmo.web.constants.UserRole;
 import com.jangmo.web.constants.MemberStatus;
+import com.jangmo.web.model.dto.response.UserListResponse;
 import com.jangmo.web.model.entity.user.UserEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -31,4 +34,6 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
         "LEFT JOIN mercenary mer ON u.id = mer.id " +
             "WHERE mem.status = 'PENDING' or mer.status = 'PENDING'", nativeQuery = true)
     List<UserEntity> findApprovalUsers();
+
+    Page<UserEntity> findByIdNotAndRoleNot(String id, UserRole role, Pageable pageable);
 }

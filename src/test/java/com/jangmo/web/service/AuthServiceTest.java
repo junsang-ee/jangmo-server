@@ -19,7 +19,7 @@ import com.jangmo.web.model.dto.response.MatchVoteCreateResponse;
 import com.jangmo.web.model.dto.response.MemberSignupResponse;
 import com.jangmo.web.model.dto.response.MercenaryRegistrationResponse;
 import com.jangmo.web.model.entity.MatchEntity;
-import com.jangmo.web.model.entity.MatchVoteEntity;
+import com.jangmo.web.model.entity.vote.MatchVoteEntity;
 import com.jangmo.web.model.entity.administrative.City;
 import com.jangmo.web.model.entity.administrative.District;
 import com.jangmo.web.model.entity.user.MemberEntity;
@@ -104,7 +104,7 @@ public class AuthServiceTest {
                 "01012341234",
                 Gender.MALE,
                 birth,
-                "by0398467!@",
+                "1231231!",
                 1L,
                 1L
         );
@@ -222,13 +222,15 @@ public class AuthServiceTest {
         );
         assertNotNull(mercenaryRepository.findByMobile(registration.getMobile()));
 
-        LocalDate now = LocalDate.now();
-
         /** Create matchVote, match */
         MemberEntity admin = memberRepository.findByMobile("01043053451").get();
-
+        LocalDate now = LocalDate.now();
+        LocalDate endAt = now.plusDays(1);
+        LocalDate matchAt = now.plusDays(2);
         MatchVoteCreateRequest matchVoteCreateRequest = new MatchVoteCreateRequest(
-                MatchType.REGULAR, now
+                MatchType.REGULAR,
+                matchAt,
+                endAt
         );
 
         MatchVoteCreateResponse matchVoteResponse = voteService.createMatchVote(
@@ -246,18 +248,19 @@ public class AuthServiceTest {
 
         MercenaryTransientEntity transientEntity = mercenaryTransientRepository.save(
                 MercenaryTransientEntity.create(
-                        mercenary,
                         mercenaryCode,
                         match
                 )
         );
+        mercenary.updateTransient(transientEntity);
         assertNotNull(transientEntity);
+        assertNotNull(mercenary.getMercenaryTransient());
         assertNotNull(transientEntity.getCode());
         assertNotNull(transientEntity.getMatch());
 
         assertEquals(transientEntity.getMatch(), match);
 
-        log.info("transientEntity matchId : {}", transientEntity.getMercenary().getId());
+        log.info("transientEntity matchId : {}", transientEntity.getMatch().getId());
         log.info("match Id : {}", match.getId());
 
         mercenary.updateStatus(MercenaryStatus.ENABLED);
