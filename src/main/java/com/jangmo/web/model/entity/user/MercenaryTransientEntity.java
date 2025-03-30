@@ -1,7 +1,7 @@
 package com.jangmo.web.model.entity.user;
 
+import com.jangmo.web.model.SequentialEntity;
 import com.jangmo.web.model.entity.MatchEntity;
-import com.jangmo.web.model.entity.common.SequentialEntity;
 
 import com.jangmo.web.utils.EncryptUtil;
 import lombok.AllArgsConstructor;

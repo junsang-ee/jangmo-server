@@ -2,9 +2,8 @@ package com.jangmo.web.model.dto.response;
 
 
 import com.jangmo.web.constants.Gender;
+import com.jangmo.web.constants.user.MemberStatus;
 import com.jangmo.web.constants.UserRole;
-import com.jangmo.web.model.entity.administrative.City;
-import com.jangmo.web.model.entity.administrative.District;
 import com.jangmo.web.model.entity.user.MemberEntity;
 
 import lombok.Getter;
@@ -23,6 +22,7 @@ public class MemberDetailResponse {
     private final LocalDate birth;
     private final Gender gender;
     private final UserRole role;
+    private final MemberStatus status;
     private final Instant createdAt;
     private final Long cityId;
     private final String cityName;
@@ -36,6 +36,7 @@ public class MemberDetailResponse {
                 member.getBirth(),
                 member.getGender(),
                 member.getRole(),
+                member.getStatus(),
                 member.getCreatedAt(),
                 member.getCity().getId(),
                 member.getCity().getName(),

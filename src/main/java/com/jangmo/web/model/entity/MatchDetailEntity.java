@@ -1,6 +1,6 @@
 package com.jangmo.web.model.entity;
 
-import com.jangmo.web.model.entity.common.CreationTimestampEntity;
+import com.jangmo.web.model.ModificationTimestampEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -22,7 +22,7 @@ import static lombok.AccessLevel.PROTECTED;
 @ToString
 @NoArgsConstructor(access = PROTECTED)
 @Entity(name = "match_detail")
-public class MatchDetailEntity extends CreationTimestampEntity {
+public class MatchDetailEntity extends ModificationTimestampEntity {
 
     @Column(nullable = false)
     private LocalDateTime startAt;

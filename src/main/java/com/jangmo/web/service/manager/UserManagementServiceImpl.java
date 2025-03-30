@@ -2,16 +2,18 @@ package com.jangmo.web.service.manager;
 
 import com.jangmo.web.config.sms.SmsProvider;
 
-import com.jangmo.web.constants.MemberStatus;
+import com.jangmo.web.constants.user.MemberStatus;
 import com.jangmo.web.constants.MercenaryRetentionStatus;
-import com.jangmo.web.constants.MercenaryStatus;
+import com.jangmo.web.constants.user.MercenaryStatus;
 import com.jangmo.web.constants.message.ErrorMessage;
-import com.jangmo.web.constants.UserRole;
 import com.jangmo.web.constants.SmsType;
 
 import com.jangmo.web.exception.custom.AuthException;
 import com.jangmo.web.exception.custom.InvalidStateException;
 import com.jangmo.web.exception.custom.NotFoundException;
+import com.jangmo.web.model.dto.request.UserListSearchRequest;
+import com.jangmo.web.model.dto.response.MemberDetailResponse;
+import com.jangmo.web.model.dto.response.MercenaryDetailResponse;
 import com.jangmo.web.model.dto.response.UserListResponse;
 import com.jangmo.web.model.entity.MatchEntity;
 import com.jangmo.web.model.entity.user.MemberEntity;
@@ -25,7 +27,9 @@ import com.jangmo.web.repository.MemberRepository;
 import com.jangmo.web.repository.MatchRepository;
 import com.jangmo.web.repository.UserRepository;
 
+import com.jangmo.web.repository.criteria.UserListCriteria;
 import com.jangmo.web.utils.CodeGeneratorUtil;
+import com.querydsl.core.types.Predicate;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
@@ -103,12 +107,29 @@ public class UserManagementServiceImpl implements UserManagementService {
     }
 
     @Override
-    public Page<UserListResponse> getUsers(String myId, Pageable pageable) {
-        return userRepository.findByIdNotAndRoleNot(
-                myId,
-                UserRole.ADMIN,
-                pageable
-        ).map(UserListResponse::of);
+    public Page<UserListResponse> getUserList(String myId, UserListSearchRequest request, Pageable pageable) {
+        Predicate criteria = new UserListCriteria()
+                .myId(myId)
+                .role(request.getRole())
+                .build();
+        return userRepository.findAll(criteria, pageable)
+                .map(UserListResponse::of);
+    }
+
+    @Override
+    public MemberDetailResponse getMemberDetail(String memberId) {
+        MemberEntity member = memberRepository.findById(memberId).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND)
+        );
+        return MemberDetailResponse.of(member);
+    }
+
+    @Override
+    public MercenaryDetailResponse getMercenaryDetail(String mercenaryId) {
+        MercenaryEntity mercenary = mercenaryRepository.findById(mercenaryId).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.MERCENARY_NOT_FOUND)
+        );
+        return MercenaryDetailResponse.of(mercenary);
     }
 
     @Transactional

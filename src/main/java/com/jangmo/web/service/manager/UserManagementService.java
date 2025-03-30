@@ -1,6 +1,9 @@
 package com.jangmo.web.service.manager;
 
 
+import com.jangmo.web.model.dto.request.UserListSearchRequest;
+import com.jangmo.web.model.dto.response.MemberDetailResponse;
+import com.jangmo.web.model.dto.response.MercenaryDetailResponse;
 import com.jangmo.web.model.dto.response.UserListResponse;
 import com.jangmo.web.model.entity.user.UserEntity;
 
@@ -16,5 +19,9 @@ public interface UserManagementService {
 
     List<UserEntity> getApprovalUsers();
 
-    Page<UserListResponse> getUsers(String myId, Pageable pageable);
+    Page<UserListResponse> getUserList(String myId, UserListSearchRequest request, Pageable pageable);
+
+    MemberDetailResponse getMemberDetail(String memberId);
+
+    MercenaryDetailResponse getMercenaryDetail(String mercenaryId);
 }

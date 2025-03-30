@@ -2,8 +2,9 @@ package com.jangmo.web.model.entity.user;
 
 import com.jangmo.web.constants.Gender;
 import com.jangmo.web.constants.UserRole;
-import com.jangmo.web.model.entity.common.CreationTimestampEntity;
 
+import com.jangmo.web.model.CreationTimestampEntity;
+import com.jangmo.web.model.ModificationTimestampEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -22,7 +23,7 @@ import static javax.persistence.InheritanceType.JOINED;
 @Inheritance(strategy = JOINED)
 @Table(name = "\"user\"")
 @Entity(name = "user")
-public class UserEntity extends CreationTimestampEntity {
+public class UserEntity extends ModificationTimestampEntity {
 
     @Column(nullable = false)
     private String name;

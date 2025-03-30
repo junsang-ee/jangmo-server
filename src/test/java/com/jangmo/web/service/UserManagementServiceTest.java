@@ -1,9 +1,9 @@
 package com.jangmo.web.service;
 
 import com.jangmo.web.constants.Gender;
-import com.jangmo.web.constants.MemberStatus;
+import com.jangmo.web.constants.user.MemberStatus;
 import com.jangmo.web.constants.MercenaryRetentionStatus;
-import com.jangmo.web.constants.MercenaryStatus;
+import com.jangmo.web.constants.user.MercenaryStatus;
 import com.jangmo.web.constants.match.MatchType;
 import com.jangmo.web.model.dto.request.MatchVoteCreateRequest;
 import com.jangmo.web.model.dto.request.MemberSignUpRequest;
@@ -22,9 +22,7 @@ import com.jangmo.web.repository.MemberRepository;
 import com.jangmo.web.repository.MercenaryRepository;
 import com.jangmo.web.repository.CityRepository;
 import com.jangmo.web.repository.DistrictRepository;
-import com.jangmo.web.repository.MatchRepository;
 import com.jangmo.web.repository.MatchVoteRepository;
-import com.jangmo.web.repository.MercenaryTransientRepository;
 
 import com.jangmo.web.service.manager.UserManagementServiceImpl;
 import com.jangmo.web.service.manager.VoteServiceImpl;

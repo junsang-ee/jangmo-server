@@ -2,6 +2,7 @@ package com.jangmo.web.model.dto.response;
 
 import com.jangmo.web.constants.UserRole;
 import com.jangmo.web.model.entity.user.UserEntity;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

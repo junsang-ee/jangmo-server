@@ -1,8 +1,8 @@
 package com.jangmo.web.repository;
 
+import com.jangmo.web.config.dsl.QueryDslPredicateExtendedExecutor;
 import com.jangmo.web.constants.UserRole;
-import com.jangmo.web.constants.MemberStatus;
-import com.jangmo.web.model.dto.response.UserListResponse;
+import com.jangmo.web.constants.user.MemberStatus;
 import com.jangmo.web.model.entity.user.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +15,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserEntity, String> {
+public interface UserRepository extends JpaRepository<UserEntity, String>,
+        QueryDslPredicateExtendedExecutor<UserEntity> {
 
     @Query(value = "SELECT u " +
              "FROM user u " +

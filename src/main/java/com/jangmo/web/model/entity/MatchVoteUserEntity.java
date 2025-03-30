@@ -2,7 +2,7 @@ package com.jangmo.web.model.entity;
 
 import com.jangmo.web.constants.MatchVoteStatus;
 import com.jangmo.web.constants.UserRole;
-import com.jangmo.web.model.entity.common.CreationTimestampEntity;
+import com.jangmo.web.model.CreationTimestampEntity;
 import com.jangmo.web.model.entity.user.UserEntity;
 
 import com.jangmo.web.model.entity.vote.MatchVoteEntity;

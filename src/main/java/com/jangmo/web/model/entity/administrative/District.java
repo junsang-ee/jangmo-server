@@ -1,7 +1,7 @@
 package com.jangmo.web.model.entity.administrative;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.jangmo.web.model.entity.common.SequentialEntity;
+import com.jangmo.web.model.SequentialEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

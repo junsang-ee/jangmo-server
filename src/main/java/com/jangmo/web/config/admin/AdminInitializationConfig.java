@@ -1,7 +1,7 @@
 package com.jangmo.web.config.admin;
 
 import com.jangmo.web.constants.Gender;
-import com.jangmo.web.constants.MemberStatus;
+import com.jangmo.web.constants.user.MemberStatus;
 import com.jangmo.web.constants.UserRole;
 import com.jangmo.web.constants.message.ErrorMessage;
 import com.jangmo.web.exception.custom.NotFoundException;

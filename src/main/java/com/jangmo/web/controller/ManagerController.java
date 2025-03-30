@@ -1,12 +1,12 @@
 package com.jangmo.web.controller;
 
-import com.jangmo.web.constants.MemberStatus;
-import com.jangmo.web.constants.MercenaryStatus;
+import com.jangmo.web.constants.user.MemberStatus;
+import com.jangmo.web.constants.user.MercenaryStatus;
 import com.jangmo.web.controller.base.BaseController;
 import com.jangmo.web.model.dto.request.MatchVoteCreateRequest;
 import com.jangmo.web.model.dto.request.MercenaryMatchRequest;
-import com.jangmo.web.model.dto.response.MatchVoteCreateResponse;
-import com.jangmo.web.model.dto.response.UserListResponse;
+import com.jangmo.web.model.dto.request.UserListSearchRequest;
+import com.jangmo.web.model.dto.response.*;
 import com.jangmo.web.model.dto.response.common.ApiSuccessResponse;
 
 import com.jangmo.web.model.dto.response.common.PageResponse;
@@ -16,6 +16,8 @@ import com.jangmo.web.service.manager.VoteService;
 
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
@@ -32,7 +34,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import javax.validation.Valid;
 import java.util.List;
 
-
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api/managers")
 @RestController
@@ -42,12 +44,22 @@ public class ManagerController extends BaseController {
 
     private final UserManagementService userManagementService;
 
-    @GetMapping("/users")
-    public ApiSuccessResponse<PageResponse<UserListResponse>> userList(@AuthenticationPrincipal(expression = "id") String myId,
-                                                                       Pageable pageable) {
-        return page(userManagementService.getUsers(myId, pageable));
+    @GetMapping("/members/{memberId}")
+    public ApiSuccessResponse<MemberDetailResponse> getMemberDetail(@PathVariable String memberId) {
+        return wrap(userManagementService.getMemberDetail(memberId));
     }
 
+    @GetMapping("/mercenaries/{mercenaryId}")
+    public ApiSuccessResponse<MercenaryDetailResponse> getMercenaryDetail(@PathVariable String mercenaryId) {
+        return wrap(userManagementService.getMercenaryDetail(mercenaryId));
+    }
+
+    @GetMapping("/users")
+    public ApiSuccessResponse<PageResponse<UserListResponse>> getUserList(@AuthenticationPrincipal(expression = "id") String myId,
+                                                                          @ParameterObject UserListSearchRequest request,
+                                                                          Pageable pageable) {
+        return page(userManagementService.getUserList(myId, request, pageable));
+    }
 
     @PatchMapping("/mercenaries/{mercenaryId}/approve")
     public ApiSuccessResponse<Object> approveMercenary(@PathVariable String mercenaryId,

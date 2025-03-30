@@ -2,9 +2,9 @@ package com.jangmo.web.service;
 
 import com.jangmo.web.config.jwt.JwtConfig;
 import com.jangmo.web.constants.Gender;
-import com.jangmo.web.constants.MemberStatus;
+import com.jangmo.web.constants.user.MemberStatus;
 import com.jangmo.web.constants.MercenaryRetentionStatus;
-import com.jangmo.web.constants.MercenaryStatus;
+import com.jangmo.web.constants.user.MercenaryStatus;
 import com.jangmo.web.constants.match.MatchType;
 import com.jangmo.web.constants.message.ErrorMessage;
 import com.jangmo.web.exception.custom.NotFoundException;

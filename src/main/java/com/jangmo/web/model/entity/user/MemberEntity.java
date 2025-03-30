@@ -1,7 +1,7 @@
 package com.jangmo.web.model.entity.user;
 
 import com.jangmo.web.constants.Gender;
-import com.jangmo.web.constants.MemberStatus;
+import com.jangmo.web.constants.user.MemberStatus;
 import com.jangmo.web.constants.UserRole;
 import com.jangmo.web.model.dto.request.MemberSignUpRequest;
 
