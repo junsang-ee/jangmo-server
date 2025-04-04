@@ -2,6 +2,7 @@ package com.jangmo.web.service.manager;
 
 import com.jangmo.web.config.sms.SmsProvider;
 
+import com.jangmo.web.constants.UserRole;
 import com.jangmo.web.constants.user.MemberStatus;
 import com.jangmo.web.constants.MercenaryRetentionStatus;
 import com.jangmo.web.constants.user.MercenaryStatus;
@@ -27,12 +28,11 @@ import com.jangmo.web.repository.MemberRepository;
 import com.jangmo.web.repository.MatchRepository;
 import com.jangmo.web.repository.UserRepository;
 
-import com.jangmo.web.repository.criteria.UserListCriteria;
 import com.jangmo.web.utils.CodeGeneratorUtil;
-import com.querydsl.core.types.Predicate;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,6 +58,8 @@ public class UserManagementServiceImpl implements UserManagementService {
 
     private final SmsProvider smsProvider;
 
+    @Value("${jangmo.admin.mobile}")
+    private String adminMobile;
 
     @Override
     @Transactional
@@ -108,12 +110,11 @@ public class UserManagementServiceImpl implements UserManagementService {
 
     @Override
     public Page<UserListResponse> getUserList(String myId, UserListSearchRequest request, Pageable pageable) {
-        Predicate criteria = new UserListCriteria()
-                .myId(myId)
-                .role(request.getRole())
-                .build();
-        return userRepository.findAll(criteria, pageable)
-                .map(UserListResponse::of);
+        String adminId = getAdmin().getId();
+
+        return userRepository.findByStatusAndUserRole(
+                adminId, myId, request, pageable
+        );
     }
 
     @Override
@@ -145,6 +146,12 @@ public class UserManagementServiceImpl implements UserManagementService {
                 mercenary.getMobile(),
                 mercenaryCode,
                 SmsType.MERCENARY
+        );
+    }
+
+    private UserEntity getAdmin() {
+        return userRepository.findByMobile(adminMobile).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND)
         );
     }
 }

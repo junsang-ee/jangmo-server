@@ -1,9 +1,9 @@
 package com.jangmo.web.repository;
 
-import com.jangmo.web.config.dsl.QueryDslPredicateExtendedExecutor;
 import com.jangmo.web.constants.UserRole;
 import com.jangmo.web.constants.user.MemberStatus;
 import com.jangmo.web.model.entity.user.UserEntity;
+import com.jangmo.web.repository.query.UserCustomRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,8 +15,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserEntity, String>,
-        QueryDslPredicateExtendedExecutor<UserEntity> {
+public interface UserRepository extends
+        JpaRepository<UserEntity, String>,
+        UserCustomRepository {
+
+    UserEntity getByRole(UserRole role);
 
     @Query(value = "SELECT u " +
              "FROM user u " +

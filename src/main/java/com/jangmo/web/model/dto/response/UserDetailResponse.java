@@ -5,7 +5,6 @@ import com.jangmo.web.model.entity.user.UserEntity;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import java.time.Instant;
 
 import static lombok.AccessLevel.PRIVATE;
 
