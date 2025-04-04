@@ -17,6 +17,7 @@ import static lombok.AccessLevel.PRIVATE;
 @Getter
 @RequiredArgsConstructor(access = PRIVATE)
 public class MemberDetailResponse {
+    private final String id;
     private final String name;
     private final String mobile;
     private final LocalDate birth;
@@ -31,17 +32,12 @@ public class MemberDetailResponse {
 
     public static MemberDetailResponse of(final MemberEntity member) {
         return new MemberDetailResponse(
-                member.getName(),
-                member.getMobile(),
-                member.getBirth(),
-                member.getGender(),
-                member.getRole(),
-                member.getStatus(),
-                member.getCreatedAt(),
-                member.getCity().getId(),
-                member.getCity().getName(),
-                member.getDistrict().getId(),
-                member.getDistrict().getName()
+                member.getId(), member.getName(),
+                member.getMobile(), member.getBirth(),
+                member.getGender(), member.getRole(),
+                member.getStatus(), member.getCreatedAt(),
+                member.getCity().getId(), member.getCity().getName(),
+                member.getDistrict().getId(), member.getDistrict().getName()
         );
     }
 }

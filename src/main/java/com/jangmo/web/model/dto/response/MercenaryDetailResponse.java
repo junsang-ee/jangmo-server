@@ -14,6 +14,7 @@ import static lombok.AccessLevel.PRIVATE;
 @Getter
 @RequiredArgsConstructor(access = PRIVATE)
 public class MercenaryDetailResponse {
+    private final String id;
     private final String name;
     private final String mobile;
     private final Gender gender;
@@ -24,6 +25,7 @@ public class MercenaryDetailResponse {
 
     public static MercenaryDetailResponse of(final MercenaryEntity mercenary) {
         return new MercenaryDetailResponse(
+                mercenary.getId(),
                 mercenary.getName(),
                 mercenary.getMobile(),
                 mercenary.getGender(),

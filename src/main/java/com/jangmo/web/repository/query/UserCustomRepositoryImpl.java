@@ -66,8 +66,8 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        JPAQuery<Long> count = queryFactory
-                .select(memberEntity.count())
+        JPAQuery<Long> totalCount = queryFactory
+                .select(userEntity.count())
                 .from(userEntity)
                 .leftJoin(memberEntity).on(userEntity.id.eq(memberEntity.id))
                 .leftJoin(mercenaryEntity).on(userEntity.id.eq(mercenaryEntity.id))
@@ -81,7 +81,8 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
                             request.getMercenaryStatus()
                         )
                 );
-        return PageableExecutionUtils.getPage(result, pageable, count::fetchOne);
+
+        return PageableExecutionUtils.getPage(result, pageable, totalCount::fetchOne);
     }
 
     private BooleanExpression userRoleEq(final UserRole role) {
