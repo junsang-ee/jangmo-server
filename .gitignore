@@ -43,4 +43,5 @@ bin/
 .DS_Store
 
 ### QClass ###
-./src/main/generated/**
+/src/main/generated/**
+
