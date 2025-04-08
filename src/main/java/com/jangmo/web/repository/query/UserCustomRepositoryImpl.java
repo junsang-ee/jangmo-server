@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -60,7 +61,8 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
                                 request.getRole(),
                                 request.getMemberStatus(),
                                 request.getMercenaryStatus()
-                        )
+                        ),
+                        nameContain(request.getSearchKeyword())
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -79,7 +81,8 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
                             request.getRole(),
                             request.getMemberStatus(),
                             request.getMercenaryStatus()
-                        )
+                        ),
+                        nameContain(request.getSearchKeyword())
                 );
 
         return PageableExecutionUtils.getPage(result, pageable, totalCount::fetchOne);
@@ -104,6 +107,10 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
         BooleanExpression mercenaryCondition =
                 mercenaryStatus != null ? mercenaryEntity.status.eq(mercenaryStatus) : null;
         return combineUserStatusCondition(memberCondition, mercenaryCondition);
+    }
+
+    private BooleanExpression nameContain(final String searchKeyword) {
+        return StringUtils.hasText(searchKeyword) ? userEntity.name.contains(searchKeyword) : null;
     }
 
     private BooleanExpression combineUserStatusCondition(BooleanExpression... conditions) {
