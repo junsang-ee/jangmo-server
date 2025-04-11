@@ -3,7 +3,7 @@ package com.jangmo.web.constants.match;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 public enum MatchType {
-    REGULAR, AUTONOMOUS;
+    REGULAR, FRIENDLY;
 
     @JsonCreator
     public static MatchType getType(String value) {
