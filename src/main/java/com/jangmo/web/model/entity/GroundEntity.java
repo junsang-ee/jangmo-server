@@ -19,7 +19,10 @@ public class GroundEntity extends ModificationTimestampEntity {
     private String name;
 
     @Column(nullable = false)
-    private String streetAddress;
+    private String roadAddress;
+
+    @Column(nullable = false)
+    private String address;
 
     @Column(nullable = false)
     private Double latitude;
