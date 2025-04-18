@@ -1,6 +1,5 @@
 package com.jangmo.web.model.entity;
 
-import com.jangmo.web.model.CreationTimestampEntity;
 import com.jangmo.web.model.ModificationTimestampEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

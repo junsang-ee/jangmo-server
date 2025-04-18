@@ -1,8 +1,9 @@
-package com.jangmo.web.controller;
+package com.jangmo.web.controller.manager;
 
 import com.jangmo.web.constants.user.MemberStatus;
 import com.jangmo.web.constants.user.MercenaryStatus;
 import com.jangmo.web.controller.base.BaseController;
+import com.jangmo.web.model.dto.request.KakaoSearchRequest;
 import com.jangmo.web.model.dto.request.MatchVoteCreateRequest;
 import com.jangmo.web.model.dto.request.MercenaryMatchRequest;
 import com.jangmo.web.model.dto.request.UserListSearchRequest;
@@ -11,6 +12,7 @@ import com.jangmo.web.model.dto.response.common.ApiSuccessResponse;
 
 import com.jangmo.web.model.dto.response.common.PageResponse;
 import com.jangmo.web.model.entity.user.UserEntity;
+import com.jangmo.web.service.GroundService;
 import com.jangmo.web.service.manager.UserManagementService;
 import com.jangmo.web.service.manager.VoteService;
 
@@ -43,6 +45,8 @@ public class ManagerController extends BaseController {
     private final VoteService voteService;
 
     private final UserManagementService userManagementService;
+
+    private final GroundService groundService;
 
     @GetMapping("/members/{memberId}")
     public ApiSuccessResponse<MemberDetailResponse> getMemberDetail(@PathVariable String memberId) {
@@ -100,6 +104,12 @@ public class ManagerController extends BaseController {
     @GetMapping("/users/pending-approval")
     public ApiSuccessResponse<List<UserEntity>> getApprovalUsers() {
         return wrap(userManagementService.getApprovalUsers());
+    }
+
+    @GetMapping("/ground/{keyword}")
+    public ApiSuccessResponse<Object> searchGrounds(@PathVariable KakaoSearchRequest request) {
+        groundService.test(request.getKeyword());
+        return wrap(null);
     }
 
 

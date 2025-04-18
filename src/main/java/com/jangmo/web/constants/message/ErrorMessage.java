@@ -15,6 +15,7 @@ public enum ErrorMessage {
     REQUEST_INVALID_CODE("113"),
     REQUEST_INVALID_MERCENARY_CODE("114"),
 
+    BAD_REQUEST("400"),
     INTERNAL_SERVER_ERROR("500"),
 
     /* 1000 ~ 1100 (signup error) */
