@@ -3,7 +3,6 @@ package com.jangmo.web.controller.manager;
 import com.jangmo.web.constants.user.MemberStatus;
 import com.jangmo.web.constants.user.MercenaryStatus;
 import com.jangmo.web.controller.base.BaseController;
-import com.jangmo.web.model.dto.request.KakaoSearchRequest;
 import com.jangmo.web.model.dto.request.MatchVoteCreateRequest;
 import com.jangmo.web.model.dto.request.MercenaryMatchRequest;
 import com.jangmo.web.model.dto.request.UserListSearchRequest;
@@ -107,9 +106,8 @@ public class ManagerController extends BaseController {
     }
 
     @GetMapping("/ground/{keyword}")
-    public ApiSuccessResponse<Object> searchGrounds(@PathVariable KakaoSearchRequest request) {
-        groundService.test(request.getKeyword());
-        return wrap(null);
+    public ApiSuccessResponse<List<SearchPlaceResponse>> searchGrounds(@PathVariable String keyword) {
+        return wrap(groundService.searchGrounds(keyword));
     }
 
 

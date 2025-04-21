@@ -19,10 +19,10 @@ public class WebClientApiHelper {
     public <T> Mono<T> get(WebClient webClient, ApiType type, String query, Class<T> response) {
         String queryPath = "";
         if (type == ApiType.KAKAO) {
-            queryPath = KAKAO_PATH;
+            queryPath = KAKAO_PATH + query ;
         }
-
         return webClient.get()
+                .uri(queryPath)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .onStatus(
