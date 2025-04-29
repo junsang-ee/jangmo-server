@@ -3,6 +3,7 @@ package com.jangmo.web.controller.manager;
 import com.jangmo.web.constants.user.MemberStatus;
 import com.jangmo.web.constants.user.MercenaryStatus;
 import com.jangmo.web.controller.base.BaseController;
+import com.jangmo.web.model.dto.request.GroundCreateRequest;
 import com.jangmo.web.model.dto.request.MatchVoteCreateRequest;
 import com.jangmo.web.model.dto.request.MercenaryMatchRequest;
 import com.jangmo.web.model.dto.request.UserListSearchRequest;
@@ -12,6 +13,7 @@ import com.jangmo.web.model.dto.response.common.ApiSuccessResponse;
 import com.jangmo.web.model.dto.response.common.PageResponse;
 import com.jangmo.web.model.entity.user.UserEntity;
 import com.jangmo.web.service.GroundService;
+import com.jangmo.web.service.manager.GroundManagementService;
 import com.jangmo.web.service.manager.UserManagementService;
 import com.jangmo.web.service.manager.VoteService;
 
@@ -45,7 +47,7 @@ public class ManagerController extends BaseController {
 
     private final UserManagementService userManagementService;
 
-    private final GroundService groundService;
+    private final GroundManagementService groundManagementService;
 
     @GetMapping("/members/{memberId}")
     public ApiSuccessResponse<MemberDetailResponse> getMemberDetail(@PathVariable String memberId) {
@@ -90,8 +92,9 @@ public class ManagerController extends BaseController {
     }
 
     @PostMapping("/votes/matches")
-    public ApiSuccessResponse<MatchVoteCreateResponse> createMatchVote(@AuthenticationPrincipal(expression = "id") String userId,
-                                                                       @Valid @RequestBody MatchVoteCreateRequest request) {
+    public ApiSuccessResponse<MatchVoteCreateResponse> createMatchVote(
+            @AuthenticationPrincipal(expression = "id") String userId,
+            @Valid @RequestBody MatchVoteCreateRequest request) {
         return wrap(voteService.createMatchVote(userId, request));
     }
 
@@ -107,7 +110,14 @@ public class ManagerController extends BaseController {
 
     @GetMapping("/ground/{keyword}")
     public ApiSuccessResponse<List<SearchPlaceResponse>> searchGrounds(@PathVariable String keyword) {
-        return wrap(groundService.searchGrounds(keyword));
+        return wrap(groundManagementService.searchGrounds(keyword));
+    }
+
+    @PostMapping("/ground")
+    public ApiSuccessResponse<GroundCreateResponse> createGround(
+            @AuthenticationPrincipal(expression = "id") String createdById,
+            @RequestBody GroundCreateRequest request) {
+        return wrap(groundManagementService.createGround(createdById, request));
     }
 
 
