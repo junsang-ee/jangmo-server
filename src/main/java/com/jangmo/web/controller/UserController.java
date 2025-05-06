@@ -1,6 +1,5 @@
 package com.jangmo.web.controller;
 
-import com.jangmo.web.controller.base.BaseController;
 import com.jangmo.web.model.dto.request.MemberUpdateAddressRequest;
 import com.jangmo.web.model.dto.request.MemberUpdatePasswordRequest;
 import com.jangmo.web.model.dto.response.MemberDetailResponse;
@@ -21,10 +20,12 @@ import lombok.RequiredArgsConstructor;
 
 import javax.validation.Valid;
 
+import static com.jangmo.web.model.dto.response.common.ApiSuccessResponse.wrap;
+
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
 @RestController
-public class UserController extends BaseController {
+public class UserController {
     private final UserService userService;
 
     @GetMapping("/me")

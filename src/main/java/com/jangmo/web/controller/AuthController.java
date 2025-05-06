@@ -1,7 +1,5 @@
 package com.jangmo.web.controller;
 
-import com.jangmo.web.controller.base.BaseController;
-
 import com.jangmo.web.model.dto.request.MemberSignUpRequest;
 import com.jangmo.web.model.dto.request.MercenaryRegistrationRequest;
 import com.jangmo.web.model.dto.request.MobileRequest;
@@ -32,10 +30,12 @@ import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import static com.jangmo.web.model.dto.response.common.ApiSuccessResponse.wrap;
+
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
 @RestController
-public class AuthController extends BaseController {
+public class AuthController {
 
     private final AuthService authService;
 
