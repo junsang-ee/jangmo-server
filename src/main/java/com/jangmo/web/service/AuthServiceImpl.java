@@ -6,9 +6,9 @@ import com.jangmo.web.config.sms.SmsProvider;
 import com.jangmo.web.constants.SmsType;
 import com.jangmo.web.constants.cache.CacheType;
 import com.jangmo.web.constants.message.ErrorMessage;
-import com.jangmo.web.exception.custom.AuthException;
-import com.jangmo.web.exception.custom.InvalidStateException;
-import com.jangmo.web.exception.custom.NotFoundException;
+import com.jangmo.web.exception.AuthException;
+import com.jangmo.web.exception.InvalidStateException;
+import com.jangmo.web.exception.NotFoundException;
 
 import com.jangmo.web.model.dto.request.MemberSignUpRequest;
 import com.jangmo.web.model.dto.request.MercenaryRegistrationRequest;

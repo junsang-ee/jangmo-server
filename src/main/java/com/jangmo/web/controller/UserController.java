@@ -7,6 +7,7 @@ import com.jangmo.web.model.dto.response.UserDetailResponse;
 import com.jangmo.web.model.dto.response.common.ApiSuccessResponse;
 import com.jangmo.web.service.UserService;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,31 +30,31 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/me")
-    public ApiSuccessResponse<UserDetailResponse> me(@AuthenticationPrincipal(expression = "id") String userId) {
+    public ResponseEntity<ApiSuccessResponse<UserDetailResponse>> me(@AuthenticationPrincipal(expression = "id") String userId) {
         return wrap(userService.getDetail(userId));
     }
 
     @PatchMapping("/members/password")
-    public ApiSuccessResponse<Object> updatePassword(@AuthenticationPrincipal(expression = "id") String memberId,
+    public ResponseEntity<ApiSuccessResponse<Object>> updatePassword(@AuthenticationPrincipal(expression = "id") String memberId,
                                                      @Valid @RequestBody MemberUpdatePasswordRequest request) {
         userService.updatePassword(memberId, request.getOldPassword(), request.getNewPassword());
         return wrap(null);
     }
 
     @GetMapping("/members/me")
-    public ApiSuccessResponse<MemberDetailResponse> getMemberDetail(@AuthenticationPrincipal(expression = "id") String memberId) {
+    public ResponseEntity<ApiSuccessResponse<MemberDetailResponse>> getMemberDetail(@AuthenticationPrincipal(expression = "id") String memberId) {
         return wrap(userService.getMemberDetail(memberId));
     }
 
     @PatchMapping("/members/address")
-    public ApiSuccessResponse<Object> updateAddress(@AuthenticationPrincipal(expression = "id") String memberId,
+    public ResponseEntity<ApiSuccessResponse<Object>> updateAddress(@AuthenticationPrincipal(expression = "id") String memberId,
                                                     @Valid @RequestBody MemberUpdateAddressRequest address) {
         userService.updateAddress(memberId, address.getCityId(), address.getDistrictId());
         return wrap(null);
     }
 
     @DeleteMapping("/members/retire")
-    public ApiSuccessResponse<Object> retireMember(@AuthenticationPrincipal(expression = "id") String memberId) {
+    public ResponseEntity<ApiSuccessResponse<Object>> retireMember(@AuthenticationPrincipal(expression = "id") String memberId) {
         userService.retireMember(memberId);
         return wrap(null);
     }

@@ -3,7 +3,7 @@ package com.jangmo.web.service.manager;
 import com.jangmo.web.api.WebClientApiHelper;
 import com.jangmo.web.constants.ApiType;
 import com.jangmo.web.constants.message.ErrorMessage;
-import com.jangmo.web.exception.custom.NotFoundException;
+import com.jangmo.web.exception.NotFoundException;
 import com.jangmo.web.model.dto.request.GroundCreateRequest;
 import com.jangmo.web.model.dto.response.GroundCreateResponse;
 import com.jangmo.web.model.dto.response.SearchPlaceResponse;

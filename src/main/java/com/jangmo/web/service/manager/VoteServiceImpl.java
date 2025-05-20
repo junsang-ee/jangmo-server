@@ -3,7 +3,7 @@ package com.jangmo.web.service.manager;
 import com.jangmo.web.constants.UserRole;
 import com.jangmo.web.constants.user.MemberStatus;
 import com.jangmo.web.constants.message.ErrorMessage;
-import com.jangmo.web.exception.custom.NotFoundException;
+import com.jangmo.web.exception.NotFoundException;
 import com.jangmo.web.model.dto.request.MatchVoteCreateRequest;
 import com.jangmo.web.model.dto.response.MatchVoteCreateResponse;
 import com.jangmo.web.model.entity.vote.MatchVoteEntity;

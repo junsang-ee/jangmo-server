@@ -2,7 +2,7 @@ package com.jangmo.web.api;
 
 import com.jangmo.web.constants.ApiType;
 import com.jangmo.web.constants.message.ErrorMessage;
-import com.jangmo.web.exception.custom.InvalidStateException;
+import com.jangmo.web.exception.InvalidStateException;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.HttpStatus;

@@ -1,6 +1,7 @@
 package com.jangmo.web.service;
 
 import com.jangmo.web.constants.Gender;
+import com.jangmo.web.constants.UserRole;
 import com.jangmo.web.constants.user.MemberStatus;
 import com.jangmo.web.constants.MercenaryRetentionStatus;
 import com.jangmo.web.constants.user.MercenaryStatus;
@@ -8,6 +9,7 @@ import com.jangmo.web.constants.match.MatchType;
 import com.jangmo.web.model.dto.request.MatchVoteCreateRequest;
 import com.jangmo.web.model.dto.request.MemberSignUpRequest;
 import com.jangmo.web.model.dto.request.MercenaryRegistrationRequest;
+import com.jangmo.web.model.dto.request.UserListSearchRequest;
 import com.jangmo.web.model.dto.response.UserListResponse;
 import com.jangmo.web.model.entity.MatchEntity;
 import com.jangmo.web.model.entity.user.UserEntity;
@@ -309,8 +311,14 @@ public class UserManagementServiceTest {
         );
         mercenaryRepository.saveAll(mercenaryEntities);
         Pageable pageable = PageRequest.of(0, 10);
-        Page<UserListResponse> result = userManagementService.getUsers(
+        UserListSearchRequest searchRequest = new UserListSearchRequest();
+        searchRequest.setRole(UserRole.MEMBER);
+        searchRequest.setMemberStatus(MemberStatus.ENABLED);
+        searchRequest.setMercenaryStatus(MercenaryStatus.ENABLED);
+        searchRequest.setSearchKeyword(null);
+        Page<UserListResponse> result = userManagementService.getUserList(
             admin.getId(),
+            searchRequest,
             pageable
         );
         assertEquals(result.getContent().size(), 10);

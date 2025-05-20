@@ -1,7 +1,7 @@
 package com.jangmo.web.config.validator;
 
 import com.jangmo.web.constants.message.ErrorMessage;
-import com.jangmo.web.exception.custom.FieldValidationException;
+import com.jangmo.web.exception.FieldValidationException;
 import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintValidator;

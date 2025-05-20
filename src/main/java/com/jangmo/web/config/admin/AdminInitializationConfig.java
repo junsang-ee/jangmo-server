@@ -4,7 +4,7 @@ import com.jangmo.web.constants.Gender;
 import com.jangmo.web.constants.user.MemberStatus;
 import com.jangmo.web.constants.UserRole;
 import com.jangmo.web.constants.message.ErrorMessage;
-import com.jangmo.web.exception.custom.NotFoundException;
+import com.jangmo.web.exception.NotFoundException;
 import com.jangmo.web.model.dto.request.MemberSignUpRequest;
 import com.jangmo.web.model.entity.administrative.City;
 import com.jangmo.web.model.entity.administrative.District;

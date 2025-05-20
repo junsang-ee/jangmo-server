@@ -6,7 +6,13 @@ import com.jangmo.web.model.dto.request.GroundCreateRequest;
 import com.jangmo.web.model.dto.request.MatchVoteCreateRequest;
 import com.jangmo.web.model.dto.request.MercenaryMatchRequest;
 import com.jangmo.web.model.dto.request.UserListSearchRequest;
-import com.jangmo.web.model.dto.response.*;
+
+import com.jangmo.web.model.dto.response.MatchVoteCreateResponse;
+import com.jangmo.web.model.dto.response.MemberDetailResponse;
+import com.jangmo.web.model.dto.response.MercenaryDetailResponse;
+import com.jangmo.web.model.dto.response.UserListResponse;
+import com.jangmo.web.model.dto.response.SearchPlaceResponse;
+import com.jangmo.web.model.dto.response.GroundCreateResponse;
 import com.jangmo.web.model.dto.response.common.ApiSuccessResponse;
 
 import com.jangmo.web.model.dto.response.common.PageResponse;
@@ -20,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,71 +58,75 @@ public class ManagerController {
     private final GroundManagementService groundManagementService;
 
     @GetMapping("/members/{memberId}")
-    public ApiSuccessResponse<MemberDetailResponse> getMemberDetail(@PathVariable String memberId) {
+    public ResponseEntity<ApiSuccessResponse<MemberDetailResponse>> getMemberDetail(@PathVariable String memberId) {
         return wrap(userManagementService.getMemberDetail(memberId));
     }
 
     @GetMapping("/mercenaries/{mercenaryId}")
-    public ApiSuccessResponse<MercenaryDetailResponse> getMercenaryDetail(@PathVariable String mercenaryId) {
+    public ResponseEntity<ApiSuccessResponse<MercenaryDetailResponse>> getMercenaryDetail(@PathVariable String mercenaryId) {
         return wrap(userManagementService.getMercenaryDetail(mercenaryId));
     }
 
     @GetMapping("/users")
-    public ApiSuccessResponse<PageResponse<UserListResponse>> getUserList(@AuthenticationPrincipal(expression = "id") String myId,
-                                                                          @ParameterObject UserListSearchRequest request,
-                                                                          Pageable pageable) {
+    public ResponseEntity<ApiSuccessResponse<PageResponse<UserListResponse>>> getUserList(
+            @AuthenticationPrincipal(expression = "id") String myId,
+            @ParameterObject UserListSearchRequest request,
+            Pageable pageable) {
         return page(userManagementService.getUserList(myId, request, pageable));
     }
 
     @PatchMapping("/mercenaries/{mercenaryId}/approve")
-    public ApiSuccessResponse<Object> approveMercenary(@PathVariable String mercenaryId,
-                                                       @RequestBody MercenaryMatchRequest matchRequest) {
+    public ResponseEntity<ApiSuccessResponse<Object>> approveMercenary(
+            @PathVariable String mercenaryId,
+            @RequestBody MercenaryMatchRequest matchRequest) {
         userManagementService.approveMercenary(mercenaryId, matchRequest.getMatchId());
         return wrap(null);
     }
 
     @PatchMapping("/members/{memberId}/approve")
-    public ApiSuccessResponse<Object> approveMember(@PathVariable String memberId) {
+    public ResponseEntity<ApiSuccessResponse<Object>> approveMember(@PathVariable String memberId) {
         userManagementService.approveMember(memberId);
         return wrap(null);
     }
 
     @PatchMapping("/members/{memberId}/status/{status}")
-    public ApiSuccessResponse<Object> updateMemberStatus(@PathVariable String memberId,
-                                                         @PathVariable MemberStatus status) {
+    public ResponseEntity<ApiSuccessResponse<Object>> updateMemberStatus(
+            @PathVariable String memberId,
+            @PathVariable MemberStatus status) {
         return wrap(null);
     }
 
     @PatchMapping("/mercenaries/{mercenaryId}/status/{status}")
-    public ApiSuccessResponse<Object> updateMercenaryStatus(@PathVariable String mercenaryId,
-                                                            @PathVariable MercenaryStatus status) {
+    public ResponseEntity<ApiSuccessResponse<Object>> updateMercenaryStatus(
+            @PathVariable String mercenaryId,
+            @PathVariable MercenaryStatus status) {
         return wrap(null);
     }
 
     @PostMapping("/votes/matches")
-    public ApiSuccessResponse<MatchVoteCreateResponse> createMatchVote(
+    public ResponseEntity<ApiSuccessResponse<MatchVoteCreateResponse>> createMatchVote(
             @AuthenticationPrincipal(expression = "id") String userId,
             @Valid @RequestBody MatchVoteCreateRequest request) {
         return wrap(voteService.createMatchVote(userId, request));
     }
 
     @DeleteMapping("/votes/{voteId}")
-    public ApiSuccessResponse<Object> deleteVote(@PathVariable String voteId) {
+    public ResponseEntity<ApiSuccessResponse<Object>> deleteVote(@PathVariable String voteId) {
         return wrap(null);
     }
 
     @GetMapping("/users/pending-approval")
-    public ApiSuccessResponse<List<UserEntity>> getApprovalUsers() {
+    public ResponseEntity<ApiSuccessResponse<List<UserEntity>>> getApprovalUsers() {
         return wrap(userManagementService.getApprovalUsers());
     }
 
     @GetMapping("/ground/{keyword}")
-    public ApiSuccessResponse<List<SearchPlaceResponse>> searchGrounds(@PathVariable String keyword) {
+    public ResponseEntity<ApiSuccessResponse<List<SearchPlaceResponse>>> searchGrounds(@PathVariable String keyword) {
         return wrap(groundManagementService.searchGrounds(keyword));
     }
 
     @PostMapping("/ground")
-    public ApiSuccessResponse<GroundCreateResponse> createGround(
+    public ResponseEntity<ApiSuccessResponse<GroundCreateResponse>> createGround(
             @AuthenticationPrincipal(expression = "id") String createdById,
             @RequestBody GroundCreateRequest request) {
         return wrap(groundManagementService.createGround(createdById, request));

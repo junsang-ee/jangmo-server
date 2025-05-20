@@ -1,7 +1,7 @@
 package com.jangmo.web.repository;
 
 import com.jangmo.web.constants.message.ErrorMessage;
-import com.jangmo.web.exception.custom.NotFoundException;
+import com.jangmo.web.exception.NotFoundException;
 import com.jangmo.web.model.entity.administrative.City;
 
 import org.junit.jupiter.api.DisplayName;

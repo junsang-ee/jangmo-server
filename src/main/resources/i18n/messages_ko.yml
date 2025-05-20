@@ -118,3 +118,7 @@ response:
         status:
           code: "6014"
           message: "상태 변경이 필요한 용병 계정입니다."
+
+    internal.server.error:
+      code: "9998"
+      message: "요청을 처리하는 도중 데이터 처리 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
