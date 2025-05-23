@@ -6,6 +6,7 @@ import com.jangmo.web.security.ExtendedUserDetailsService;
 import io.jsonwebtoken.Claims;
 
 import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 
 import lombok.RequiredArgsConstructor;
@@ -48,16 +49,11 @@ public class JwtTokenProvider {
         return token;
     }
 
-    public boolean isValid(String token) {
-        try {
-            Jws<Claims> claims = Jwts.parser()
-                    .verifyWith(jwtConfig.getSecretKey())
-                    .build().parseSignedClaims(token);
-            log.info("{}", claims.getPayload().getExpiration());
-            return !claims.getPayload().getExpiration().before(new Date());
-        } catch (Exception e) {
-            return false;
-        }
+    public void validateToken(String token) throws JwtException {
+        Jws<Claims> claims = Jwts.parser()
+                .verifyWith(jwtConfig.getSecretKey())
+                .build().parseSignedClaims(token);
+        log.info("ExpiredAt :: {}", claims.getPayload().getExpiration());
     }
 
     public String getUserId(String token) {

@@ -74,8 +74,9 @@ public class AuthController {
     }
 
     @PostMapping("/login/member")
-    public ResponseEntity<ApiSuccessResponse<TokenResponse>> loginMember(HttpServletRequest request,
-                                                         @Valid @RequestBody MemberLoginRequest login) {
+    public ResponseEntity<ApiSuccessResponse<TokenResponse>> loginMember(
+            HttpServletRequest request,
+            @Valid @RequestBody MemberLoginRequest login) {
         String userAgent = request.getHeader("User-Agent");
         return wrap(new TokenResponse(authService.loginMember(userAgent, login)));
     }

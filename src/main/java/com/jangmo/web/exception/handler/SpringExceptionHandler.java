@@ -12,7 +12,6 @@ import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
@@ -23,7 +22,7 @@ import java.sql.SQLException;
 import java.util.Objects;
 
 @Slf4j
-@RestControllerAdvice(annotations = RestController.class)
+@RestControllerAdvice
 public class SpringExceptionHandler extends BaseExceptionHandler {
 
 

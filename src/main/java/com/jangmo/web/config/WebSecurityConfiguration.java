@@ -1,7 +1,9 @@
 package com.jangmo.web.config;
 
+import com.jangmo.web.config.jwt.JwtAuthenticationEntryPoint;
 import com.jangmo.web.config.jwt.JwtAuthenticationFilter;
 import com.jangmo.web.config.jwt.JwtTokenProvider;
+import com.jangmo.web.config.jwt.TestAccessDeninedException;
 import com.jangmo.web.security.ExtendedUserDetailsService;
 import com.jangmo.web.security.ExtendedUserDetailServiceImpl;
 import com.jangmo.web.service.UserService;
@@ -32,6 +34,8 @@ public class WebSecurityConfiguration {
 
     private final ApplicationContext context;
 
+    private final JwtAuthenticationEntryPoint entryPoint;
+
     public static final String[] PERMIT_ANT_PATH = {
             "/api/auth/**"
     };
@@ -41,7 +45,7 @@ public class WebSecurityConfiguration {
     };
 
     public static final String[] MANAGER_ANT_PATH = {
-            "/api/manager/**"
+            "/api/managers/**"
     };
 
     @Bean
@@ -59,6 +63,8 @@ public class WebSecurityConfiguration {
                 .and().cors()
                 .and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and().exceptionHandling()
+                .authenticationEntryPoint(entryPoint)
                 .and().addFilterBefore(
                         new JwtAuthenticationFilter(
                                 BeanSuppliers.beanSupplier(context, JwtTokenProvider.class)

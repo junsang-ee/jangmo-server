@@ -15,7 +15,7 @@ import java.util.Optional;
 @ToString(callSuper = true)
 public class ApiSuccessResponse<T> extends ApiResponse {
 
-    private final static int SUCCESS_STATUS = HttpStatus.OK.value();
+    private final static HttpStatus SUCCESS_STATUS = HttpStatus.OK;
     private final T data;
 
     public ApiSuccessResponse(int code, String message, T data) {

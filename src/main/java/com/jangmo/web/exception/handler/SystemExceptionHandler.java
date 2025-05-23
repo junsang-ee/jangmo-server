@@ -3,16 +3,13 @@ package com.jangmo.web.exception.handler;
 import com.jangmo.web.exception.*;
 import com.jangmo.web.exception.handler.base.BaseExceptionHandler;
 import com.jangmo.web.model.dto.response.common.ApiErrorResponse;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
-@RequiredArgsConstructor
-@RestControllerAdvice(annotations = RestController.class)
+@RestControllerAdvice
 public class SystemExceptionHandler extends BaseExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
