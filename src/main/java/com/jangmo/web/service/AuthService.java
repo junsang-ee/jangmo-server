@@ -2,8 +2,8 @@ package com.jangmo.web.service;
 
 import com.jangmo.web.model.dto.request.MemberSignUpRequest;
 import com.jangmo.web.model.dto.request.MercenaryRegistrationRequest;
-import com.jangmo.web.model.dto.request.MobileRequest;
-import com.jangmo.web.model.dto.request.VerificationRequest;
+import com.jangmo.web.model.dto.request.VerificationCodeSendRequest;
+import com.jangmo.web.model.dto.request.VerificationCodeVerifyRequest;
 import com.jangmo.web.model.dto.request.MemberLoginRequest;
 import com.jangmo.web.model.dto.request.MercenaryLoginRequest;
 
@@ -23,9 +23,9 @@ public interface AuthService {
 
     List<DistrictListResponse> getDistricts(Long cityId);
 
-    String sendAuthCode(MobileRequest request);
+    String sendAuthCode(VerificationCodeSendRequest request);
 
-    void verifyCode(VerificationRequest request);
+    void verifyCode(VerificationCodeVerifyRequest request);
 
     String loginMember(String userAgent, MemberLoginRequest request);
 

@@ -1,8 +1,8 @@
 package com.jangmo.web.service.aspect;
 
 import com.jangmo.web.constants.cache.CacheType;
-import com.jangmo.web.model.dto.request.MobileRequest;
-import com.jangmo.web.model.dto.request.VerificationRequest;
+import com.jangmo.web.model.dto.request.VerificationCodeSendRequest;
+import com.jangmo.web.model.dto.request.VerificationCodeVerifyRequest;
 import com.jangmo.web.service.cache.CacheService;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -18,7 +18,7 @@ public class AuthAspect {
 
     @AfterReturning(value = "execution(* com..AuthService.sendAuthCode(..)) && args(request)",
             returning = "code", argNames = "request, code")
-    public void saveCode(MobileRequest request, String code) {
+    public void saveCode(VerificationCodeSendRequest request, String code) {
         try {
             if (cacheService.get(CacheType.SIGNUP_CODE, request.getMobile()) != null) {
                 cacheService.remove(
@@ -38,7 +38,7 @@ public class AuthAspect {
 
 
     @AfterReturning(value = "execution(* com..AuthService.verifyCode(..)) && args(request)")
-    public void removeCode(VerificationRequest request) {
+    public void removeCode(VerificationCodeVerifyRequest request) {
         String code = cacheService.get(CacheType.SIGNUP_CODE, request.getMobile());
         if (code != null && code.equals(request.getCode())) {
             cacheService.remove(

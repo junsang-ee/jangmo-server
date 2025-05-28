@@ -30,31 +30,36 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/me")
-    public ResponseEntity<ApiSuccessResponse<UserDetailResponse>> me(@AuthenticationPrincipal(expression = "id") String userId) {
+    public ResponseEntity<ApiSuccessResponse<UserDetailResponse>> me(
+            @AuthenticationPrincipal(expression = "id") String userId) {
         return wrap(userService.getDetail(userId));
     }
 
     @PatchMapping("/members/password")
-    public ResponseEntity<ApiSuccessResponse<Object>> updatePassword(@AuthenticationPrincipal(expression = "id") String memberId,
-                                                     @Valid @RequestBody MemberUpdatePasswordRequest request) {
+    public ResponseEntity<ApiSuccessResponse<Object>> updatePassword(
+            @AuthenticationPrincipal(expression = "id") String memberId,
+            @Valid @RequestBody MemberUpdatePasswordRequest request) {
         userService.updatePassword(memberId, request.getOldPassword(), request.getNewPassword());
         return wrap(null);
     }
 
     @GetMapping("/members/me")
-    public ResponseEntity<ApiSuccessResponse<MemberDetailResponse>> getMemberDetail(@AuthenticationPrincipal(expression = "id") String memberId) {
+    public ResponseEntity<ApiSuccessResponse<MemberDetailResponse>> getMemberDetail(
+            @AuthenticationPrincipal(expression = "id") String memberId) {
         return wrap(userService.getMemberDetail(memberId));
     }
 
     @PatchMapping("/members/address")
-    public ResponseEntity<ApiSuccessResponse<Object>> updateAddress(@AuthenticationPrincipal(expression = "id") String memberId,
-                                                    @Valid @RequestBody MemberUpdateAddressRequest address) {
+    public ResponseEntity<ApiSuccessResponse<Object>> updateAddress(
+            @AuthenticationPrincipal(expression = "id") String memberId,
+            @Valid @RequestBody MemberUpdateAddressRequest address) {
         userService.updateAddress(memberId, address.getCityId(), address.getDistrictId());
         return wrap(null);
     }
 
     @DeleteMapping("/members/retire")
-    public ResponseEntity<ApiSuccessResponse<Object>> retireMember(@AuthenticationPrincipal(expression = "id") String memberId) {
+    public ResponseEntity<ApiSuccessResponse<Object>> retireMember(
+            @AuthenticationPrincipal(expression = "id") String memberId) {
         userService.retireMember(memberId);
         return wrap(null);
     }

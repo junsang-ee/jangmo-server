@@ -3,6 +3,7 @@ package com.jangmo.web.service;
 import com.jangmo.web.config.jwt.JwtTokenProvider;
 import com.jangmo.web.config.sms.SmsProvider;
 
+import com.jangmo.web.constants.AuthPurposeType;
 import com.jangmo.web.constants.SmsType;
 import com.jangmo.web.constants.cache.CacheType;
 import com.jangmo.web.constants.message.ErrorMessage;
@@ -10,10 +11,11 @@ import com.jangmo.web.exception.AuthException;
 import com.jangmo.web.exception.InvalidStateException;
 import com.jangmo.web.exception.NotFoundException;
 
+import com.jangmo.web.infra.cache.CacheAccessor;
 import com.jangmo.web.model.dto.request.MemberSignUpRequest;
 import com.jangmo.web.model.dto.request.MercenaryRegistrationRequest;
-import com.jangmo.web.model.dto.request.MobileRequest;
-import com.jangmo.web.model.dto.request.VerificationRequest;
+import com.jangmo.web.model.dto.request.VerificationCodeSendRequest;
+import com.jangmo.web.model.dto.request.VerificationCodeVerifyRequest;
 import com.jangmo.web.model.dto.request.MemberLoginRequest;
 import com.jangmo.web.model.dto.request.MercenaryLoginRequest;
 
@@ -61,7 +63,7 @@ public class AuthServiceImpl implements AuthService {
 
     private final SmsProvider smsProvider;
 
-    private final CacheService cacheService;
+    private final CacheAccessor cacheAccessor;
 
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -108,20 +110,25 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String sendAuthCode(MobileRequest request) {
+    public String sendAuthCode(VerificationCodeSendRequest request) {
+        AuthPurposeType purposeType = request.getAuthPurposeType();
+        String mobile = request.getMobile();
+        if (purposeType == AuthPurposeType.RESET_PASSWORD)
+            getMemberByMobile(mobile);
+        else if (purposeType == AuthPurposeType.RESET_MERCENARY_CODE)
+            getMercenaryByMobile(mobile);
         String code = getRandomCode();
-        smsProvider.send(request.getMobile(), code, SmsType.AUTH);
+        smsProvider.send(mobile, code, SmsType.AUTH);
         return code;
     }
 
     @Override
-    public void verifyCode(VerificationRequest request) {
-        String code = null;
-        try {
-            code = cacheService.get(CacheType.SIGNUP_CODE, request.getMobile());
-        } catch (NullPointerException e) {
-            throw new AuthException(ErrorMessage.AUTH_CODE_EXPIRED);
-        }
+    public void verifyCode(VerificationCodeVerifyRequest request) {
+        CacheType cacheType = request.getAuthPurposeType() == AuthPurposeType.SIGNUP ?
+                CacheType.SIGNUP_CODE : CacheType.RESET_CODE;
+        String code = cacheAccessor.get(cacheType, request.getMobile(), String.class).orElseThrow(
+                () -> new AuthException(ErrorMessage.AUTH_CODE_EXPIRED)
+        );
         if (!code.equals(request.getCode()))
             throw new AuthException(ErrorMessage.AUTH_CODE_INVALID);
     }
@@ -131,7 +138,7 @@ public class AuthServiceImpl implements AuthService {
         MemberEntity member = memberRepository.findByMobile(request.getMobile()).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND)
         );
-        validMember(member, request.getPassword());
+        validateMember(member, request.getPassword());
         return jwtTokenProvider.create(userAgent, member.getId(), member.getRole());
     }
 
@@ -140,7 +147,7 @@ public class AuthServiceImpl implements AuthService {
         MercenaryEntity mercenary = mercenaryRepository.findByMobile(request.getMobile()).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.MERCENARY_NOT_FOUND)
         );
-        validMercenary(mercenary, request.getMercenaryCode());
+        validateMercenary(mercenary, request.getMercenaryCode());
         return jwtTokenProvider.create(userAgent, mercenary.getId(), mercenary.getRole());
     }
 
@@ -163,7 +170,7 @@ public class AuthServiceImpl implements AuthService {
         );
     }
 
-    private void validMember(MemberEntity member, String password) {
+    private void validateMember(MemberEntity member, String password) {
         if (EncryptUtil.matches(password, member.getPassword())) {
             switch (member.getStatus()) {
                 case DISABLED:
@@ -176,7 +183,7 @@ public class AuthServiceImpl implements AuthService {
         throw new InvalidStateException(ErrorMessage.AUTH_PASSWORD_INVALID);
     }
 
-    private void validMercenary(MercenaryEntity mercenary, String code) {
+    private void validateMercenary(MercenaryEntity mercenary, String code) {
         MercenaryTransientEntity transientEntity = mercenary.getMercenaryTransient();
 
         if (transientEntity == null) {
@@ -196,6 +203,30 @@ public class AuthServiceImpl implements AuthService {
         if (!EncryptUtil.matches(code, transientEntity.getCode())) {
             throw new AuthException(ErrorMessage.AUTH_MERCENARY_CODE_INVALID);
         }
+    }
+
+    private void validateUserExists(String mobile, AuthPurposeType purposeType) {
+        switch (purposeType) {
+            case RESET_PASSWORD:
+                getMemberByMobile(mobile);
+                break;
+            case RESET_MERCENARY_CODE:
+                getMercenaryByMobile(mobile);
+                break;
+            default:
+        }
+    }
+
+    private MemberEntity getMemberByMobile(String mobile) {
+        return memberRepository.findByMobile(mobile).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND)
+        );
+    }
+
+    private MercenaryEntity getMercenaryByMobile(String mobile) {
+        return mercenaryRepository.findByMobile(mobile).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.MERCENARY_NOT_FOUND)
+        );
     }
 
 }

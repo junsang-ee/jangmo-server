@@ -2,8 +2,8 @@ package com.jangmo.web.controller;
 
 import com.jangmo.web.model.dto.request.MemberSignUpRequest;
 import com.jangmo.web.model.dto.request.MercenaryRegistrationRequest;
-import com.jangmo.web.model.dto.request.MobileRequest;
-import com.jangmo.web.model.dto.request.VerificationRequest;
+import com.jangmo.web.model.dto.request.VerificationCodeSendRequest;
+import com.jangmo.web.model.dto.request.VerificationCodeVerifyRequest;
 import com.jangmo.web.model.dto.request.MemberLoginRequest;
 import com.jangmo.web.model.dto.request.MercenaryLoginRequest;
 
@@ -51,14 +51,14 @@ public class AuthController {
         return wrap(authService.registerMercenary(registration));
     }
 
-    @PostMapping("/signup/mobile/send-code")
-    public ResponseEntity<ApiSuccessResponse<Object>> sendCode(@RequestBody MobileRequest request) {
+    @PostMapping("/verification-codes")
+    public ResponseEntity<ApiSuccessResponse<Object>> sendCode(@RequestBody VerificationCodeSendRequest request) {
         authService.sendAuthCode(request);
         return wrap(null);
     }
 
-    @PostMapping("/signup/mobile/verify-code")
-    public ResponseEntity<ApiSuccessResponse<Object>> verifyCode(@RequestBody VerificationRequest request) {
+    @PostMapping("/verification-codes/verify")
+    public ResponseEntity<ApiSuccessResponse<Object>> verifyCode(@RequestBody VerificationCodeVerifyRequest request) {
         authService.verifyCode(request);
         return wrap(null);
     }
@@ -82,10 +82,16 @@ public class AuthController {
     }
 
     @PostMapping("/login/mercenary")
-    public ResponseEntity<ApiSuccessResponse<TokenResponse>> loginMercenary(HttpServletRequest request,
-                                                            @Valid @RequestBody MercenaryLoginRequest login) {
+    public ResponseEntity<ApiSuccessResponse<TokenResponse>> loginMercenary(
+            HttpServletRequest request,
+            @Valid @RequestBody MercenaryLoginRequest login) {
         String userAgent = request.getHeader("User-Agent");
         return wrap(new TokenResponse(authService.loginMercenary(userAgent, login)));
+    }
+
+    @PostMapping("/members/temp-password")
+    public ResponseEntity<ApiSuccessResponse<Object>> resetPassword() {
+        return null;
     }
 
 }

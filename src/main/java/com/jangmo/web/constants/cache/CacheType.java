@@ -8,8 +8,8 @@ import lombok.experimental.FieldNameConstants;
 @NoArgsConstructor
 @FieldNameConstants(onlyExplicitlyIncluded = true)
 public enum CacheType {
-    @FieldNameConstants.Include SIGNUP_CODE("SIGNUP_CODE", 3);
-
+    @FieldNameConstants.Include SIGNUP_CODE("SIGNUP_CODE", 3),
+    @FieldNameConstants.Include RESET_CODE("RESET_CODE", 3);
 
     private String name;
 
