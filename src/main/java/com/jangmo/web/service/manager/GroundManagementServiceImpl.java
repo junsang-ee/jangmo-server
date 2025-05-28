@@ -1,9 +1,9 @@
 package com.jangmo.web.service.manager;
 
-import com.jangmo.web.api.WebClientApiHelper;
 import com.jangmo.web.constants.ApiType;
 import com.jangmo.web.constants.message.ErrorMessage;
 import com.jangmo.web.exception.NotFoundException;
+import com.jangmo.web.infra.client.WebClientExecutor;
 import com.jangmo.web.model.dto.request.GroundCreateRequest;
 import com.jangmo.web.model.dto.response.GroundCreateResponse;
 import com.jangmo.web.model.dto.response.SearchPlaceResponse;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class GroundManagementServiceImpl implements GroundManagementService {
-    private final WebClientApiHelper webClientApiHelper;
+    private final WebClientExecutor webClientExecutor;
 
     private final CityRepository cityRepository;
 
@@ -41,7 +41,7 @@ public class GroundManagementServiceImpl implements GroundManagementService {
 
     @Override
     public List<SearchPlaceResponse> searchGrounds(String keyword) {
-        KakaoPlaceSearchResponse apiResponse = webClientApiHelper.get(
+        KakaoPlaceSearchResponse apiResponse = webClientExecutor.get(
                 webClient, ApiType.KAKAO, keyword, KakaoPlaceSearchResponse.class
         ).block();
         if (apiResponse == null) return null;

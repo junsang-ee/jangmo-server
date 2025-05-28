@@ -1,10 +1,9 @@
-package com.jangmo.web.api;
+package com.jangmo.web.infra.client;
 
 import com.jangmo.web.constants.ApiType;
 import com.jangmo.web.constants.message.ErrorMessage;
 import com.jangmo.web.exception.InvalidStateException;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -13,7 +12,7 @@ import reactor.core.publisher.Mono;
 
 @Slf4j
 @Component
-public class WebClientApiHelper {
+public class WebClientExecutor {
     private final static String KAKAO_PATH = "keyword.json?query=";
 
     public <T> Mono<T> get(WebClient webClient, ApiType type, String query, Class<T> response) {
@@ -40,5 +39,4 @@ public class WebClientApiHelper {
                 .bodyToMono(response)
                 .doOnError(e -> log.error("Error occurred during WebClient call", e));
     }
-
 }
