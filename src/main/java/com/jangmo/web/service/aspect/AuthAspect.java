@@ -1,10 +1,12 @@
 package com.jangmo.web.service.aspect;
 
+import com.jangmo.web.constants.AuthPurposeType;
 import com.jangmo.web.constants.cache.CacheType;
+import com.jangmo.web.infra.cache.CacheAccessor;
 import com.jangmo.web.model.dto.request.VerificationCodeSendRequest;
 import com.jangmo.web.model.dto.request.VerificationCodeVerifyRequest;
-import com.jangmo.web.service.cache.CacheService;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
@@ -14,37 +16,49 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthAspect {
 
-    private final CacheService cacheService;
+    private final static String SEND_CODE_METHOD_NAME = "sendAuthCode";
+    private final static String VERIFY_CODE_METHOD_NAME = "verifyCode";
 
-    @AfterReturning(value = "execution(* com..AuthService.sendAuthCode(..)) && args(request)",
-            returning = "code", argNames = "request, code")
-    public void saveCode(VerificationCodeSendRequest request, String code) {
-        try {
-            if (cacheService.get(CacheType.SIGNUP_CODE, request.getMobile()) != null) {
-                cacheService.remove(
-                        CacheType.SIGNUP_CODE,
-                        request.getMobile()
-                );
+    private final CacheAccessor cacheAccessor;
+
+    @AfterReturning(
+            value = "execution(* com..AuthService.sendAuthCode(..)) || execution(* com..AuthService.verifyCode(..))",
+            returning = "authCode")
+    public void handleCachedAuthCode(JoinPoint joinPoint, Object authCode) {
+        Object request = joinPoint.getArgs()[0];
+        String method = joinPoint.getSignature().getName();
+        CacheType cacheType = getCacheType(request);
+        String mobile = getMobile(request);
+
+        cacheAccessor.get(cacheType, mobile, String.class).ifPresent(
+                cachedAuthCode -> {
+                    if (method.equals(VERIFY_CODE_METHOD_NAME)) {
+                        String inputCode = ((VerificationCodeVerifyRequest) request).getCode();
+                        if (!inputCode.equals(cachedAuthCode))
+                            return;
+                    }
+                    cacheAccessor.remove(cacheType, mobile);
+                }
+        );
+        if (method.equals(SEND_CODE_METHOD_NAME)) {
+            if (authCode instanceof String) {
+                cacheAccessor.put(cacheType, mobile, (String)authCode);
             }
-        } catch (NullPointerException ignored) {
-        } finally {
-            cacheService.put(
-                    CacheType.SIGNUP_CODE,
-                    request.getMobile(),
-                    code
-            );
         }
+
     }
 
+    private CacheType getCacheType(Object request) {
+        AuthPurposeType authPurposeType = request instanceof VerificationCodeSendRequest ?
+            ((VerificationCodeSendRequest) request).getAuthPurposeType() :
+            ((VerificationCodeVerifyRequest) request).getAuthPurposeType();
+        return authPurposeType == AuthPurposeType.SIGNUP ?
+                CacheType.SIGNUP_CODE : CacheType.RESET_CODE;
+    }
 
-    @AfterReturning(value = "execution(* com..AuthService.verifyCode(..)) && args(request)")
-    public void removeCode(VerificationCodeVerifyRequest request) {
-        String code = cacheService.get(CacheType.SIGNUP_CODE, request.getMobile());
-        if (code != null && code.equals(request.getCode())) {
-            cacheService.remove(
-                    CacheType.SIGNUP_CODE,
-                    request.getMobile()
-            );
-        }
+    private String getMobile(Object request) {
+        return request instanceof VerificationCodeSendRequest ?
+            ((VerificationCodeSendRequest) request).getMobile() :
+            ((VerificationCodeVerifyRequest) request).getMobile();
     }
 }

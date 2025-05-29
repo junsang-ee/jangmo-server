@@ -1,5 +1,5 @@
 package com.jangmo.web.constants;
 
 public enum SmsType {
-    AUTH, MERCENARY
+    AUTH_CODE, MERCENARY_CODE
 }

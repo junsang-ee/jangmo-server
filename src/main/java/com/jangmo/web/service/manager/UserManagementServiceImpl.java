@@ -1,6 +1,5 @@
 package com.jangmo.web.service.manager;
 
-import com.jangmo.web.config.sms.SmsProvider;
 
 import com.jangmo.web.constants.user.MemberStatus;
 import com.jangmo.web.constants.MercenaryRetentionStatus;
@@ -11,6 +10,7 @@ import com.jangmo.web.constants.SmsType;
 import com.jangmo.web.exception.AuthException;
 import com.jangmo.web.exception.InvalidStateException;
 import com.jangmo.web.exception.NotFoundException;
+import com.jangmo.web.infra.sms.SmsProvider;
 import com.jangmo.web.model.dto.request.UserListSearchRequest;
 import com.jangmo.web.model.dto.response.MemberDetailResponse;
 import com.jangmo.web.model.dto.response.MercenaryDetailResponse;
@@ -144,7 +144,7 @@ public class UserManagementServiceImpl implements UserManagementService {
         smsProvider.send(
                 mercenary.getMobile(),
                 mercenaryCode,
-                SmsType.MERCENARY
+                SmsType.MERCENARY_CODE
         );
     }
 

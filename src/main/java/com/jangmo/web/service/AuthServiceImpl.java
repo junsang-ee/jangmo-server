@@ -1,7 +1,6 @@
 package com.jangmo.web.service;
 
 import com.jangmo.web.config.jwt.JwtTokenProvider;
-import com.jangmo.web.config.sms.SmsProvider;
 
 import com.jangmo.web.constants.AuthPurposeType;
 import com.jangmo.web.constants.SmsType;
@@ -12,6 +11,7 @@ import com.jangmo.web.exception.InvalidStateException;
 import com.jangmo.web.exception.NotFoundException;
 
 import com.jangmo.web.infra.cache.CacheAccessor;
+import com.jangmo.web.infra.sms.SmsProvider;
 import com.jangmo.web.model.dto.request.MemberSignUpRequest;
 import com.jangmo.web.model.dto.request.MercenaryRegistrationRequest;
 import com.jangmo.web.model.dto.request.VerificationCodeSendRequest;
@@ -34,7 +34,6 @@ import com.jangmo.web.repository.MercenaryRepository;
 import com.jangmo.web.repository.CityRepository;
 import com.jangmo.web.repository.DistrictRepository;
 
-import com.jangmo.web.service.cache.CacheService;
 
 import com.jangmo.web.utils.EncryptUtil;
 
@@ -118,7 +117,7 @@ public class AuthServiceImpl implements AuthService {
         else if (purposeType == AuthPurposeType.RESET_MERCENARY_CODE)
             getMercenaryByMobile(mobile);
         String code = getRandomCode();
-        smsProvider.send(mobile, code, SmsType.AUTH);
+        smsProvider.send(mobile, code, SmsType.AUTH_CODE);
         return code;
     }
 
