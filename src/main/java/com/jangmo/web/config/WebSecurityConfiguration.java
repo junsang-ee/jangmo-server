@@ -37,7 +37,8 @@ public class WebSecurityConfiguration {
     private final JwtAuthenticationEntryPoint entryPoint;
 
     public static final String[] PERMIT_ANT_PATH = {
-            "/api/auth/**"
+            "/api/auth/**",
+            "/api/locations/**"
     };
 
     public static final String[] ADMIN_ANT_PATH = {

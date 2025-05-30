@@ -7,8 +7,6 @@ import com.jangmo.web.model.dto.request.VerificationCodeVerifyRequest;
 import com.jangmo.web.model.dto.request.MemberLoginRequest;
 import com.jangmo.web.model.dto.request.MercenaryLoginRequest;
 
-import com.jangmo.web.model.dto.response.CityListResponse;
-import com.jangmo.web.model.dto.response.DistrictListResponse;
 import com.jangmo.web.model.dto.response.MemberSignupResponse;
 import com.jangmo.web.model.dto.response.MercenaryRegistrationResponse;
 import com.jangmo.web.model.dto.response.common.ApiSuccessResponse;
@@ -23,10 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -61,16 +56,6 @@ public class AuthController {
     public ResponseEntity<ApiSuccessResponse<Object>> verifyCode(@RequestBody VerificationCodeVerifyRequest request) {
         authService.verifyCode(request);
         return wrap(null);
-    }
-
-    @GetMapping("/signup/cities")
-    public ResponseEntity<ApiSuccessResponse<List<CityListResponse>>> cities() {
-        return wrap(authService.getCities());
-    }
-
-    @GetMapping("/signup/cities/{cityId}/districts")
-    public ResponseEntity<ApiSuccessResponse<List<DistrictListResponse>>> districts(@PathVariable Long cityId) {
-        return wrap(authService.getDistricts(cityId));
     }
 
     @PostMapping("/login/member")

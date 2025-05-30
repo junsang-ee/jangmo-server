@@ -92,23 +92,6 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public List<CityListResponse> getCities() {
-        return cityRepository.findAll().stream().map(
-                CityListResponse::of
-        ).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<DistrictListResponse> getDistricts(Long cityId) {
-        City city = cityRepository.findById(cityId).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.CITY_NOT_FOUND)
-        );
-        return districtRepository.findByCity(city).stream().map(
-                DistrictListResponse::of
-        ).collect(Collectors.toList());
-    }
-
-    @Override
     public String sendAuthCode(VerificationCodeSendRequest request) {
         AuthPurposeType purposeType = request.getAuthPurposeType();
         String mobile = request.getMobile();

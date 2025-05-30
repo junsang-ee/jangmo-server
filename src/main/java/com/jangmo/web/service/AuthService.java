@@ -19,10 +19,6 @@ public interface AuthService {
 
     MercenaryRegistrationResponse registerMercenary(MercenaryRegistrationRequest request);
 
-    List<CityListResponse> getCities();
-
-    List<DistrictListResponse> getDistricts(Long cityId);
-
     String sendAuthCode(VerificationCodeSendRequest request);
 
     void verifyCode(VerificationCodeVerifyRequest request);
