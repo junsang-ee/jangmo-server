@@ -1,11 +1,6 @@
 package com.jangmo.web.service;
 
-import com.jangmo.web.model.dto.request.MemberSignUpRequest;
-import com.jangmo.web.model.dto.request.MercenaryRegistrationRequest;
-import com.jangmo.web.model.dto.request.VerificationCodeSendRequest;
-import com.jangmo.web.model.dto.request.VerificationCodeVerifyRequest;
-import com.jangmo.web.model.dto.request.MemberLoginRequest;
-import com.jangmo.web.model.dto.request.MercenaryLoginRequest;
+import com.jangmo.web.model.dto.request.*;
 
 import com.jangmo.web.model.dto.response.CityListResponse;
 import com.jangmo.web.model.dto.response.DistrictListResponse;
@@ -19,12 +14,16 @@ public interface AuthService {
 
     MercenaryRegistrationResponse registerMercenary(MercenaryRegistrationRequest request);
 
-    String sendAuthCode(VerificationCodeSendRequest request);
+    void sendAuthCode(VerificationCodeSendRequest request);
 
     void verifyCode(VerificationCodeVerifyRequest request);
 
-    String loginMember(String userAgent, MemberLoginRequest request);
+    String loginMember(String userAgent, MemberLoginRequest login);
 
-    String loginMercenary(String userAgent, MercenaryLoginRequest request);
+    String loginMercenary(String userAgent, MercenaryLoginRequest login);
+
+    void resetMemberPassword(ResetPasswordRequest reset);
+
+    void resetMercenaryCode(ResetMercenaryCodeRequest reset);
 
 }

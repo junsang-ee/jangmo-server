@@ -77,13 +77,18 @@ response:
         privacy:
           code: "4009"
           message: "개인 정보 파기로 삭제되어야 하는 용병 계정입니다."
-      code:
-        invalid:
-          code: "4020"
-          message: "잘못된 인증 코드 입니다."
-        expired:
-          code: "4021"
-          message: "인증 시간이 만료되었습니다. 인증 코드를 재발급 받으세요."
+        code.not.issued:
+          code: "4010"
+          message: "해당 용병의 코드가 존재하지 않습니다. 관리자에게 문의하세요."
+      user.duplicated:
+        code: "4011"
+        message: "해당 휴대폰 번호로 등록된 유저가 이미 존재합니다."
+      code.invalid:
+        code: "4020"
+        message: "잘못된 인증 코드 입니다."
+      not.verified:
+        code: "4021"
+        message: "잘못된 인증 정보이거나 인증 시간이 만료되었습니다."
 
     user:
       not.found:
@@ -103,10 +108,6 @@ response:
       not.found:
         code: "5002"
         message: "해당 용병을 찾을 수 없습니다."
-      code:
-        not.found:
-          code: "5003"
-          message: "해당 용병의 코드가 존재하지 않습니다. 관리자에게 문의하세요."
       disabled:
         code: "6010"
         message: "해당 용병은 이용 제한된 용병입니다."

@@ -1,11 +1,6 @@
 package com.jangmo.web.controller;
 
-import com.jangmo.web.model.dto.request.MemberSignUpRequest;
-import com.jangmo.web.model.dto.request.MercenaryRegistrationRequest;
-import com.jangmo.web.model.dto.request.VerificationCodeSendRequest;
-import com.jangmo.web.model.dto.request.VerificationCodeVerifyRequest;
-import com.jangmo.web.model.dto.request.MemberLoginRequest;
-import com.jangmo.web.model.dto.request.MercenaryLoginRequest;
+import com.jangmo.web.model.dto.request.*;
 
 import com.jangmo.web.model.dto.response.MemberSignupResponse;
 import com.jangmo.web.model.dto.response.MercenaryRegistrationResponse;
@@ -17,10 +12,7 @@ import com.jangmo.web.service.UserService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -74,9 +66,16 @@ public class AuthController {
         return wrap(new TokenResponse(authService.loginMercenary(userAgent, login)));
     }
 
-    @PostMapping("/members/temp-password")
-    public ResponseEntity<ApiSuccessResponse<Object>> resetPassword() {
-        return null;
+    @PatchMapping("/members/password")
+    public ResponseEntity<ApiSuccessResponse<Object>> resetPassword(@RequestBody ResetPasswordRequest reset) {
+        authService.resetMemberPassword(reset);
+        return wrap(null);
+    }
+
+    @PatchMapping("/mercenaries/code")
+    public ResponseEntity<ApiSuccessResponse<Object>> resetMercenaryCode(@RequestBody ResetMercenaryCodeRequest reset) {
+        authService.resetMercenaryCode(reset);
+        return wrap(null);
     }
 
 }

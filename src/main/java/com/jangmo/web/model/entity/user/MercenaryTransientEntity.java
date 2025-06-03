@@ -37,4 +37,8 @@ public class MercenaryTransientEntity extends SequentialEntity {
                 match
         );
     }
+
+    public void updateCode(String code) {
+        this.code = EncryptUtil.encode(code);
+    }
 }

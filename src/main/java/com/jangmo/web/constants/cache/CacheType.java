@@ -9,7 +9,9 @@ import lombok.experimental.FieldNameConstants;
 @FieldNameConstants(onlyExplicitlyIncluded = true)
 public enum CacheType {
     @FieldNameConstants.Include SIGNUP_CODE("SIGNUP_CODE", 3),
-    @FieldNameConstants.Include RESET_CODE("RESET_CODE", 3);
+    @FieldNameConstants.Include RESET_CODE("RESET_CODE", 3),
+    @FieldNameConstants.Include SIGNUP_VERIFIED("SIGNUP_VERIFIED", 10),
+    @FieldNameConstants.Include RESET_VERIFIED("RESET_VERIFIED", 10);
 
     private String name;
 

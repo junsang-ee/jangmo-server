@@ -3,21 +3,19 @@ package com.jangmo.web.service;
 import com.jangmo.web.config.jwt.JwtTokenProvider;
 
 import com.jangmo.web.constants.AuthPurposeType;
+import com.jangmo.web.constants.MercenaryRetentionStatus;
 import com.jangmo.web.constants.SmsType;
 import com.jangmo.web.constants.cache.CacheType;
 import com.jangmo.web.constants.message.ErrorMessage;
+import com.jangmo.web.constants.user.MercenaryStatus;
 import com.jangmo.web.exception.AuthException;
+import com.jangmo.web.exception.DuplicatedException;
 import com.jangmo.web.exception.InvalidStateException;
 import com.jangmo.web.exception.NotFoundException;
 
 import com.jangmo.web.infra.cache.CacheAccessor;
 import com.jangmo.web.infra.sms.SmsProvider;
-import com.jangmo.web.model.dto.request.MemberSignUpRequest;
-import com.jangmo.web.model.dto.request.MercenaryRegistrationRequest;
-import com.jangmo.web.model.dto.request.VerificationCodeSendRequest;
-import com.jangmo.web.model.dto.request.VerificationCodeVerifyRequest;
-import com.jangmo.web.model.dto.request.MemberLoginRequest;
-import com.jangmo.web.model.dto.request.MercenaryLoginRequest;
+import com.jangmo.web.model.dto.request.*;
 
 import com.jangmo.web.model.dto.response.MemberSignupResponse;
 import com.jangmo.web.model.dto.response.MercenaryRegistrationResponse;
@@ -27,25 +25,22 @@ import com.jangmo.web.model.entity.user.MercenaryEntity;
 import com.jangmo.web.model.entity.administrative.City;
 import com.jangmo.web.model.entity.user.MercenaryTransientEntity;
 
-import com.jangmo.web.repository.MemberRepository;
-import com.jangmo.web.repository.MercenaryRepository;
-import com.jangmo.web.repository.CityRepository;
-import com.jangmo.web.repository.DistrictRepository;
+import com.jangmo.web.repository.*;
 
 
+import com.jangmo.web.utils.CodeGeneratorUtil;
 import com.jangmo.web.utils.EncryptUtil;
 
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Objects;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -53,6 +48,8 @@ public class AuthServiceImpl implements AuthService {
     private final MemberRepository memberRepository;
 
     private final MercenaryRepository mercenaryRepository;
+
+    private final UserRepository userRepository;
 
     private final CityRepository cityRepository;
 
@@ -68,6 +65,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public MemberSignupResponse signupMember(MemberSignUpRequest signup) {
+        validateVerifiedMobile(CacheType.SIGNUP_VERIFIED, signup.getMobile());
         City city = getCity(signup.getCityId());
         District district = getDistrict(signup.getDistrictId());
         MemberEntity member = MemberEntity.create(
@@ -90,45 +88,80 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String sendAuthCode(VerificationCodeSendRequest request) {
+    public void sendAuthCode(VerificationCodeSendRequest request) {
         AuthPurposeType purposeType = request.getAuthPurposeType();
         String mobile = request.getMobile();
-        if (purposeType == AuthPurposeType.RESET_PASSWORD)
-            getMemberByMobile(mobile);
-        else if (purposeType == AuthPurposeType.RESET_MERCENARY_CODE)
-            getMercenaryByMobile(mobile);
+
+        CacheType cacheType = CacheType.SIGNUP_CODE;
+        if (purposeType == AuthPurposeType.SIGNUP) {
+            checkDuplicatedUser(mobile);
+        } else {
+            checkResettableUser(mobile, purposeType);
+            cacheType = CacheType.RESET_CODE;
+        }
+
         String code = getRandomCode();
+        putCacheAuthCode(cacheType, mobile, code);
         smsProvider.send(mobile, code, SmsType.AUTH_CODE);
-        return code;
+    }
+
+    private void checkDuplicatedUser(String mobile) {
+        userRepository.findByMobile(mobile).ifPresent(
+                val -> {
+                    throw new DuplicatedException(
+                            ErrorMessage.AUTH_USER_DUPLICATED
+                    );
+                }
+        );
     }
 
     @Override
     public void verifyCode(VerificationCodeVerifyRequest request) {
         CacheType cacheType = request.getAuthPurposeType() == AuthPurposeType.SIGNUP ?
                 CacheType.SIGNUP_CODE : CacheType.RESET_CODE;
-        String code = cacheAccessor.get(cacheType, request.getMobile(), String.class).orElseThrow(
-                () -> new AuthException(ErrorMessage.AUTH_CODE_EXPIRED)
-        );
-        if (!code.equals(request.getCode()))
+        String mobile = request.getMobile();
+        String cachedAuthCode = getCachedAuthCode(mobile, cacheType);
+        if (!cachedAuthCode.equals(request.getCode()))
             throw new AuthException(ErrorMessage.AUTH_CODE_INVALID);
+        putCacheVerifiedMobile(cacheType, mobile);
     }
 
     @Override
-    public String loginMember(String userAgent, MemberLoginRequest request) {
-        MemberEntity member = memberRepository.findByMobile(request.getMobile()).orElseThrow(
+    public String loginMember(String userAgent, MemberLoginRequest login) {
+        MemberEntity member = memberRepository.findByMobile(login.getMobile()).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND)
         );
-        validateMember(member, request.getPassword());
+        validateMember(member, login.getPassword());
         return jwtTokenProvider.create(userAgent, member.getId(), member.getRole());
     }
 
     @Override
-    public String loginMercenary(String userAgent, MercenaryLoginRequest request) {
-        MercenaryEntity mercenary = mercenaryRepository.findByMobile(request.getMobile()).orElseThrow(
+    public String loginMercenary(String userAgent, MercenaryLoginRequest login) {
+        MercenaryEntity mercenary = mercenaryRepository.findByMobile(login.getMobile()).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.MERCENARY_NOT_FOUND)
         );
-        validateMercenary(mercenary, request.getMercenaryCode());
+        validateMercenary(mercenary, login.getMercenaryCode());
         return jwtTokenProvider.create(userAgent, mercenary.getId(), mercenary.getRole());
+    }
+
+    @Override
+    @Transactional
+    public void resetMemberPassword(ResetPasswordRequest reset) {
+        validateVerifiedMobile(CacheType.RESET_VERIFIED, reset.getMobile());
+        MemberEntity member = getMemberByMobile(reset.getMobile());
+        member.updatePassword(reset.getNewPassword());
+    }
+
+    @Override
+    @Transactional
+    public void resetMercenaryCode(ResetMercenaryCodeRequest reset) {
+        String mobile = reset.getMobile();
+        validateVerifiedMobile(CacheType.RESET_VERIFIED, mobile);
+        MercenaryEntity mercenary = getMercenaryByMobile(mobile);
+        String newCode = CodeGeneratorUtil.getMercenaryCode();
+        MercenaryTransientEntity transientEntity = mercenary.getMercenaryTransient();
+        transientEntity.updateCode(newCode);
+        smsProvider.send(mobile, newCode, SmsType.MERCENARY_CODE);
     }
 
     private String getRandomCode() {
@@ -165,48 +198,82 @@ public class AuthServiceImpl implements AuthService {
 
     private void validateMercenary(MercenaryEntity mercenary, String code) {
         MercenaryTransientEntity transientEntity = mercenary.getMercenaryTransient();
+        MercenaryStatus status = mercenary.getStatus();
+        if (status == MercenaryStatus.DISABLED)
+            throw new AuthException(ErrorMessage.AUTH_DISABLED);
+        else if (status == MercenaryStatus.EXPIRED)
+            throw new AuthException(ErrorMessage.AUTH_MERCENARY_EXPIRED);
 
         if (transientEntity == null) {
-            switch (mercenary.getStatus()) {
-                case PENDING:
-                    throw new AuthException(ErrorMessage.AUTH_UNAUTHENTICATED);
-                case DISABLED:
-                    throw new AuthException(ErrorMessage.AUTH_DISABLED);
-                case EXPIRED:
-                    throw new AuthException(ErrorMessage.AUTH_MERCENARY_EXPIRED);
-            }
+            if (mercenary.getStatus() == MercenaryStatus.PENDING)
+                throw new AuthException(ErrorMessage.AUTH_UNAUTHENTICATED);
+            else
+                log.error("MercenaryTransientEntity is Null Error >> {}, {}",
+                        mercenary.getMobile(), mercenary.getStatus());
+            throw new NotFoundException(ErrorMessage.AUTH_MERCENARY_CODE_NOT_ISSUED);
         }
 
-        if (Objects.requireNonNull(transientEntity).getCode() == null) {
-            throw new NotFoundException(ErrorMessage.MERCENARY_CODE_NOT_FOUND);
-        }
-        if (!EncryptUtil.matches(code, transientEntity.getCode())) {
+        if (transientEntity.getCode() == null)
+            throw new NotFoundException(ErrorMessage.AUTH_MERCENARY_CODE_NOT_ISSUED);
+
+        if (!EncryptUtil.matches(code, transientEntity.getCode()))
             throw new AuthException(ErrorMessage.AUTH_MERCENARY_CODE_INVALID);
-        }
+
     }
 
-    private void validateUserExists(String mobile, AuthPurposeType purposeType) {
-        switch (purposeType) {
-            case RESET_PASSWORD:
-                getMemberByMobile(mobile);
-                break;
-            case RESET_MERCENARY_CODE:
-                getMercenaryByMobile(mobile);
-                break;
-            default:
+    private void checkResettableUser(String mobile, AuthPurposeType authPurposeType) {
+        if (authPurposeType == AuthPurposeType.RESET_PASSWORD) {
+            getMemberByMobile(mobile);
+        } else if (authPurposeType == AuthPurposeType.RESET_MERCENARY_CODE) {
+            MercenaryEntity mercenary = getMercenaryByMobile(mobile);
+            if (mercenary.getMercenaryTransient() == null) {
+                if (mercenary.getRetentionStatus() == MercenaryRetentionStatus.DELETE) {
+                    throw new AuthException(ErrorMessage.AUTH_MERCENARY_CODE_NOT_ISSUED);
+                }
+            }
+
         }
     }
-
     private MemberEntity getMemberByMobile(String mobile) {
         return memberRepository.findByMobile(mobile).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND)
         );
     }
-
     private MercenaryEntity getMercenaryByMobile(String mobile) {
         return mercenaryRepository.findByMobile(mobile).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.MERCENARY_NOT_FOUND)
         );
+    }
+
+
+    private void validateVerifiedMobile(CacheType cacheType, String mobile) {
+        cacheAccessor.get(cacheType, mobile, Boolean.class)
+                .filter(Boolean::booleanValue)
+                .orElseThrow(
+                        () -> new AuthException(ErrorMessage.AUTH_NOT_VERIFIED)
+                );
+        cacheAccessor.remove(cacheType, mobile);
+    }
+
+    private void putCacheVerifiedMobile(CacheType cacheType, String mobile) {
+        if (cacheType == CacheType.SIGNUP_CODE)
+            cacheAccessor.put(CacheType.SIGNUP_VERIFIED, mobile, true);
+        else if (cacheType == CacheType.RESET_CODE)
+            cacheAccessor.put(CacheType.RESET_VERIFIED, mobile, true);
+        cacheAccessor.remove(cacheType, mobile);
+    }
+
+    private String getCachedAuthCode(String mobile, CacheType cacheType) {
+        return cacheAccessor.get(cacheType, mobile, String.class).orElseThrow(
+                () -> new AuthException(ErrorMessage.AUTH_NOT_VERIFIED)
+        );
+    }
+
+    private void putCacheAuthCode(CacheType cacheType, String mobile, String code) {
+        cacheAccessor.get(cacheType, mobile, String.class).ifPresent(
+                cachedAuthCode -> cacheAccessor.remove(cacheType, mobile)
+        );
+        cacheAccessor.put(cacheType, mobile, code);
     }
 
 }

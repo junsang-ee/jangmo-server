@@ -1,6 +1,7 @@
 package com.jangmo.web.service;
 
 import com.jangmo.web.config.jwt.JwtConfig;
+import com.jangmo.web.constants.AuthPurposeType;
 import com.jangmo.web.constants.Gender;
 import com.jangmo.web.constants.user.MemberStatus;
 import com.jangmo.web.constants.MercenaryRetentionStatus;
@@ -9,11 +10,7 @@ import com.jangmo.web.constants.match.MatchType;
 import com.jangmo.web.constants.message.ErrorMessage;
 import com.jangmo.web.exception.NotFoundException;
 
-import com.jangmo.web.model.dto.request.MemberSignUpRequest;
-import com.jangmo.web.model.dto.request.MemberLoginRequest;
-import com.jangmo.web.model.dto.request.MercenaryRegistrationRequest;
-import com.jangmo.web.model.dto.request.MatchVoteCreateRequest;
-import com.jangmo.web.model.dto.request.MercenaryLoginRequest;
+import com.jangmo.web.model.dto.request.*;
 
 import com.jangmo.web.model.dto.response.MatchVoteCreateResponse;
 import com.jangmo.web.model.dto.response.MemberSignupResponse;
@@ -136,6 +133,17 @@ public class AuthServiceTest {
 
         assertEquals(old, response.getOld());
 
+    }
+
+    @DisplayName("인증 번호 요청 중복 에러 테스트")
+    @Test
+    @Transactional
+    void signupDuplicatedTest() {
+        VerificationCodeSendRequest request = new VerificationCodeSendRequest(
+                "01043053451",
+                AuthPurposeType.SIGNUP
+        );
+        authService.sendAuthCode(request);
     }
 
     @DisplayName("Member 로그인 테스트")
