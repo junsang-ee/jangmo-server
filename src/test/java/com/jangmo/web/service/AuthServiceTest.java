@@ -3,13 +3,17 @@ package com.jangmo.web.service;
 import com.jangmo.web.config.jwt.JwtConfig;
 import com.jangmo.web.constants.AuthPurposeType;
 import com.jangmo.web.constants.Gender;
+import com.jangmo.web.constants.cache.CacheType;
 import com.jangmo.web.constants.user.MemberStatus;
 import com.jangmo.web.constants.MercenaryRetentionStatus;
 import com.jangmo.web.constants.user.MercenaryStatus;
 import com.jangmo.web.constants.match.MatchType;
 import com.jangmo.web.constants.message.ErrorMessage;
+import com.jangmo.web.exception.AuthException;
 import com.jangmo.web.exception.NotFoundException;
 
+import com.jangmo.web.infra.cache.CacheAccessor;
+import com.jangmo.web.infra.sms.SmsProvider;
 import com.jangmo.web.model.dto.request.*;
 
 import com.jangmo.web.model.dto.response.MatchVoteCreateResponse;
@@ -49,6 +53,7 @@ import org.junit.jupiter.api.TestInfo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,26 +62,37 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
 
 
 @Slf4j
 @SpringBootTest
 public class AuthServiceTest {
+    @Autowired
+    MemberRepository memberRepository;
+    @Autowired
+    MercenaryRepository mercenaryRepository;
+    @Autowired
+    CityRepository cityRepository;
+    @Autowired
+    DistrictRepository districtRepository;
+    @Autowired
+    MatchVoteRepository matchVoteRepository;
+    @Autowired
+    MercenaryTransientRepository mercenaryTransientRepository;
+    @Autowired
+    VoteServiceImpl voteService;
+    @Autowired
+    JwtConfig jwtConfig;
+    @Autowired
+    AuthServiceImpl authService;
 
-    @Autowired MemberRepository memberRepository;
-    @Autowired MercenaryRepository mercenaryRepository;
-    @Autowired CityRepository cityRepository;
-    @Autowired DistrictRepository districtRepository;
-    @Autowired MatchVoteRepository matchVoteRepository;
+    @Autowired
+    CacheAccessor cacheAccessor;
 
-    @Autowired MercenaryTransientRepository mercenaryTransientRepository;
-
-    @Autowired AuthServiceImpl authService;
-
-    @Autowired UserManagementServiceImpl userManagementService;
-
-    @Autowired VoteServiceImpl voteService;
-    @Autowired JwtConfig jwtConfig;
+    @MockBean
+    private SmsProvider smsProvider;
 
     @BeforeEach
     void init(TestInfo testInfo) {
@@ -90,11 +106,42 @@ public class AuthServiceTest {
         }
     }
 
-
-    @DisplayName("Member 회원가입 및 정보 저장 테스트")
+    /**
+     * 회원가입(Member) 시나리오에 통합 테스트
+     *
+     * <p>시나리오:
+     * <ol>
+     *     <li>인증 코드 요청 (SMS) - sendAuthCode()</li>
+     *     <li>인증 코드 검증 - verifyCode() </li>
+     *     <li>회원가입 처리 signupMember() </li>
+     *     <li>캐시 만료 시 예외 처리</li>
+     * </ol>
+     *
+     * 테스트 목적:
+     * - 인증 절차와 회원가입 및 용병 등록 흐름의 유효성 검증
+     * - 캐시 TTL 적용 확인
+     */
+    @DisplayName("Member 회원가입 테스트")
     @Test
     @Transactional
     void memberSignupTest() {
+        String signupMobile = "01012341234";
+        AuthPurposeType authPurposeType = AuthPurposeType.SIGNUP;
+        VerificationCodeSendRequest codeSendRequest = new VerificationCodeSendRequest(
+                signupMobile, authPurposeType
+        );
+        authService.sendAuthCode(codeSendRequest);
+        verify(smsProvider).send(eq(signupMobile), anyString(), any());
+
+        String authCode = cacheAccessor.get(CacheType.SIGNUP_CODE, signupMobile, String.class)
+                .orElseThrow(() -> new AuthException(ErrorMessage.AUTH_NOT_VERIFIED));
+
+        VerificationCodeVerifyRequest verifyRequest = new VerificationCodeVerifyRequest(
+                signupMobile, authCode, authPurposeType
+        );
+
+        authService.verifyCode(verifyRequest);
+
         LocalDate birth = LocalDate.of(1994, 3, 16);
         MemberSignUpRequest signup = new MemberSignUpRequest(
                 "testMember",
@@ -114,6 +161,7 @@ public class AuthServiceTest {
         MemberEntity member = MemberEntity.create(signup, city, district);
 
         MemberSignupResponse response = authService.signupMember(signup);
+        assertNotNull(response);
         MemberEntity savedMember = memberRepository.findByMobile(signup.getMobile()).orElseThrow();
         int old = AgeUtil.calculate(member.getBirth());
 
