@@ -19,10 +19,9 @@ import com.jangmo.web.model.dto.request.*;
 import com.jangmo.web.model.dto.response.MatchVoteCreateResponse;
 import com.jangmo.web.model.dto.response.MemberSignupResponse;
 
+import com.jangmo.web.model.dto.response.MercenaryRegistrationResponse;
 import com.jangmo.web.model.entity.MatchEntity;
 import com.jangmo.web.model.entity.vote.MatchVoteEntity;
-import com.jangmo.web.model.entity.administrative.City;
-import com.jangmo.web.model.entity.administrative.District;
 import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.model.entity.user.MercenaryEntity;
 import com.jangmo.web.model.entity.user.MercenaryTransientEntity;
@@ -34,12 +33,11 @@ import com.jangmo.web.repository.DistrictRepository;
 import com.jangmo.web.repository.MatchVoteRepository;
 import com.jangmo.web.repository.MercenaryTransientRepository;
 
-import com.jangmo.web.service.AuthServiceImpl;
-import com.jangmo.web.service.manager.UserManagementServiceImpl;
 import com.jangmo.web.service.manager.VoteServiceImpl;
 import com.jangmo.web.utils.AgeUtil;
 
 import com.jangmo.web.utils.CodeGeneratorUtil;
+import com.jangmo.web.utils.EncryptUtil;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -64,8 +62,6 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 
 @Slf4j
 @SpringBootTest
@@ -147,14 +143,7 @@ public class AuthServiceTest {
         String cachedCode = cacheAccessor.get(CacheType.SIGNUP_CODE, signupMobile, String.class).orElseThrow(
                 () -> new AuthException(ErrorMessage.AUTH_NOT_VERIFIED)
         );
-        String testErrorCachedCode = "123123";
 
-        // when wrong cached code
-//        VerificationCodeVerifyRequest verifyRequest = new VerificationCodeVerifyRequest(
-//                signupMobile, testErrorCachedCode, authPurposeType
-//        );
-
-        // when matching cached code
         VerificationCodeVerifyRequest verifyRequest = new VerificationCodeVerifyRequest(
                 signupMobile, cachedCode, authPurposeType
         );
@@ -197,6 +186,12 @@ public class AuthServiceTest {
     @Test
     @Transactional
     void memberSignupIntegrationTest() {
+
+        /**
+         * sendAuthCode
+         * 인증 번호 전송(요쳥된 휴대폰 번호로)
+         * 인증 번호 및 휴대폰 번호 캐시 저장
+         */
         String signupMobile = "01012341234";
         AuthPurposeType authPurposeType = AuthPurposeType.SIGNUP;
         VerificationCodeSendRequest codeSendRequest = new VerificationCodeSendRequest(
@@ -208,6 +203,11 @@ public class AuthServiceTest {
         String authCode = cacheAccessor.get(CacheType.SIGNUP_CODE, signupMobile, String.class)
                 .orElseThrow(() -> new AuthException(ErrorMessage.AUTH_NOT_VERIFIED));
 
+        /**
+         * verifyCode
+         * 인증 번호 검증 (sendAuthCode 에서 저장된 캐시 데이터와 비교)
+         * 휴대폰 번호 인증 확인 캐시 저장
+         */
         VerificationCodeVerifyRequest verifyRequest = new VerificationCodeVerifyRequest(
                 signupMobile, authCode, authPurposeType
         );
@@ -224,25 +224,26 @@ public class AuthServiceTest {
 
         log.info("Before signup isCachedVerified :: {}", isCachedVerified);
 
+
+        /**
+         * signupMember
+         * 인증 번호 검증(verifyCode 에서 인증된 휴대폰 번호 (CacheType.SIGNUP_VERIFIED))
+         * 정상 회원 가입 및 회원 정상 저장 검증
+         */
+
         LocalDate birth = LocalDate.of(1994, 3, 16);
         MemberSignUpRequest signUpRequest = new MemberSignUpRequest(
-                "김테스트",
+                "김회원",
                 "01012341234",
                 Gender.MALE,
                 birth,
-                "1231231!",
+                "1231231!@",
                 1L,
                 1L
         );
-        City city = cityRepository.findById(1L).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.CITY_NOT_FOUND)
-        );
-        District district = districtRepository.findById(1L).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.DISTRICT_NOT_FOUND)
-        );
-        MemberEntity member = MemberEntity.create(signUpRequest, city, district);
 
         MemberSignupResponse response = authService.signupMember(signUpRequest);
+        assertNotNull(response);
 
         isCachedVerified = cacheAccessor.get(
                 CacheType.SIGNUP_VERIFIED,
@@ -250,28 +251,110 @@ public class AuthServiceTest {
                 Boolean.class
         ).orElseGet(() -> false);
         assertFalse(isCachedVerified);
+
+        log.info("After signup isCachedVerified :: {}", isCachedVerified);
+
+
+        MemberEntity savedMember = memberRepository.findByMobile(signUpRequest.getMobile()).orElseThrow();
+        assertNotNull(savedMember);
+        int old = AgeUtil.calculate(savedMember.getBirth());
+
+        log.info("savedMember name : {}", savedMember.getName());
+        log.info("savedMember old : {}", AgeUtil.calculate(savedMember.getBirth()));
+        log.info("savedMember mobile : {}", savedMember.getMobile());
+
+        log.info("response name : {}", response.getName());
+        log.info("response old : {}", response.getOld());
+        log.info("response mobile : {}", response.getMobile());
+
+        assertEquals(savedMember.getName(), response.getName());
+        assertEquals(savedMember.getMobile(), response.getMobile());
+        assertEquals(savedMember.getStatus(), MemberStatus.PENDING);
+        assertEquals(old, response.getOld());
+    }
+
+    @DisplayName("용병 등록 시나리오 및 인증된 휴대폰 캐시 검증 테스트")
+    @Test
+    @Transactional
+    void registerMercenaryTest() {
+
+        /**
+         * sendAuthCode
+         * 인증 번호 전송(요쳥된 휴대폰 번호로)
+         * 인증 번호 및 휴대폰 번호 캐시 저장
+         */
+        String registerMobile = "01012341234";
+        AuthPurposeType authPurposeType = AuthPurposeType.SIGNUP;
+        VerificationCodeSendRequest codeSendRequest = new VerificationCodeSendRequest(
+                registerMobile, authPurposeType
+        );
+        authService.sendAuthCode(codeSendRequest);
+
+        verify(smsProvider).send(eq(registerMobile), anyString(), any());
+
+        String authCode = cacheAccessor.get(CacheType.SIGNUP_CODE, registerMobile, String.class)
+                .orElseThrow(() -> new AuthException(ErrorMessage.AUTH_NOT_VERIFIED));
+
+        /**
+         * verifyCode
+         * 인증 번호 검증 (sendAuthCode 에서 저장된 캐시 데이터와 비교)
+         * 휴대폰 번호 인증 확인 캐시 저장
+         */
+        VerificationCodeVerifyRequest verifyRequest = new VerificationCodeVerifyRequest(
+                registerMobile, authCode, authPurposeType
+        );
+
+        authService.verifyCode(verifyRequest);
+
+        boolean isCachedVerified = false;
+        isCachedVerified = cacheAccessor.get(
+                CacheType.SIGNUP_VERIFIED,
+                registerMobile,
+                Boolean.class
+        ).orElseGet(() -> false);
+        assertTrue(isCachedVerified);
+
+        log.info("Before register isCachedVerified :: {}", isCachedVerified);
+
+        /**
+         * registerMercenary
+         * 인증 번호 검증(verifyCode 에서 인증된 휴대폰 번호 (CacheType.SIGNUP_VERIFIED))
+         * 정상 용병 등록 및 용병 정상 저장
+         */
+        MercenaryRetentionStatus retentionStatus = MercenaryRetentionStatus.KEEP;
+        MercenaryRegistrationRequest registrationRequest = new MercenaryRegistrationRequest(
+                "김용병",
+                registerMobile,
+                Gender.MALE,
+                retentionStatus
+        );
+
+        MercenaryRegistrationResponse response = authService.registerMercenary(
+                registrationRequest
+        );
+
+        isCachedVerified = cacheAccessor.get(
+                CacheType.SIGNUP_VERIFIED,
+                registerMobile,
+                Boolean.class
+        ).orElseGet(() -> false);
+        assertFalse(isCachedVerified);
+
         log.info("After signup isCachedVerified :: {}", isCachedVerified);
 
         assertNotNull(response);
-        MemberEntity savedMember = memberRepository.findByMobile(signUpRequest.getMobile()).orElseThrow();
-        int old = AgeUtil.calculate(member.getBirth());
-
-        log.info("member name : " + member.getName() +
-                 ", member old : " + AgeUtil.calculate(member.getBirth()) +
-                 ", member mobile : " + member.getMobile());
-
-        log.info("response name : " + response.getName() +
-                 ", response old : " + response.getOld() +
-                 ", response mobile : " + response.getMobile());
-
-        log.info("savedMember name : " + savedMember.getName() +
-                ", savedMember mobile : " + savedMember.getMobile());
-        assertNotNull(savedMember);
-        assertEquals(member.getName(), response.getName());
-        assertEquals(member.getMobile(), response.getMobile());
-
-        assertEquals(old, response.getOld());
-
+        MercenaryEntity savedMercenary = mercenaryRepository
+                .findByMobile(registrationRequest.getMobile()).orElseThrow(
+                        () -> new NotFoundException(ErrorMessage.MERCENARY_NOT_FOUND)
+                );
+        assertNotNull(savedMercenary);
+        log.info("registerMercenary response name : {}", response.getName());
+        log.info("registerMercenary response mobile : {}", response.getMobile());
+        log.info("savedMercenary name : {}", savedMercenary.getName());
+        log.info("savedMember mobile : {}", savedMercenary.getMobile());
+        assertEquals(savedMercenary.getName(), response.getName());
+        assertEquals(savedMercenary.getMobile(), response.getMobile());
+        assertEquals(savedMercenary.getStatus(), MercenaryStatus.PENDING);
     }
 
     @DisplayName("인증 번호 요청 중복 에러 테스트")
@@ -413,6 +496,89 @@ public class AuthServiceTest {
         assertEquals(mercenary.getId(), mercenaryId);
         log.info("mercenary getId : {}", mercenary.getId());
         log.info("mercenaryId : {}", mercenaryId);
+    }
+
+    @DisplayName("회원 비밀번호 재설정 시나리오 테스트")
+    @Test
+    @Transactional
+    void resetMemberPasswordTest() {
+
+        /** Create Temporary Member  */
+        String memberTestMobile = "01012341234";
+        cacheAccessor.put(CacheType.SIGNUP_VERIFIED, memberTestMobile, true);
+
+        MemberSignUpRequest signUpRequest = new MemberSignUpRequest(
+                "김회원",
+                memberTestMobile,
+                Gender.MALE,
+                LocalDate.of(1994, 3, 17),
+                "1231231!@",
+                1L,
+                1L
+        );
+        authService.signupMember(signUpRequest);
+
+        /**
+         * sendAuthCode
+         * 인증 번호 전송(요쳥된 휴대폰 번호로)
+         * 인증 번호 및 휴대폰 번호 캐시 저장
+         */
+        AuthPurposeType authPurposeType = AuthPurposeType.RESET_PASSWORD;
+
+        VerificationCodeSendRequest codeSendRequest = new VerificationCodeSendRequest(
+                memberTestMobile, authPurposeType
+        );
+
+        authService.sendAuthCode(codeSendRequest);
+
+        String cachedCode = cacheAccessor.get(CacheType.RESET_CODE, memberTestMobile, String.class).orElseThrow(
+                () -> new AuthException(ErrorMessage.AUTH_NOT_VERIFIED)
+        );
+
+        /**
+         * verifyCode
+         * 인증 번호 검증 (sendAuthCode 에서 저장된 캐시 데이터와 비교)
+         * 휴대폰 번호 인증 확인 캐시 저장
+         */
+        VerificationCodeVerifyRequest verifyRequest = new VerificationCodeVerifyRequest(
+                memberTestMobile, cachedCode, authPurposeType
+        );
+
+        authService.verifyCode(verifyRequest);
+
+        boolean isCachedVerified = cacheAccessor.get(
+                CacheType.RESET_VERIFIED,
+                memberTestMobile,
+                Boolean.class
+        ).orElseGet(() -> false);
+        log.info("Before resetPassword isCachedVerified :: {}", isCachedVerified);
+        assertTrue(isCachedVerified);
+
+        /**
+         * resetMemberPassword
+         * 인증된 휴대폰 번호 검증
+         * 비밀 번호 변경 및 휴대폰 인증 캐시 제거
+         * 바뀐 비밀 번호와 회원 비밀 번호 match 검증
+         */
+        String updatePassword = "123123!!";
+        ResetPasswordRequest resetPasswordRequest = new ResetPasswordRequest(
+                memberTestMobile, updatePassword
+        );
+
+        authService.resetMemberPassword(resetPasswordRequest);
+        isCachedVerified = cacheAccessor.get(
+                CacheType.RESET_VERIFIED,
+                memberTestMobile,
+                Boolean.class
+        ).orElseGet(() -> false);
+        log.info("After resetPassword isCachedVerified :: {}", isCachedVerified);
+        assertFalse(isCachedVerified);
+        MemberEntity mercenary = memberRepository.findByMobile(memberTestMobile).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND)
+        );
+
+        assertTrue(EncryptUtil.matches(updatePassword, mercenary.getPassword()));
+
     }
 
 

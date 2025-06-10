@@ -80,8 +80,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public MercenaryRegistrationResponse registerMercenary(MercenaryRegistrationRequest request) {
-        MercenaryEntity mercenary = MercenaryEntity.create(request);
+    public MercenaryRegistrationResponse registerMercenary(MercenaryRegistrationRequest registration) {
+        validateVerifiedMobile(CacheType.SIGNUP_VERIFIED, registration.getMobile());
+        MercenaryEntity mercenary = MercenaryEntity.create(registration);
         return MercenaryRegistrationResponse.of(
                 mercenaryRepository.save(mercenary)
         );
