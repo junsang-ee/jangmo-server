@@ -19,7 +19,7 @@ public class VerificationCodeVerifyRequest {
     private String mobile;
 
     @NotBlank(message = "인증 코드는 필수 항목입니다.")
-    @ValidFields(field = "validCode")
+    @ValidFields(field = "authCode")
     private String code;
 
     @NotNull(message = "인증 타입은 필수 항목입니다.")

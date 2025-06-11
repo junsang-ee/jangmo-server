@@ -3,6 +3,7 @@ package com.jangmo.web.service;
 import com.jangmo.web.config.jwt.JwtConfig;
 import com.jangmo.web.constants.AuthPurposeType;
 import com.jangmo.web.constants.Gender;
+import com.jangmo.web.constants.SmsType;
 import com.jangmo.web.constants.cache.CacheType;
 import com.jangmo.web.constants.user.MemberStatus;
 import com.jangmo.web.constants.MercenaryRetentionStatus;
@@ -21,17 +22,13 @@ import com.jangmo.web.model.dto.response.MemberSignupResponse;
 
 import com.jangmo.web.model.dto.response.MercenaryRegistrationResponse;
 import com.jangmo.web.model.entity.MatchEntity;
+import com.jangmo.web.model.entity.user.UserEntity;
 import com.jangmo.web.model.entity.vote.MatchVoteEntity;
 import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.model.entity.user.MercenaryEntity;
 import com.jangmo.web.model.entity.user.MercenaryTransientEntity;
 
-import com.jangmo.web.repository.MemberRepository;
-import com.jangmo.web.repository.MercenaryRepository;
-import com.jangmo.web.repository.CityRepository;
-import com.jangmo.web.repository.DistrictRepository;
-import com.jangmo.web.repository.MatchVoteRepository;
-import com.jangmo.web.repository.MercenaryTransientRepository;
+import com.jangmo.web.repository.*;
 
 import com.jangmo.web.service.manager.VoteServiceImpl;
 import com.jangmo.web.utils.AgeUtil;
@@ -70,10 +67,6 @@ public class AuthServiceTest {
     MemberRepository memberRepository;
     @Autowired
     MercenaryRepository mercenaryRepository;
-    @Autowired
-    CityRepository cityRepository;
-    @Autowired
-    DistrictRepository districtRepository;
     @Autowired
     MatchVoteRepository matchVoteRepository;
     @Autowired
@@ -119,7 +112,7 @@ public class AuthServiceTest {
         authService.sendAuthCode(codeSendRequest);
 
         // then
-        verify(smsProvider).send(eq(signupMobile), anyString(), any());
+        verify(smsProvider).send(eq(signupMobile), anyString(), eq(SmsType.AUTH_CODE));
 
         String cachedCode = cacheAccessor.get(CacheType.SIGNUP_CODE, signupMobile, String.class).orElseThrow(
                 () -> new AuthException(ErrorMessage.AUTH_NOT_VERIFIED)
@@ -140,9 +133,12 @@ public class AuthServiceTest {
 
         authService.sendAuthCode(codeSendRequest);
 
-        String cachedCode = cacheAccessor.get(CacheType.SIGNUP_CODE, signupMobile, String.class).orElseThrow(
-                () -> new AuthException(ErrorMessage.AUTH_NOT_VERIFIED)
-        );
+        verify(smsProvider).send(eq(signupMobile), anyString(), eq(SmsType.AUTH_CODE));
+
+        String cachedCode = cacheAccessor.get(CacheType.SIGNUP_CODE, signupMobile, String.class)
+                .orElseThrow(
+                        () -> new AuthException(ErrorMessage.AUTH_NOT_VERIFIED)
+                );
 
         VerificationCodeVerifyRequest verifyRequest = new VerificationCodeVerifyRequest(
                 signupMobile, cachedCode, authPurposeType
@@ -168,21 +164,16 @@ public class AuthServiceTest {
     }
 
     /**
-     * 회원가입(Member) 시나리오 통합 테스트
+     * ● 회원가입 시나리오 통합 테스트
      *
-     * <p>시나리오:
+     * <p> 시나리오
      * <ol>
-     *     <li>인증 코드 요청 (SMS) - sendAuthCode()</li>
-     *     <li>인증 코드 검증 - verifyCode() </li>
-     *     <li>회원가입 처리 signupMember() </li>
-     *     <li>캐시 만료 시 예외 처리</li>
+     *     <li> 인증 코드 요청 (SMS) => sendAuthCode()</li>
+     *     <li> 인증 코드 검증 => verifyCode() </li>
+     *     <li> 회원가입 처리 => signupMember() </li>
      * </ol>
-     *
-     * 테스트 목적:
-     * - 인증 절차와 회원가입 및 용병 등록 흐름의 유효성 검증
-     * - 캐시 TTL 적용 확인
      */
-    @DisplayName("회원 가입 시나리오 및 인증된 휴대폰 캐시 검증 테스트")
+    @DisplayName("회원 가입 시나리오 테스트")
     @Test
     @Transactional
     void memberSignupIntegrationTest() {
@@ -198,7 +189,8 @@ public class AuthServiceTest {
                 signupMobile, authPurposeType
         );
         authService.sendAuthCode(codeSendRequest);
-        verify(smsProvider).send(eq(signupMobile), anyString(), any());
+
+        verify(smsProvider).send(eq(signupMobile), anyString(), eq(SmsType.AUTH_CODE));
 
         String authCode = cacheAccessor.get(CacheType.SIGNUP_CODE, signupMobile, String.class)
                 .orElseThrow(() -> new AuthException(ErrorMessage.AUTH_NOT_VERIFIED));
@@ -273,7 +265,17 @@ public class AuthServiceTest {
         assertEquals(old, response.getOld());
     }
 
-    @DisplayName("용병 등록 시나리오 및 인증된 휴대폰 캐시 검증 테스트")
+    /**
+     * ● 용병 등록 시나리오 통합 테스트
+     *
+     * <p> 시나리오
+     * <ol>
+     *     <li> 인증 코드 요청(SMS) => sendAuthCode() </li>
+     *     <li> 인증 코드 검증 => verifyCode() </li>
+     *     <li> 용병 등록 처리 => registerMercenary() </li>
+     * </ol>
+     */
+    @DisplayName("용병 등록 시나리오 테스트")
     @Test
     @Transactional
     void registerMercenaryTest() {
@@ -290,7 +292,7 @@ public class AuthServiceTest {
         );
         authService.sendAuthCode(codeSendRequest);
 
-        verify(smsProvider).send(eq(registerMobile), anyString(), any());
+        verify(smsProvider).send(eq(registerMobile), anyString(), eq(SmsType.AUTH_CODE));
 
         String authCode = cacheAccessor.get(CacheType.SIGNUP_CODE, registerMobile, String.class)
                 .orElseThrow(() -> new AuthException(ErrorMessage.AUTH_NOT_VERIFIED));
@@ -360,7 +362,8 @@ public class AuthServiceTest {
     @DisplayName("인증 번호 요청 중복 에러 테스트")
     @Test
     @Transactional
-    void signupDuplicatedTest() {
+    void sendAuthCodeDuplicatedErrorTest() {
+        // already exists admin mobile(01043053451)
         VerificationCodeSendRequest request = new VerificationCodeSendRequest(
                 "01043053451",
                 AuthPurposeType.SIGNUP
@@ -410,7 +413,7 @@ public class AuthServiceTest {
         assertEquals(signupMember.getId(), userId);
     }
 
-    @DisplayName("Mercenary 로그인 테스트")
+    @DisplayName("용병 로그인 테스트")
     @Test
     @Transactional
     void mercenaryLoginTest() {
@@ -498,7 +501,20 @@ public class AuthServiceTest {
         log.info("mercenaryId : {}", mercenaryId);
     }
 
-    @DisplayName("회원 비밀번호 재설정 시나리오 테스트")
+    /**
+     * ● 회원 비밀 번호 재설정 시나리오 통합 테스트
+     *
+     * <p> 시나리오
+     * <ol>
+     *     <li> 임의 회원 등록(회원 가입 과정 생략) => signupMember() </li>
+     *     <li> 인증 코드 요청(SMS) => sendAuthCode() </li>
+     *     <li> 인증 코드 검증 => verifyCode() </li>
+     *     <li> 캐시 검증(sendAuthCode(), verifyCode() 각각 검증) </li>
+     *     <li> 회원 비밀 번호 재설정 => resetMemberPassword() </li>
+     *     <li> 기존 비밀 번호와 비매칭 검증 </li>
+     * </ol>
+     */
+    @DisplayName("회원 비밀 번호 재설정 시나리오 테스트")
     @Test
     @Transactional
     void resetMemberPasswordTest() {
@@ -517,7 +533,10 @@ public class AuthServiceTest {
                 1L
         );
         authService.signupMember(signUpRequest);
-
+        MemberEntity member = memberRepository.findByMobile(memberTestMobile)
+                .orElseThrow(
+                        () -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND)
+                );
         /**
          * sendAuthCode
          * 인증 번호 전송(요쳥된 휴대폰 번호로)
@@ -530,10 +549,12 @@ public class AuthServiceTest {
         );
 
         authService.sendAuthCode(codeSendRequest);
+        verify(smsProvider).send(eq(memberTestMobile), anyString(), eq(SmsType.AUTH_CODE));
 
-        String cachedCode = cacheAccessor.get(CacheType.RESET_CODE, memberTestMobile, String.class).orElseThrow(
-                () -> new AuthException(ErrorMessage.AUTH_NOT_VERIFIED)
-        );
+        String cachedCode = cacheAccessor.get(CacheType.RESET_CODE, memberTestMobile, String.class)
+                .orElseThrow(
+                        () -> new AuthException(ErrorMessage.AUTH_NOT_VERIFIED)
+                );
 
         /**
          * verifyCode
@@ -573,11 +594,156 @@ public class AuthServiceTest {
         ).orElseGet(() -> false);
         log.info("After resetPassword isCachedVerified :: {}", isCachedVerified);
         assertFalse(isCachedVerified);
-        MemberEntity mercenary = memberRepository.findByMobile(memberTestMobile).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND)
+
+        assertTrue(EncryptUtil.matches(updatePassword, member.getPassword()));
+    }
+
+
+    /**
+     * ● 용병 코드 재발급 시나리오 통합 테스트
+     *
+     * <p> 시나리오
+     * <ol>
+     *     <li> 임의 용병 계정 등록(용병 등록 과정 생략) => registerMercenary() </li>
+     *     <li> 임의 매칭 투표 및 용병 코드 생성(관리자 승인 프로세스 수동 생성) (MercenaryTransientEntity Set) </li>
+     *     <li> 인증 코드 요청(SMS) => sendAuthCode() </li>
+     *     <li> 인증 코드 검증 => verifyCode() </li>
+     *     <li> 캐시 검증(sendAuthCode(), verifyCode() 각각 검증) </li>
+     *     <li> 용병 코드 인증 캐시 검증 후 재발급 => resetMercenaryCode() </li>
+     *     <li> 기존 용병 코드와 비매칭 검증 </li>
+     * </ol>
+     */
+    @DisplayName("용병 코드 재발급 시나리오 테스트")
+    @Test
+    @Transactional
+    void resetMercenaryCodeTest() {
+
+        /** Create Temporary Mercenary */
+        String mercenaryTestMobile = "01012341234";
+        cacheAccessor.put(CacheType.SIGNUP_VERIFIED, mercenaryTestMobile, true);
+
+        MercenaryRetentionStatus retentionStatus = MercenaryRetentionStatus.KEEP;
+        MercenaryRegistrationRequest registrationRequest = new MercenaryRegistrationRequest(
+                "김용병",
+                mercenaryTestMobile,
+                Gender.MALE,
+                retentionStatus
+        );
+        authService.registerMercenary(registrationRequest);
+
+        MercenaryEntity mercenary = mercenaryRepository.findByMobile(mercenaryTestMobile)
+                .orElseThrow(
+                        () -> new NotFoundException(ErrorMessage.MERCENARY_NOT_FOUND)
+                );
+
+        assertNotNull(mercenary);
+        assertEquals(mercenary.getStatus(), MercenaryStatus.PENDING);
+
+        /**
+         * 임의 매치 투표 생성 (매치 투표 생성 시 자동 매치(MatchEntity) 생성) => MatchVoteEntity 생성
+         * 관리자 임의(수동) 승인 (MercenaryTransientEntity (code, match) 임의 생성 후 updateTransient)
+         * 인증 번호 전송(요쳥된 휴대폰 번호로)
+         * 인증 번호 및 휴대폰 번호 캐시 저장
+         */
+
+        assertNull(mercenary.getMercenaryTransient());
+        UserEntity admin = memberRepository.findByMobile("01043053451").get();
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
+        String originMercenaryCode = "test123456";
+
+        MatchVoteCreateRequest matchVoteCreateRequest = new MatchVoteCreateRequest(
+                MatchType.REGULAR, tomorrow.plusDays(1), tomorrow
         );
 
-        assertTrue(EncryptUtil.matches(updatePassword, mercenary.getPassword()));
+        MatchVoteEntity matchVote = MatchVoteEntity.create(
+                admin, matchVoteCreateRequest
+        );
+        matchVoteRepository.save(matchVote);
+
+        MercenaryTransientEntity transientEntity = MercenaryTransientEntity.create(
+                originMercenaryCode, matchVote.getMatch()
+        );
+        mercenaryTransientRepository.save(transientEntity);
+
+        mercenary.updateStatus(MercenaryStatus.ENABLED);
+        mercenary.updateTransient(transientEntity);
+
+        /**
+         * sendAuthCode
+         * 인증 번호 전송(요쳥된 휴대폰 번호로)
+         * 인증 번호 및 휴대폰 번호 캐시 저장
+         */
+        AuthPurposeType authPurposeType = AuthPurposeType.RESET_MERCENARY_CODE;
+
+        VerificationCodeSendRequest codeSendRequest = new VerificationCodeSendRequest(
+                mercenaryTestMobile, authPurposeType
+        );
+
+        authService.sendAuthCode(codeSendRequest);
+
+        verify(smsProvider).send(eq(mercenaryTestMobile), anyString(), eq(SmsType.AUTH_CODE));
+
+        String cachedCode = cacheAccessor.get(CacheType.RESET_CODE, mercenaryTestMobile, String.class)
+                .orElseThrow(
+                        () -> new AuthException(ErrorMessage.AUTH_NOT_VERIFIED)
+                );
+
+        VerificationCodeVerifyRequest verifyRequest = new VerificationCodeVerifyRequest(
+                mercenaryTestMobile, cachedCode, authPurposeType
+        );
+
+        authService.verifyCode(verifyRequest);
+
+        boolean isCachedVerified = cacheAccessor.get(
+                CacheType.RESET_VERIFIED,
+                mercenaryTestMobile,
+                Boolean.class
+        ).orElseGet(() -> false);
+
+        log.info("Before reset mercenaryCode isCachedVerified :: {}", isCachedVerified);
+        assertTrue(isCachedVerified);
+
+        log.info("Before reset mercenaryCode matching result :: {}",
+                EncryptUtil.matches(
+                        originMercenaryCode,
+                        mercenary.getMercenaryTransient().getCode()
+                )
+        );
+        assertTrue(
+                EncryptUtil.matches(
+                        originMercenaryCode,
+                        mercenary.getMercenaryTransient().getCode()
+                )
+        );
+
+        ResetMercenaryCodeRequest resetMercenaryCodeRequest = new ResetMercenaryCodeRequest(
+                mercenaryTestMobile
+        );
+
+        authService.resetMercenaryCode(resetMercenaryCodeRequest);
+        verify(smsProvider).send(eq(mercenaryTestMobile), anyString(), eq(SmsType.MERCENARY_CODE));
+        isCachedVerified = cacheAccessor.get(
+                CacheType.RESET_VERIFIED,
+                mercenaryTestMobile,
+                Boolean.class
+        ).orElseGet(() -> false);
+
+        assertFalse(isCachedVerified);
+
+        log.info("After reset mercenaryCode isCachedVerified :: {}", isCachedVerified);
+
+        log.info("After reset mercenaryCode matching result :: {}",
+                EncryptUtil.matches(
+                        originMercenaryCode,
+                        mercenary.getMercenaryTransient().getCode()
+                )
+        );
+        assertFalse(
+                EncryptUtil.matches(
+                        originMercenaryCode,
+                        mercenary.getMercenaryTransient().getCode()
+                )
+        );
 
     }
 

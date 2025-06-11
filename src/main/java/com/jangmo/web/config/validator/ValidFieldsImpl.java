@@ -33,7 +33,7 @@ public class ValidFieldsImpl implements ConstraintValidator<ValidFields, String>
             case "mobile": validMobile(value); break;
             case "password": validPassword(value); break;
             case "name": validName(value); break;
-            case "validCode": validCode(value); break;
+            case "authCode": validAuthCode(value); break;
             case "mercenaryCode": validMercenaryCode(value); break;
             default: break;
         }
@@ -56,7 +56,7 @@ public class ValidFieldsImpl implements ConstraintValidator<ValidFields, String>
             throw new FieldValidationException(ErrorMessage.REQUEST_INVALID_NAME);
     }
 
-    private void validCode(String code) {
+    private void validAuthCode(String code) {
         if (!code.matches(VALID_CODE_REGEX))
             throw new FieldValidationException(ErrorMessage.REQUEST_INVALID_CODE);
     }
