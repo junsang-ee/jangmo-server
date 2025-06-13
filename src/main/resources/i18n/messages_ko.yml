@@ -49,39 +49,42 @@ response:
       expired:
         code: "4000"
         message: "세션이 만료되었습니다."
+      permission.denied:
+        code: "4002"
+        message: "접근 권한이 없습니다."
       invalid:
-        code: "4001"
+        code: "4003"
         message: "올바르지 않은 인증 정보입니다."
       password.invalid:
-        code: "4002"
+        code: "4003"
         message: "비밀번호가 일치하지 않습니다."
       disabled:
-        code: "4003"
+        code: "4004"
         message: "이용 제한된 계정입니다."
       unauthenticated:
-        code: "4004"
+        code: "4005"
         message: "관리자 승인이 필요한 계정입니다."
       retired:
-        code: "4005"
+        code: "4006"
         message: "탈퇴한 계정입니다."
       already.enabled:
-        code: "4006"
+        code: "4007"
         message: "정상 이용 가능한 계정입니다."
       mercenary:
         code.invalid:
-          code: "4007"
+          code: "4008"
           message: "용병코드가 일치하지 않습니다."
         expired:
-          code: "4008"
+          code: "4009"
           message: "용병 코드 재발급이 필요한 용병 계정입니다."
         privacy:
-          code: "4009"
+          code: "4010"
           message: "개인 정보 파기로 삭제되어야 하는 용병 계정입니다."
         code.not.issued:
-          code: "4010"
+          code: "4011"
           message: "해당 용병의 코드가 존재하지 않습니다. 관리자에게 문의하세요."
       user.duplicated:
-        code: "4011"
+        code: "4012"
         message: "해당 휴대폰 번호로 등록된 유저가 이미 존재합니다."
       code.invalid:
         code: "4020"

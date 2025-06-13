@@ -1,9 +1,9 @@
 package com.jangmo.web.config;
 
+import com.jangmo.web.config.jwt.JwtAccessDeniedHandler;
 import com.jangmo.web.config.jwt.JwtAuthenticationEntryPoint;
 import com.jangmo.web.config.jwt.JwtAuthenticationFilter;
 import com.jangmo.web.config.jwt.JwtTokenProvider;
-import com.jangmo.web.config.jwt.TestAccessDeninedException;
 import com.jangmo.web.security.ExtendedUserDetailsService;
 import com.jangmo.web.security.ExtendedUserDetailServiceImpl;
 import com.jangmo.web.service.UserService;
@@ -36,9 +36,15 @@ public class WebSecurityConfiguration {
 
     private final JwtAuthenticationEntryPoint entryPoint;
 
+    private final JwtAccessDeniedHandler accessDeniedHandler;
+
     public static final String[] PERMIT_ANT_PATH = {
             "/api/auth/**",
             "/api/locations/**"
+    };
+
+    public static final String[] AUTHENTICATED_ANT_PATH = {
+            "/api/matches/**"
     };
 
     public static final String[] ADMIN_ANT_PATH = {
@@ -58,6 +64,7 @@ public class WebSecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeRequests()
                 .antMatchers(PERMIT_ANT_PATH).permitAll()
+                .antMatchers(AUTHENTICATED_ANT_PATH).authenticated()
                 .antMatchers(ADMIN_ANT_PATH).hasRole("ADMIN")
                 .antMatchers(MANAGER_ANT_PATH).hasAnyRole("ADMIN", "MANAGER")
                 .anyRequest().authenticated()
@@ -65,7 +72,8 @@ public class WebSecurityConfiguration {
                 .and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().exceptionHandling()
-                .authenticationEntryPoint(entryPoint)
+                    .authenticationEntryPoint(entryPoint)
+                    .accessDeniedHandler(accessDeniedHandler)
                 .and().addFilterBefore(
                         new JwtAuthenticationFilter(
                                 BeanSuppliers.beanSupplier(context, JwtTokenProvider.class)

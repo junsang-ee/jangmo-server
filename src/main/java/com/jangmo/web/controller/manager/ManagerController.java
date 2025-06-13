@@ -56,7 +56,6 @@ public class ManagerController {
     private final UserManagementService userManagementService;
 
     private final GroundManagementService groundManagementService;
-
     @GetMapping("/members/{memberId}")
     public ResponseEntity<ApiSuccessResponse<MemberDetailResponse>> getMemberDetail(@PathVariable String memberId) {
         return wrap(userManagementService.getMemberDetail(memberId));
