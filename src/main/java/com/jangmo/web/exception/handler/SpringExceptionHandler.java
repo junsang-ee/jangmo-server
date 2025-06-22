@@ -4,6 +4,7 @@ import com.jangmo.web.constants.message.ErrorMessage;
 import com.jangmo.web.exception.handler.base.BaseExceptionHandler;
 import com.jangmo.web.model.dto.response.common.ApiErrorResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataAccessResourceFailureException;
 
@@ -40,7 +41,13 @@ public class SpringExceptionHandler extends BaseExceptionHandler {
 
     @ExceptionHandler(DataAccessResourceFailureException.class)
     public ResponseEntity<ApiErrorResponse> handleDataAccessResourceFailure(DataAccessResourceFailureException ex) {
-        log.error("DataAccessResourceFailureException >> Fail DB Connection ", ex);
+        log.error("DataAccessResourceFailureException >> Fail DB Connection {}", ex.getMessage(), ex);
+        return toResponse(ErrorMessage.INTERNAL_SERVER_ERROR, null);
+    }
+
+    @ExceptionHandler(JDBCConnectionException.class)
+    public ResponseEntity<ApiErrorResponse> handleJDBCConnectionException(JDBCConnectionException ex) {
+        log.error("JDBCConnectionException >> Fail DB Connection {}", ex.getMessage(), ex);
         return toResponse(ErrorMessage.INTERNAL_SERVER_ERROR, null);
     }
 
