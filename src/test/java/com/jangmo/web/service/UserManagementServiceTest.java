@@ -110,7 +110,7 @@ public class UserManagementServiceTest {
         LocalDate endAt = now.plusDays(1);
         LocalDate matchAt = now.plusDays(2);
         MatchVoteCreateRequest matchVoteCreateRequest = new MatchVoteCreateRequest(
-                MatchType.REGULAR,
+                MatchType.FUTSAL,
                 matchAt,
                 endAt
         );

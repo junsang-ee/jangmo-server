@@ -52,7 +52,7 @@ public class VoteServiceTest {
         LocalDate matchAt = now.plusDays(2);
         LocalDate endAt = now.plusDays(1);
         MatchVoteCreateRequest createRequest = new MatchVoteCreateRequest(
-                MatchType.REGULAR,
+                MatchType.FUTSAL,
                 matchAt,
                 endAt
         );

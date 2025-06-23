@@ -437,7 +437,7 @@ public class AuthServiceTest {
         LocalDate endAt = now.plusDays(1);
         LocalDate matchAt = now.plusDays(2);
         MatchVoteCreateRequest matchVoteCreateRequest = new MatchVoteCreateRequest(
-                MatchType.REGULAR,
+                MatchType.FUTSAL,
                 matchAt,
                 endAt
         );
@@ -652,7 +652,7 @@ public class AuthServiceTest {
         String originMercenaryCode = "test123456";
 
         MatchVoteCreateRequest matchVoteCreateRequest = new MatchVoteCreateRequest(
-                MatchType.REGULAR, tomorrow.plusDays(1), tomorrow
+                MatchType.FUTSAL, tomorrow.plusDays(1), tomorrow
         );
 
         MatchVoteEntity matchVote = MatchVoteEntity.create(
