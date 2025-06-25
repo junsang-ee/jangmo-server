@@ -3,7 +3,7 @@ package com.jangmo.web.model.entity.vote;
 import com.jangmo.web.constants.VoteType;
 import com.jangmo.web.model.dto.request.MatchVoteCreateRequest;
 import com.jangmo.web.model.entity.MatchEntity;
-import com.jangmo.web.model.entity.MatchVoteUserEntity;
+import com.jangmo.web.model.entity.vote.user.MatchVoteUserEntity;
 import com.jangmo.web.model.entity.user.UserEntity;
 import com.jangmo.web.utils.DateFormatUtil;
 import lombok.Getter;
@@ -38,9 +38,14 @@ public class MatchVoteEntity extends VoteEntity {
     private List<MatchVoteUserEntity> voters;
 
     private MatchVoteEntity(UserEntity user,
-                            MatchVoteCreateRequest request) {
-        super(user, DateFormatUtil.convertToString(request.getMatchAt()),
-                request.getEndAt(), VoteType.MATCH);
+                            MatchVoteCreateRequest request,
+                            List<UserEntity> rawVoters) {
+        super(
+                user,
+                DateFormatUtil.convertToString(request.getMatchAt()),
+                request.getEndAt(),
+                VoteType.MATCH
+        );
         this.matchAt = request.getMatchAt();
         this.match = MatchEntity.create(
                 user,
@@ -48,11 +53,15 @@ public class MatchVoteEntity extends VoteEntity {
                 request.getMatchType(),
                 this
         );
+        this.voters = MatchVoteUserEntity.createAll(
+                rawVoters, this
+        );
     }
 
     public static MatchVoteEntity create(final UserEntity createdBy,
-                                         final MatchVoteCreateRequest request) {
-        return new MatchVoteEntity(createdBy, request);
+                                         final MatchVoteCreateRequest request,
+                                         final List<UserEntity> rawVoters) {
+        return new MatchVoteEntity(createdBy, request, rawVoters);
     }
 
     public void setVoters(List<MatchVoteUserEntity> voters) {
