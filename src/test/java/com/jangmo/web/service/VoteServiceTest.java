@@ -1,7 +1,9 @@
 package com.jangmo.web.service;
 
+import com.jangmo.web.constants.UserRole;
 import com.jangmo.web.constants.match.MatchType;
 import com.jangmo.web.constants.message.ErrorMessage;
+import com.jangmo.web.constants.user.MemberStatus;
 import com.jangmo.web.exception.NotFoundException;
 import com.jangmo.web.model.dto.request.MatchVoteCreateRequest;
 import com.jangmo.web.model.dto.response.MatchVoteCreateResponse;
@@ -50,14 +52,14 @@ public class VoteServiceTest {
         );
         LocalDate now = LocalDate.now();
         LocalDate matchAt = now.plusDays(2);
-        LocalDate endAt = now.plusDays(1);
+        LocalDate voteEndAt = now.plusDays(1);
         MatchVoteCreateRequest createRequest = new MatchVoteCreateRequest(
                 MatchType.FUTSAL,
                 matchAt,
-                endAt
+                voteEndAt
         );
         MatchVoteCreateResponse response = voteService.createMatchVote(admin.getId(), createRequest);
-        List<MatchVoteEntity> matchVoteList = matchVoteRepository.findByMatchAt(now);
+        List<MatchVoteEntity> matchVoteList = matchVoteRepository.findByMatchAt(matchAt);
         log.info("matchVoteList size: " + matchVoteList.size());
         MatchVoteEntity matchVote = matchVoteList.get(0);
 
@@ -65,14 +67,31 @@ public class VoteServiceTest {
         assertNotNull(response);
         assertNotNull(matchVote);
         assertNotNull(match);
+
         assertEquals(matchVote.getMatch().getId(), match.getId());
-        log.info("matchVote getMatchId : " + matchVote.getMatch().getId());
-        log.info("matchId : " + match.getId());
-        log.info("response matchAt : " + response.getMatchAt());
-        log.info("now : " + now);
-        log.info("response name : " + response.getCreatorName());
-        log.info("admin name : " + admin.getName());
-        assertEquals(response.getMatchAt(), now);
-        assertEquals(response.getCreatorName(), admin.getName());
+        assertEquals(matchVote.getMatchAt(), matchAt);
+        assertEquals(matchVote.getEndAt(), voteEndAt);
+        assertEquals(matchVote.getCreatedBy().getName(), admin.getName());
+
+        log.info("======================================================");
+        log.info("matchVote getMatchId : {}", matchVote.getMatch().getId());
+        log.info("matchId : {}", match.getId());
+        log.info("======================================================");
+        log.info("matchVote matchAt : {}", matchVote.getMatchAt());
+        log.info("matchAt : {}", matchAt);
+        log.info("======================================================");
+        log.info("matchVote voteEndAt : {}", matchVote.getEndAt());
+        log.info("voteEndAt : {}", voteEndAt);
+        log.info("======================================================");
+        log.info("matchVote createdByName : {}", matchVote.getCreatedBy().getName());
+        log.info("admin name : {}", admin.getName());
+        log.info("======================================================");
+
+        int voterCount = userRepository.findUserByMemberStatusAndRoleNot(
+                MemberStatus.ENABLED,
+                UserRole.MERCENARY
+        ).size();
+        log.info("voterCount : {}", voterCount);
+        assertEquals(voterCount, matchVote.getVoters().size());
     }
 }

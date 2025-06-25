@@ -102,6 +102,8 @@ public class UserManagementServiceImpl implements UserManagementService {
         member.updateStatus(MemberStatus.ENABLED);
     }
 
+
+
     @Override
     public List<UserEntity> getApprovalUsers() {
         return userRepository.findApprovalUsers();
@@ -118,18 +120,28 @@ public class UserManagementServiceImpl implements UserManagementService {
 
     @Override
     public MemberDetailResponse getMemberDetail(String memberId) {
-        MemberEntity member = memberRepository.findById(memberId).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND)
-        );
+        MemberEntity member = getMember(memberId);
         return MemberDetailResponse.of(member);
     }
 
     @Override
     public MercenaryDetailResponse getMercenaryDetail(String mercenaryId) {
-        MercenaryEntity mercenary = mercenaryRepository.findById(mercenaryId).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.MERCENARY_NOT_FOUND)
-        );
+        MercenaryEntity mercenary = getMercenary(mercenaryId);
         return MercenaryDetailResponse.of(mercenary);
+    }
+
+    @Override
+    @Transactional
+    public void updateMemberStatus(String memberId, MemberStatus status) {
+        MemberEntity member = getMember(memberId);
+        member.updateStatus(status);
+    }
+
+    @Override
+    @Transactional
+    public void updateMercenaryStatus(String mercenaryId, MercenaryStatus status) {
+        MercenaryEntity mercenary = getMercenary(mercenaryId);
+        mercenary.updateStatus(status);
     }
 
     @Transactional
@@ -151,6 +163,18 @@ public class UserManagementServiceImpl implements UserManagementService {
     private UserEntity getAdmin() {
         return userRepository.findByMobile(adminMobile).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND)
+        );
+    }
+
+    private MemberEntity getMember(String memberId) {
+        return memberRepository.findById(memberId).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND)
+        );
+    }
+
+    private MercenaryEntity getMercenary(String mercenaryId) {
+        return mercenaryRepository.findById(mercenaryId).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.MERCENARY_NOT_FOUND)
         );
     }
 }

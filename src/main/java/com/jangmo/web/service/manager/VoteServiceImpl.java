@@ -40,6 +40,7 @@ public class VoteServiceImpl implements VoteService {
         matchVote.setVoters(voters);
         matchVoteRepository.save(matchVote);
         return MatchVoteCreateResponse.of(
+                matchVote.getEndAt(),
                 matchVote.getMatchAt(),
                 matchVote.getCreatedBy().getName()
         );
