@@ -1,6 +1,8 @@
 package com.jangmo.web.service.manager;
 
 
+import com.jangmo.web.constants.user.MemberStatus;
+import com.jangmo.web.constants.user.MercenaryStatus;
 import com.jangmo.web.model.dto.request.UserListSearchRequest;
 import com.jangmo.web.model.dto.response.MemberDetailResponse;
 import com.jangmo.web.model.dto.response.MercenaryDetailResponse;
@@ -24,4 +26,8 @@ public interface UserManagementService {
     MemberDetailResponse getMemberDetail(String memberId);
 
     MercenaryDetailResponse getMercenaryDetail(String mercenaryId);
+
+    void updateMemberStatus(String memberId, MemberStatus status);
+
+    void updateMercenaryStatus(String mercenaryId, MercenaryStatus status);
 }

@@ -330,5 +330,63 @@ public class UserManagementServiceTest {
 
     }
 
+    @DisplayName("회원 상태 변경 테스트")
+    @Transactional
+    @Test
+    void updateMemberStatusTest() {
+        City city = cityRepository.findById(1L).get();
+        District district = districtRepository.findById(1L).get();
+        LocalDate birth = LocalDate.of(1994, 3, 16);
+        MemberSignUpRequest signup = new MemberSignUpRequest(
+                "firstTestMember",
+                "01012341111",
+                Gender.MALE,
+                birth,
+                "1231231!",
+                1L,
+                1L
+        );
+
+        MemberEntity member = MemberEntity.create(
+                signup, city, district
+        );
+
+        memberRepository.save(member);
+        assertEquals(MemberStatus.PENDING, member.getStatus());
+        log.info("Before update status : {}", member.getStatus());
+
+        String memberId = member.getId();
+        MemberStatus status = MemberStatus.ENABLED;
+        userManagementService.updateMemberStatus(memberId, status);
+
+        assertEquals(MemberStatus.ENABLED, member.getStatus());
+        log.info("After update status : {}", member.getStatus());
+    }
+
+    @DisplayName("용병 상태 변경 테스트")
+    @Transactional
+    @Test
+    void updateMercenaryStatusTest() {
+        MercenaryRegistrationRequest registration = new MercenaryRegistrationRequest(
+                "김용병",
+                "01012340001",
+                Gender.MALE,
+                MercenaryRetentionStatus.KEEP
+        );
+
+        MercenaryEntity mercenary = MercenaryEntity.create(registration);
+        mercenaryRepository.save(mercenary);
+        assertEquals(MercenaryStatus.PENDING, mercenary.getStatus());
+        log.info("Before update status : {}", mercenary.getStatus());
+
+        String mercenaryId = mercenary.getId();
+        MercenaryStatus status = MercenaryStatus.ENABLED;
+        userManagementService.updateMercenaryStatus(mercenaryId, status);
+
+        assertEquals(MercenaryStatus.ENABLED, mercenary.getStatus());
+        log.info("After update status : {}", mercenary.getStatus());
+
+    }
+
 
 }

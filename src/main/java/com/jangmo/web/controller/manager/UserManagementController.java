@@ -27,7 +27,7 @@ import static com.jangmo.web.model.dto.response.common.ApiSuccessResponse.wrap;
 @RequestMapping("/api/managers")
 @RestController
 public class UserManagementController {
-    
+
     private final UserManagementService userManagementService;
 
     @GetMapping("/users")
@@ -67,6 +67,7 @@ public class UserManagementController {
     public ResponseEntity<ApiSuccessResponse<Object>> updateMemberStatus(
             @PathVariable String memberId,
             @PathVariable MemberStatus status) {
+        userManagementService.updateMemberStatus(memberId, status);
         return wrap(null);
     }
 
@@ -74,6 +75,7 @@ public class UserManagementController {
     public ResponseEntity<ApiSuccessResponse<Object>> updateMercenaryStatus(
             @PathVariable String mercenaryId,
             @PathVariable MercenaryStatus status) {
+        userManagementService.updateMercenaryStatus(mercenaryId, status);
         return wrap(null);
     }
 

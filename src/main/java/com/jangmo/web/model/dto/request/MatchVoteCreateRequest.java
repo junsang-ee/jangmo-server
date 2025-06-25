@@ -19,6 +19,6 @@ public class MatchVoteCreateRequest {
     @NotNull(message = "매치 날짜는 필수 항목입니다.")
     private LocalDate matchAt;
 
-    @NotNull(message = "투표의 마감 날짜는 필수 항목입니다.")
+    @NotNull(message = "투표 마감 날짜는 필수 항목입니다.")
     private LocalDate endAt;
 }

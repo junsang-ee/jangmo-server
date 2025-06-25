@@ -12,14 +12,17 @@ import java.time.LocalDate;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class MatchVoteCreateResponse {
 
+    private final LocalDate voteEndAt;
+
     private final LocalDate matchAt;
 
     private final String creatorName;
 
-    public static MatchVoteCreateResponse of(final LocalDate matchAt,
+    public static MatchVoteCreateResponse of(final LocalDate voteEndAt,
+                                             final LocalDate matchAt,
                                              final String creatorName) {
         return new MatchVoteCreateResponse(
-                matchAt, creatorName
+                voteEndAt, matchAt, creatorName
         );
     }
 
