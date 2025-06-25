@@ -7,7 +7,7 @@ import com.jangmo.web.exception.NotFoundException;
 import com.jangmo.web.model.dto.request.MatchVoteCreateRequest;
 import com.jangmo.web.model.dto.response.MatchVoteCreateResponse;
 import com.jangmo.web.model.entity.vote.MatchVoteEntity;
-import com.jangmo.web.model.entity.MatchVoteUserEntity;
+import com.jangmo.web.model.entity.vote.user.MatchVoteUserEntity;
 import com.jangmo.web.model.entity.user.UserEntity;
 import com.jangmo.web.repository.MatchVoteRepository;
 import com.jangmo.web.repository.UserRepository;
@@ -35,9 +35,10 @@ public class VoteServiceImpl implements VoteService {
         UserEntity createdBy = userRepository.findById(userId).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND)
         );
-        MatchVoteEntity matchVote = MatchVoteEntity.create(createdBy, request);
-        List<MatchVoteUserEntity> voters = getVoters(matchVote);
-        matchVote.setVoters(voters);
+        List<UserEntity> rawVoters = getRawMatchVoters();
+        MatchVoteEntity matchVote = MatchVoteEntity.create(
+                createdBy, request, rawVoters
+        );
         matchVoteRepository.save(matchVote);
         return MatchVoteCreateResponse.of(
                 matchVote.getEndAt(),
@@ -46,13 +47,11 @@ public class VoteServiceImpl implements VoteService {
         );
     }
 
-    private List<MatchVoteUserEntity> getVoters(MatchVoteEntity matchVote) {
-        List<UserEntity> voters = userRepository.findUserByMemberStatusAndRoleNot(
+    private List<UserEntity> getRawMatchVoters() {
+        return userRepository.findUserByMemberStatusAndRoleNot(
                 MemberStatus.ENABLED,
                 UserRole.MERCENARY
         );
-        return voters.stream().map(
-                voter -> MatchVoteUserEntity.create(voter, matchVote)
-        ).collect(Collectors.toList());
     }
+
 }
