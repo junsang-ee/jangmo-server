@@ -5,8 +5,8 @@ import com.jangmo.web.constants.match.MatchType;
 import com.jangmo.web.constants.message.ErrorMessage;
 import com.jangmo.web.constants.user.MemberStatus;
 import com.jangmo.web.exception.NotFoundException;
-import com.jangmo.web.model.dto.request.MatchVoteCreateRequest;
-import com.jangmo.web.model.dto.response.MatchVoteCreateResponse;
+import com.jangmo.web.model.dto.request.vote.MatchVoteCreateRequest;
+import com.jangmo.web.model.dto.response.vote.MatchVoteCreateResponse;
 import com.jangmo.web.model.entity.MatchEntity;
 import com.jangmo.web.model.entity.vote.MatchVoteEntity;
 import com.jangmo.web.model.entity.user.UserEntity;
@@ -54,6 +54,7 @@ public class VoteServiceTest {
         LocalDate matchAt = now.plusDays(2);
         LocalDate voteEndAt = now.plusDays(1);
         MatchVoteCreateRequest createRequest = new MatchVoteCreateRequest(
+                "testTitle",
                 MatchType.FUTSAL,
                 matchAt,
                 voteEndAt

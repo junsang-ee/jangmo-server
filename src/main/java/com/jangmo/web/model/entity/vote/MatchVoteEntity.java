@@ -1,11 +1,10 @@
 package com.jangmo.web.model.entity.vote;
 
 import com.jangmo.web.constants.VoteType;
-import com.jangmo.web.model.dto.request.MatchVoteCreateRequest;
+import com.jangmo.web.model.dto.request.vote.MatchVoteCreateRequest;
 import com.jangmo.web.model.entity.MatchEntity;
 import com.jangmo.web.model.entity.vote.user.MatchVoteUserEntity;
 import com.jangmo.web.model.entity.user.UserEntity;
-import com.jangmo.web.utils.DateFormatUtil;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -37,18 +36,20 @@ public class MatchVoteEntity extends VoteEntity {
             orphanRemoval = true)
     private List<MatchVoteUserEntity> voters;
 
-    private MatchVoteEntity(UserEntity user,
+    private MatchVoteEntity(UserEntity createdBy,
                             MatchVoteCreateRequest request,
                             List<UserEntity> rawVoters) {
         super(
-                user,
-                DateFormatUtil.convertToString(request.getMatchAt()),
+                createdBy,
+                request.getTitle(),
+                LocalDate.now(),
                 request.getEndAt(),
+                request.getSelectionType(),
                 VoteType.MATCH
         );
         this.matchAt = request.getMatchAt();
         this.match = MatchEntity.create(
-                user,
+                createdBy,
                 request.getMatchAt(),
                 request.getMatchType(),
                 this

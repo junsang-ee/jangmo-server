@@ -1,6 +1,7 @@
 package com.jangmo.web.model.entity.vote;
 
 import com.jangmo.web.constants.VoteType;
+import com.jangmo.web.constants.vote.VoteSelectionType;
 import com.jangmo.web.model.entity.CreationUserEntity;
 
 import com.jangmo.web.model.entity.user.UserEntity;
@@ -23,18 +24,32 @@ public class VoteEntity extends CreationUserEntity {
     @Column(name = "title", nullable = false)
     private String title;
 
+    @Column(name = "start_at", nullable = false)
+    private LocalDate startAt;
+
     @Column(name = "end_at", nullable = false)
     private LocalDate endAt;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "type", nullable = false)
-    private VoteType type;
+    @Column(name = "selection_type", nullable = false)
+    private VoteSelectionType selectionType;
 
-    protected VoteEntity(UserEntity user, String title, LocalDate endAt, VoteType type) {
-        super(user);
+    @Enumerated(EnumType.STRING)
+    @Column(name = "vote_type", nullable = false)
+    private VoteType voteType;
+
+    protected VoteEntity(UserEntity createdBy,
+                         String title,
+                         LocalDate startAt,
+                         LocalDate endAt,
+                         VoteSelectionType selectionType,
+                         VoteType voteType) {
+        super(createdBy);
         this.title = title;
+        this.startAt = startAt;
         this.endAt = endAt;
-        this.type = type;
+        this.selectionType = selectionType;
+        this.voteType = voteType;
     }
 
 }
