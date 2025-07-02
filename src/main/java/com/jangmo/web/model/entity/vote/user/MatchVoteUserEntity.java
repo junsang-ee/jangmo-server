@@ -1,6 +1,6 @@
 package com.jangmo.web.model.entity.vote.user;
 
-import com.jangmo.web.constants.vote.MatchVoteStatus;
+import com.jangmo.web.constants.vote.MatchVoteOption;
 import com.jangmo.web.model.entity.user.UserEntity;
 
 import com.jangmo.web.model.entity.vote.MatchVoteEntity;
@@ -34,13 +34,13 @@ public class MatchVoteUserEntity extends AbstractVoteUserEntity {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private MatchVoteStatus matchVoteStatus;
+    private MatchVoteOption matchVoteOption;
 
     private MatchVoteUserEntity(UserEntity voter,
                                 MatchVoteEntity matchVote) {
         super(voter);
         this.matchVote = matchVote;
-        this.matchVoteStatus = MatchVoteStatus.NOT_VOTED;
+        this.matchVoteOption = MatchVoteOption.NOT_VOTED;
     }
 
     public static MatchVoteUserEntity create(final UserEntity rawVoter,

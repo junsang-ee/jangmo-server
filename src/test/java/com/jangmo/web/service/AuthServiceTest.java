@@ -17,7 +17,8 @@ import com.jangmo.web.infra.cache.CacheAccessor;
 import com.jangmo.web.infra.sms.SmsProvider;
 import com.jangmo.web.model.dto.request.*;
 
-import com.jangmo.web.model.dto.response.MatchVoteCreateResponse;
+import com.jangmo.web.model.dto.request.vote.MatchVoteCreateRequest;
+import com.jangmo.web.model.dto.response.vote.MatchVoteCreateResponse;
 import com.jangmo.web.model.dto.response.MemberSignupResponse;
 
 import com.jangmo.web.model.dto.response.MercenaryRegistrationResponse;

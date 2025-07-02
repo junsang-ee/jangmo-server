@@ -1,7 +1,8 @@
 package com.jangmo.web.controller.manager;
 
-import com.jangmo.web.model.dto.request.MatchVoteCreateRequest;
-import com.jangmo.web.model.dto.response.MatchVoteCreateResponse;
+import com.jangmo.web.model.dto.request.vote.GeneralVoteCreateRequest;
+import com.jangmo.web.model.dto.request.vote.MatchVoteCreateRequest;
+import com.jangmo.web.model.dto.response.vote.MatchVoteCreateResponse;
 import com.jangmo.web.model.dto.response.common.ApiSuccessResponse;
 import com.jangmo.web.service.manager.VoteService;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,19 @@ public class VoteManagementController {
             @AuthenticationPrincipal(expression = "id") String userId,
             @Valid @RequestBody MatchVoteCreateRequest request) {
         return wrap(voteService.createMatchVote(userId, request));
+    }
+
+    @PostMapping("/general")
+    public ResponseEntity<ApiSuccessResponse<Object>> createGeneralVote(
+            @AuthenticationPrincipal(expression = "id") String userId,
+            @Valid @RequestBody GeneralVoteCreateRequest request) {
+        return wrap(voteService.createGeneralVote(userId, request));
+    }
+
+
+    @GetMapping
+    public ResponseEntity<ApiSuccessResponse<Object>> getVoteAll() {
+        return wrap(null);
     }
 
     @DeleteMapping("/{voteId}")

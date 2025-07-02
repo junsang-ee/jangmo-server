@@ -20,8 +20,8 @@ public abstract class CreationUserEntity extends ModificationTimestampEntity {
     @JoinColumn(name = "created_by", nullable = false, updatable = false)
     private UserEntity createdBy;
 
-    protected CreationUserEntity(final UserEntity user) {
-        this.createdBy = user;
+    protected CreationUserEntity(final UserEntity createdBy) {
+        this.createdBy = createdBy;
     }
 
 }

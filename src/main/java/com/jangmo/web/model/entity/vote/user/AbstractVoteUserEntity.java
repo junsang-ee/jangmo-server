@@ -1,7 +1,7 @@
 package com.jangmo.web.model.entity.vote.user;
 
 import com.jangmo.web.constants.UserRole;
-import com.jangmo.web.model.SequentialEntity;
+import com.jangmo.web.model.ModificationTimestampEntity;
 import com.jangmo.web.model.entity.user.UserEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +14,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @NoArgsConstructor(access = PROTECTED)
 @MappedSuperclass
-public abstract class AbstractVoteUserEntity extends SequentialEntity {
+public abstract class AbstractVoteUserEntity extends ModificationTimestampEntity {
 
     @Column(nullable = false)
     private String voterId;
