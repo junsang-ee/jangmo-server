@@ -4,7 +4,7 @@ import com.jangmo.web.model.dto.request.vote.GeneralVoteCreateRequest;
 import com.jangmo.web.model.dto.request.vote.MatchVoteCreateRequest;
 import com.jangmo.web.model.dto.response.vote.MatchVoteCreateResponse;
 import com.jangmo.web.model.dto.response.common.ApiSuccessResponse;
-import com.jangmo.web.service.manager.VoteService;
+import com.jangmo.web.service.manager.VoteManagementService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,20 +19,20 @@ import static com.jangmo.web.model.dto.response.common.ApiSuccessResponse.wrap;
 @RestController
 public class VoteManagementController {
 
-    private final VoteService voteService;
+    private final VoteManagementService voteManagementService;
 
     @PostMapping("/matches")
     public ResponseEntity<ApiSuccessResponse<MatchVoteCreateResponse>> createMatchVote(
             @AuthenticationPrincipal(expression = "id") String userId,
             @Valid @RequestBody MatchVoteCreateRequest request) {
-        return wrap(voteService.createMatchVote(userId, request));
+        return wrap(voteManagementService.createMatchVote(userId, request));
     }
 
     @PostMapping("/general")
     public ResponseEntity<ApiSuccessResponse<Object>> createGeneralVote(
             @AuthenticationPrincipal(expression = "id") String userId,
             @Valid @RequestBody GeneralVoteCreateRequest request) {
-        return wrap(voteService.createGeneralVote(userId, request));
+        return wrap(voteManagementService.createGeneralVote(userId, request));
     }
 
 

@@ -3,7 +3,6 @@ package com.jangmo.web.model.entity.vote;
 import com.jangmo.web.model.ModificationTimestampEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -11,14 +10,13 @@ import static lombok.AccessLevel.PROTECTED;
 
 
 @Getter
-@ToString
 @NoArgsConstructor(access = PROTECTED)
 @Entity(name = "general_vote_option")
 public class GeneralVoteOptionEntity extends ModificationTimestampEntity {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "general_vote_id", nullable = false)
+    @JoinColumn(name = "general_vote", nullable = false)
     private GeneralVoteEntity generalVote;
 
     @Column(nullable = false)

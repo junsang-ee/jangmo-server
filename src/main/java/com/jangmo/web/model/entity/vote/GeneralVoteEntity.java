@@ -23,7 +23,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity(name = "general_vote")
 public class GeneralVoteEntity extends VoteEntity {
 
-    @OneToMany(mappedBy = "matchVote",
+    @OneToMany(mappedBy = "generalVote",
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
             orphanRemoval = true)
     private List<GeneralVoteUserEntity> voters;
