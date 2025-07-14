@@ -22,7 +22,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity(name = "match_vote")
 public class MatchVoteEntity extends VoteEntity {
 
-    @Column(name = "match_at", nullable = false)
+    @Column(nullable = false)
     private LocalDate matchAt;
 
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE},

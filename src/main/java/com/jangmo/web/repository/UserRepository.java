@@ -34,7 +34,7 @@ public interface UserRepository extends JpaRepository<UserEntity, String>,
                     "FROM user u " +
                     "JOIN member m ON u.id = m.id " +
                    "WHERE m.status != :status " +
-                     "AND u.role != role")
+                     "AND u.role != :role")
     List<UserEntity> findUserByMemberStatusNotAndRole(
             @Param("status") List<MemberStatus> status,
             @Param("role") UserRole role

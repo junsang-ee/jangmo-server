@@ -21,21 +21,21 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity(name = "vote")
 public class VoteEntity extends CreationUserEntity {
 
-    @Column(name = "title", nullable = false)
+    @Column(nullable = false)
     private String title;
 
-    @Column(name = "start_at", nullable = false)
+    @Column(nullable = false)
     private LocalDate startAt;
 
-    @Column(name = "end_at", nullable = false)
+    @Column(nullable = false)
     private LocalDate endAt;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "selection_type", nullable = false)
+    @Column(nullable = false)
     private VoteSelectionType selectionType;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "vote_type", nullable = false)
+    @Column(nullable = false)
     private VoteType voteType;
 
     protected VoteEntity(UserEntity createdBy,

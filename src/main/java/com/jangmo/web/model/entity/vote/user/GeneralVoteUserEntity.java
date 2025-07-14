@@ -2,13 +2,14 @@ package com.jangmo.web.model.entity.vote.user;
 
 import com.jangmo.web.model.entity.user.UserEntity;
 import com.jangmo.web.model.entity.vote.GeneralVoteEntity;
-import com.jangmo.web.model.entity.vote.GeneralVoteOptionEntity;
+import com.jangmo.web.model.entity.vote.GeneralVoteSelectionEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,18 +22,19 @@ import static lombok.AccessLevel.PROTECTED;
 public class GeneralVoteUserEntity extends AbstractVoteUserEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "general_vote", nullable = false)
+    @JoinColumn(name = "general_vote",nullable = false)
     private GeneralVoteEntity generalVote;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "selected_option", nullable = false)
-    private GeneralVoteOptionEntity selectedOption;
+    @OneToMany(mappedBy = "generalVoteUser",
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true)
+    private List<GeneralVoteSelectionEntity> selectedOptions;
 
     private GeneralVoteUserEntity(UserEntity rawVoter,
                                   GeneralVoteEntity generalVote) {
         super(rawVoter);
         this.generalVote = generalVote;
-        this.selectedOption = null;
+        this.selectedOptions = new ArrayList<>();
     }
 
     public static GeneralVoteUserEntity create(final UserEntity rawVoter,

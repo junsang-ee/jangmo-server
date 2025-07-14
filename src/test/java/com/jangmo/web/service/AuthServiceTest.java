@@ -10,6 +10,7 @@ import com.jangmo.web.constants.MercenaryRetentionStatus;
 import com.jangmo.web.constants.user.MercenaryStatus;
 import com.jangmo.web.constants.match.MatchType;
 import com.jangmo.web.constants.message.ErrorMessage;
+import com.jangmo.web.constants.vote.VoteSelectionType;
 import com.jangmo.web.exception.AuthException;
 import com.jangmo.web.exception.NotFoundException;
 
@@ -31,7 +32,7 @@ import com.jangmo.web.model.entity.user.MercenaryTransientEntity;
 
 import com.jangmo.web.repository.*;
 
-import com.jangmo.web.service.manager.VoteServiceImpl;
+import com.jangmo.web.service.manager.VoteManagementServiceImpl;
 import com.jangmo.web.utils.AgeUtil;
 
 import com.jangmo.web.utils.CodeGeneratorUtil;
@@ -73,7 +74,7 @@ public class AuthServiceTest {
     @Autowired
     MercenaryTransientRepository mercenaryTransientRepository;
     @Autowired
-    VoteServiceImpl voteService;
+    VoteManagementServiceImpl voteService;
     @Autowired
     JwtConfig jwtConfig;
     @Autowired
@@ -438,9 +439,11 @@ public class AuthServiceTest {
         LocalDate endAt = now.plusDays(1);
         LocalDate matchAt = now.plusDays(2);
         MatchVoteCreateRequest matchVoteCreateRequest = new MatchVoteCreateRequest(
+                "testTitle",
                 MatchType.FUTSAL,
                 matchAt,
-                endAt
+                endAt,
+                VoteSelectionType.SINGLE
         );
 
         MatchVoteCreateResponse matchVoteResponse = voteService.createMatchVote(
@@ -653,11 +656,17 @@ public class AuthServiceTest {
         String originMercenaryCode = "test123456";
 
         MatchVoteCreateRequest matchVoteCreateRequest = new MatchVoteCreateRequest(
-                MatchType.FUTSAL, tomorrow.plusDays(1), tomorrow
+                "testTitle",
+                MatchType.FUTSAL,
+                tomorrow.plusDays(1),
+                tomorrow,
+                VoteSelectionType.SINGLE
         );
 
         MatchVoteEntity matchVote = MatchVoteEntity.create(
-                admin, matchVoteCreateRequest
+                admin,
+                matchVoteCreateRequest,
+                null
         );
         matchVoteRepository.save(matchVote);
 
