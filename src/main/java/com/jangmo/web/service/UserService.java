@@ -1,6 +1,5 @@
 package com.jangmo.web.service;
 
-import com.jangmo.web.model.dto.request.MemberUpdatePasswordRequest;
 import com.jangmo.web.model.dto.response.MemberDetailResponse;
 import com.jangmo.web.model.dto.response.MercenaryDetailResponse;
 import com.jangmo.web.model.dto.response.UserDetailResponse;
@@ -8,7 +7,6 @@ import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.model.entity.user.MercenaryEntity;
 import com.jangmo.web.model.entity.user.UserEntity;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 public interface UserService {

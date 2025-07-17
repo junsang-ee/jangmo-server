@@ -107,6 +107,9 @@ response:
       retired:
         code: "6002"
         message: "해당 회원은 탈퇴한 회원입니다."
+      already.has.role:
+        code: "6003"
+        message: "해당 회원은 이미 동일한 권한입니다."
     mercenary:
       not.found:
         code: "5002"

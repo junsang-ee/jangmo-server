@@ -1,7 +1,7 @@
 package com.jangmo.web.controller;
 
-import com.jangmo.web.model.dto.request.MemberUpdateAddressRequest;
-import com.jangmo.web.model.dto.request.MemberUpdatePasswordRequest;
+import com.jangmo.web.model.dto.request.MemberAddressUpdateRequest;
+import com.jangmo.web.model.dto.request.MemberPasswordUpdateRequest;
 import com.jangmo.web.model.dto.response.MemberDetailResponse;
 import com.jangmo.web.model.dto.response.UserDetailResponse;
 import com.jangmo.web.model.dto.response.common.ApiSuccessResponse;
@@ -38,7 +38,7 @@ public class UserController {
     @PatchMapping("/members/password")
     public ResponseEntity<ApiSuccessResponse<Object>> updatePassword(
             @AuthenticationPrincipal(expression = "id") String memberId,
-            @Valid @RequestBody MemberUpdatePasswordRequest request) {
+            @Valid @RequestBody MemberPasswordUpdateRequest request) {
         userService.updatePassword(memberId, request.getOldPassword(), request.getNewPassword());
         return wrap(null);
     }
@@ -52,7 +52,7 @@ public class UserController {
     @PatchMapping("/members/address")
     public ResponseEntity<ApiSuccessResponse<Object>> updateAddress(
             @AuthenticationPrincipal(expression = "id") String memberId,
-            @Valid @RequestBody MemberUpdateAddressRequest address) {
+            @Valid @RequestBody MemberAddressUpdateRequest address) {
         userService.updateAddress(memberId, address.getCityId(), address.getDistrictId());
         return wrap(null);
     }
