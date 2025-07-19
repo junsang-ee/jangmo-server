@@ -3,7 +3,7 @@ package com.jangmo.web.constants;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 public enum UserRole {
-    ADMIN, MANAGER, DIRECTOR, MEMBER, MERCENARY;
+    ADMIN, MANAGER, MEMBER, MERCENARY;
 
     @JsonCreator
     public static UserRole getValue(String value) {
