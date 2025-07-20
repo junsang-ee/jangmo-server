@@ -47,7 +47,7 @@ public class MemberEntity extends UserEntity implements Serializable {
     private District district;
 
     @OneToOne(fetch = FetchType.LAZY,
-            cascade = CascadeType.REMOVE,
+            cascade = {CascadeType.REMOVE, CascadeType.PERSIST},
             orphanRemoval = true)
     @JoinColumn(name = "uniform")
     private UniformEntity uniform;
@@ -91,6 +91,10 @@ public class MemberEntity extends UserEntity implements Serializable {
 
     public void updatePassword(String newPassword) {
         this.password = EncryptUtil.encode(newPassword);
+    }
+
+    public void updateUniform(int backNumber) {
+        this.uniform = UniformEntity.create(backNumber);
     }
 
     public void updateAddress(City city, District district) {
