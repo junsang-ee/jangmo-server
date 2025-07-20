@@ -5,21 +5,17 @@ import com.jangmo.web.constants.user.MemberStatus;
 import com.jangmo.web.constants.UserRole;
 import com.jangmo.web.model.dto.request.MemberSignUpRequest;
 
+import com.jangmo.web.model.entity.UniformEntity;
 import com.jangmo.web.model.entity.administrative.City;
 import com.jangmo.web.model.entity.administrative.District;
+import com.jangmo.web.model.entity.api.KakaoApiUsageEntity;
 import com.jangmo.web.utils.EncryptUtil;
 
 import lombok.Getter;
 import lombok.ToString;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Column;
-import javax.persistence.Enumerated;
-import javax.persistence.EnumType;
-import javax.persistence.ManyToOne;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
+import javax.persistence.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -50,6 +46,18 @@ public class MemberEntity extends UserEntity implements Serializable {
     @JoinColumn(name = "district", nullable = false)
     private District district;
 
+    @OneToOne(fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true)
+    @JoinColumn(name = "uniform")
+    private UniformEntity uniform;
+
+    @OneToOne(mappedBy = "apiCaller",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true)
+    private KakaoApiUsageEntity kakaoUsages;
+
     private MemberEntity(String name, String mobile,
                          Gender gender, LocalDate birth,
                          String password, City city, District district) {
@@ -59,6 +67,8 @@ public class MemberEntity extends UserEntity implements Serializable {
         this.status = MemberStatus.PENDING;
         this.city = city;
         this.district = district;
+        this.uniform = null;
+        this.kakaoUsages = null;
     }
 
     public static MemberEntity create(final MemberSignUpRequest signup,
