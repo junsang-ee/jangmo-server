@@ -1,6 +1,7 @@
 package com.jangmo.web.service.manager;
 
 
+import com.jangmo.web.constants.UserRole;
 import com.jangmo.web.constants.user.MemberStatus;
 import com.jangmo.web.constants.MercenaryRetentionStatus;
 import com.jangmo.web.constants.user.MercenaryStatus;
@@ -16,16 +17,13 @@ import com.jangmo.web.model.dto.response.MemberDetailResponse;
 import com.jangmo.web.model.dto.response.MercenaryDetailResponse;
 import com.jangmo.web.model.dto.response.UserListResponse;
 import com.jangmo.web.model.entity.MatchEntity;
+import com.jangmo.web.model.entity.api.KakaoApiUsageEntity;
 import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.model.entity.user.MercenaryEntity;
 import com.jangmo.web.model.entity.user.MercenaryTransientEntity;
 import com.jangmo.web.model.entity.user.UserEntity;
 
-import com.jangmo.web.repository.MercenaryRepository;
-import com.jangmo.web.repository.MercenaryTransientRepository;
-import com.jangmo.web.repository.MemberRepository;
-import com.jangmo.web.repository.MatchRepository;
-import com.jangmo.web.repository.UserRepository;
+import com.jangmo.web.repository.*;
 
 import com.jangmo.web.utils.CodeGeneratorUtil;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +52,8 @@ public class UserManagementServiceImpl implements UserManagementService {
     private final MatchRepository matchRepository;
 
     private final UserRepository userRepository;
+
+    private final KakaoApiUsageRepository kakaoApiUsageRepository;
 
     private final SmsProvider smsProvider;
 
@@ -142,6 +142,29 @@ public class UserManagementServiceImpl implements UserManagementService {
     public void updateMercenaryStatus(String mercenaryId, MercenaryStatus status) {
         MercenaryEntity mercenary = getMercenary(mercenaryId);
         mercenary.updateStatus(status);
+    }
+
+    @Override
+    @Transactional
+    public void updateMemberRole(String memberId, UserRole role) {
+        MemberEntity apiCaller = getMember(memberId);
+
+        if (apiCaller.getRole() == role)
+            throw new InvalidStateException(ErrorMessage.MEMBER_ALREADY_HAS_ROLE);
+
+        if (apiCaller.getRole() == UserRole.MANAGER) {
+            kakaoApiUsageRepository.deleteByApiCaller(apiCaller);
+        } else {
+            if (role == UserRole.MANAGER) {
+                kakaoApiUsageRepository.findByApiCaller(apiCaller).orElseGet(
+                        () -> {
+                            KakaoApiUsageEntity kakaoApiUsage = KakaoApiUsageEntity.create(apiCaller);
+                            return kakaoApiUsageRepository.save(kakaoApiUsage);
+                        }
+                );
+            }
+        }
+        apiCaller.updateRole(role);
     }
 
     @Transactional

@@ -2,17 +2,20 @@ package com.jangmo.web.service;
 
 import com.jangmo.web.constants.Gender;
 import com.jangmo.web.constants.UserRole;
+import com.jangmo.web.constants.message.ErrorMessage;
 import com.jangmo.web.constants.user.MemberStatus;
 import com.jangmo.web.constants.MercenaryRetentionStatus;
 import com.jangmo.web.constants.user.MercenaryStatus;
 import com.jangmo.web.constants.match.MatchType;
 import com.jangmo.web.constants.vote.VoteSelectionType;
+import com.jangmo.web.exception.NotFoundException;
 import com.jangmo.web.model.dto.request.vote.MatchVoteCreateRequest;
 import com.jangmo.web.model.dto.request.MemberSignUpRequest;
 import com.jangmo.web.model.dto.request.MercenaryRegistrationRequest;
 import com.jangmo.web.model.dto.request.UserListSearchRequest;
 import com.jangmo.web.model.dto.response.UserListResponse;
 import com.jangmo.web.model.entity.MatchEntity;
+import com.jangmo.web.model.entity.api.KakaoApiUsageEntity;
 import com.jangmo.web.model.entity.user.UserEntity;
 import com.jangmo.web.model.entity.vote.MatchVoteEntity;
 import com.jangmo.web.model.entity.administrative.City;
@@ -21,11 +24,7 @@ import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.model.entity.user.MercenaryEntity;
 import com.jangmo.web.model.entity.user.MercenaryTransientEntity;
 
-import com.jangmo.web.repository.MemberRepository;
-import com.jangmo.web.repository.MercenaryRepository;
-import com.jangmo.web.repository.CityRepository;
-import com.jangmo.web.repository.DistrictRepository;
-import com.jangmo.web.repository.MatchVoteRepository;
+import com.jangmo.web.repository.*;
 
 import com.jangmo.web.service.manager.UserManagementServiceImpl;
 import com.jangmo.web.service.manager.VoteManagementServiceImpl;
@@ -47,8 +46,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -61,8 +59,9 @@ public class UserManagementServiceTest {
     @Autowired DistrictRepository districtRepository;
     @Autowired MatchVoteRepository matchVoteRepository;
     @Autowired UserManagementServiceImpl userManagementService;
-    @Autowired
-    VoteManagementServiceImpl voteService;
+    @Autowired VoteManagementServiceImpl voteService;
+
+    @Autowired KakaoApiUsageRepository kakaoApiUsageRepository;
 
     @DisplayName("Member 등록 승인 테스트")
     @Test
@@ -367,6 +366,7 @@ public class UserManagementServiceTest {
         log.info("After update status : {}", member.getStatus());
     }
 
+
     @DisplayName("용병 상태 변경 테스트")
     @Transactional
     @Test
@@ -389,8 +389,40 @@ public class UserManagementServiceTest {
 
         assertEquals(MercenaryStatus.ENABLED, mercenary.getStatus());
         log.info("After update status : {}", mercenary.getStatus());
-
     }
+
+    @DisplayName("회원 권한(role) 변경 테스트 및 Kakao 사용량 데이터 생성 테스트")
+    @Transactional
+    @Test
+    void updateMemberRoleTest() {
+        City city = cityRepository.findById(1L).get();
+        District district = districtRepository.findById(1L).get();
+        LocalDate birth = LocalDate.of(1994, 3, 16);
+        MemberSignUpRequest signup = new MemberSignUpRequest(
+                "firstTestMember",
+                "01012341111",
+                Gender.MALE,
+                birth,
+                "1231231!",
+                1L,
+                1L
+        );
+        MemberEntity member = MemberEntity.create(signup, city, district);
+        memberRepository.save(member);
+        assertNotNull(memberRepository.findByMobile("01012341111"));
+        KakaoApiUsageEntity beforeKakaoApiUsage = kakaoApiUsageRepository.findByApiCaller(member).orElseGet(
+                () -> null
+        );
+        assertNull(beforeKakaoApiUsage);
+        userManagementService.updateMemberRole(member.getId(), UserRole.MANAGER);
+        KakaoApiUsageEntity afterKakaoApiUsage = kakaoApiUsageRepository.findByApiCaller(member).orElseGet(
+                () -> null
+        );
+        assertNotNull(afterKakaoApiUsage);
+        log.info("afterKakaoApiUsage id : {}", afterKakaoApiUsage.getId());
+        log.info("afterKakaoApiUsage apiCallerName : {}", afterKakaoApiUsage.getApiCaller().getName());
+    }
+
 
 
 }

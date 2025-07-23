@@ -7,6 +7,7 @@ import com.jangmo.web.exception.NotFoundException;
 import com.jangmo.web.model.dto.response.MemberDetailResponse;
 import com.jangmo.web.model.dto.response.MercenaryDetailResponse;
 import com.jangmo.web.model.dto.response.UserDetailResponse;
+import com.jangmo.web.model.entity.UniformEntity;
 import com.jangmo.web.model.entity.administrative.City;
 import com.jangmo.web.model.entity.administrative.District;
 import com.jangmo.web.model.entity.user.MemberEntity;
@@ -117,6 +118,26 @@ public class UserServiceImpl implements UserService {
                 () -> new NotFoundException(ErrorMessage.DISTRICT_NOT_FOUND)
         );
         member.updateAddress(city, district);
+    }
+
+    @Override
+    @Transactional
+    public void registerUniform(String memberId, int backNumber) {
+        MemberEntity member = getMember(memberId);
+        UniformEntity uniform = member.getUniform();
+        if (uniform != null)
+            throw new InvalidStateException(ErrorMessage.MEMBER_ALREADY_HAS_UNIFORM);
+        member.registerUniform(backNumber);
+    }
+
+    @Override
+    @Transactional
+    public void updateBackNumber(String memberId, int backNumber) {
+        MemberEntity member = getMember(memberId);
+        UniformEntity uniform = member.getUniform();
+        if (uniform == null)
+            throw new NotFoundException(ErrorMessage.MEMBER_UNIFORM_NOT_FOUND);
+        uniform.updateBackNumber(backNumber);
     }
 
     @Override

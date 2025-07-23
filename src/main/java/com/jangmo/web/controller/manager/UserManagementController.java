@@ -2,6 +2,7 @@ package com.jangmo.web.controller.manager;
 
 import com.jangmo.web.constants.user.MemberStatus;
 import com.jangmo.web.constants.user.MercenaryStatus;
+import com.jangmo.web.model.dto.request.MemberRoleUpdateRequest;
 import com.jangmo.web.model.dto.request.MercenaryMatchRequest;
 import com.jangmo.web.model.dto.request.UserListSearchRequest;
 import com.jangmo.web.model.dto.response.MemberDetailResponse;
@@ -76,6 +77,14 @@ public class UserManagementController {
             @PathVariable String mercenaryId,
             @PathVariable MercenaryStatus status) {
         userManagementService.updateMercenaryStatus(mercenaryId, status);
+        return wrap(null);
+    }
+
+    @PatchMapping("/members/{memberId}/role")
+    public ResponseEntity<ApiSuccessResponse<Object>> updateMemberRole(
+            @PathVariable String memberId,
+            @RequestBody MemberRoleUpdateRequest request) {
+        userManagementService.updateMemberRole(memberId, request.getRole());
         return wrap(null);
     }
 

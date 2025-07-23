@@ -97,6 +97,10 @@ response:
       not.found:
         code: "5000"
         message: "해당 유저를 찾을 수 없습니다."
+    match:
+      not.found:
+        code: "5010"
+        message: "해당 매치를 찾을 수 없습니다."
     member:
       not.found:
         code: "5001"
@@ -107,9 +111,17 @@ response:
       retired:
         code: "6002"
         message: "해당 회원은 탈퇴한 회원입니다."
-      already.has.role:
-        code: "6003"
-        message: "해당 회원은 이미 동일한 권한입니다."
+      already.has:
+        role:
+          code: "6003"
+          message: "해당 회원은 이미 동일한 권한입니다."
+        uniform:
+          code: "6004"
+          message: "이미 유니폼을 보유하고 있는 중입니다."
+      uniform:
+        not.found:
+          code: "6005"
+          message: "유니폼을 보유하고 있지 않습니다."
     mercenary:
       not.found:
         code: "5002"

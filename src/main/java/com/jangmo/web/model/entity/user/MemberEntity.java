@@ -93,7 +93,7 @@ public class MemberEntity extends UserEntity implements Serializable {
         this.password = EncryptUtil.encode(newPassword);
     }
 
-    public void updateUniform(int backNumber) {
+    public void registerUniform(int backNumber) {
         this.uniform = UniformEntity.create(backNumber);
     }
 
