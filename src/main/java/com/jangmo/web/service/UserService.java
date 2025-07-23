@@ -32,6 +32,10 @@ public interface UserService {
 
     void updateAddress(String memberId, Long cityId, Long districtId);
 
+    void registerUniform(String memberId, int backNumber);
+
+    void updateBackNumber(String memberId, int backNumber);
+
     void retireMember(String memberId);
 
 

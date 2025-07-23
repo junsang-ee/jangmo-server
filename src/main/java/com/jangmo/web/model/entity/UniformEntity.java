@@ -25,4 +25,8 @@ public class UniformEntity extends ModificationTimestampEntity {
     public static UniformEntity create(final int backNumber) {
         return new UniformEntity(backNumber);
     }
+
+    public void updateBackNumber(int backNumber) {
+        this.backNumber = backNumber;
+    }
 }

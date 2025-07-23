@@ -1,6 +1,7 @@
 package com.jangmo.web.service.manager;
 
 
+import com.jangmo.web.constants.UserRole;
 import com.jangmo.web.constants.user.MemberStatus;
 import com.jangmo.web.constants.user.MercenaryStatus;
 import com.jangmo.web.model.dto.request.UserListSearchRequest;
@@ -30,4 +31,6 @@ public interface UserManagementService {
     void updateMemberStatus(String memberId, MemberStatus status);
 
     void updateMercenaryStatus(String mercenaryId, MercenaryStatus status);
+
+    void updateMemberRole(String memberId, UserRole role);
 }

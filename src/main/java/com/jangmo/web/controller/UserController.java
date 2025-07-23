@@ -1,7 +1,9 @@
 package com.jangmo.web.controller;
 
+import com.jangmo.web.model.dto.request.BackNumberUpdateRequest;
 import com.jangmo.web.model.dto.request.MemberAddressUpdateRequest;
 import com.jangmo.web.model.dto.request.MemberPasswordUpdateRequest;
+import com.jangmo.web.model.dto.request.UniformRegistrationRequest;
 import com.jangmo.web.model.dto.response.MemberDetailResponse;
 import com.jangmo.web.model.dto.response.UserDetailResponse;
 import com.jangmo.web.model.dto.response.common.ApiSuccessResponse;
@@ -10,12 +12,7 @@ import com.jangmo.web.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
 
@@ -54,6 +51,22 @@ public class UserController {
             @AuthenticationPrincipal(expression = "id") String memberId,
             @Valid @RequestBody MemberAddressUpdateRequest address) {
         userService.updateAddress(memberId, address.getCityId(), address.getDistrictId());
+        return wrap(null);
+    }
+
+    @PostMapping("/members/uniform")
+    public ResponseEntity<ApiSuccessResponse<Object>> registerUniform(
+            @AuthenticationPrincipal(expression = "id") String memberId,
+            @Valid @RequestBody UniformRegistrationRequest request) {
+        userService.registerUniform(memberId, request.getBackNumber());
+        return wrap(null);
+    }
+
+    @PatchMapping("/members/uniform")
+    public ResponseEntity<ApiSuccessResponse<Object>> updateBackNumber(
+            @AuthenticationPrincipal(expression = "id") String memberId,
+            @Valid @RequestBody BackNumberUpdateRequest request) {
+        userService.updateBackNumber(memberId, request.getBackNumber());
         return wrap(null);
     }
 
