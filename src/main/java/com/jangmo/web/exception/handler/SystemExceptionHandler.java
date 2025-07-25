@@ -1,6 +1,8 @@
 package com.jangmo.web.exception.handler;
 
 import com.jangmo.web.exception.*;
+import com.jangmo.web.exception.conflict.ConflictException;
+import com.jangmo.web.exception.conflict.DuplicatedException;
 import com.jangmo.web.exception.handler.base.BaseExceptionHandler;
 import com.jangmo.web.model.dto.response.common.ApiErrorResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +27,7 @@ public class SystemExceptionHandler extends BaseExceptionHandler {
     }
 
     @ExceptionHandler(DuplicatedException.class)
-    public ResponseEntity<ApiErrorResponse> handleDuplicated(DuplicatedException ex) {
+    public ResponseEntity<ApiErrorResponse> handleConflict(ConflictException ex) {
         log.error("[{}] {}", ex.getClass().getSimpleName(), ex.getMessage(), ex);
         return toResponse(ex);
     }

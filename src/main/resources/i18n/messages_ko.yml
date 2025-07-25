@@ -50,10 +50,10 @@ response:
         code: "4000"
         message: "세션이 만료되었습니다."
       permission.denied:
-        code: "4002"
+        code: "4001"
         message: "접근 권한이 없습니다."
       invalid:
-        code: "4003"
+        code: "4002"
         message: "올바르지 않은 인증 정보입니다."
       password.invalid:
         code: "4003"
@@ -86,6 +86,9 @@ response:
       user.duplicated:
         code: "4012"
         message: "해당 휴대폰 번호로 등록된 유저가 이미 존재합니다."
+      kakao.api.denied:
+        code: "4013"
+        message: "카카오 맵 사용 설정이 정상적으로 적용되어 있지 않습니다. 관리자에게 문의하새요."
       code.invalid:
         code: "4020"
         message: "잘못된 인증 코드 입니다."
