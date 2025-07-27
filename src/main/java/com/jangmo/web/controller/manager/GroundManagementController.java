@@ -22,8 +22,10 @@ public class GroundManagementController {
     private final GroundManagementService groundManagementService;
 
     @GetMapping("/{keyword}")
-    public ResponseEntity<ApiSuccessResponse<List<SearchPlaceResponse>>> searchGrounds(@PathVariable String keyword) {
-        return wrap(groundManagementService.searchGrounds(keyword));
+    public ResponseEntity<ApiSuccessResponse<List<SearchPlaceResponse>>> searchGrounds(
+            @AuthenticationPrincipal(expression = "id") String searcherId,
+            @PathVariable String keyword) {
+        return wrap(groundManagementService.searchGrounds(searcherId, keyword));
     }
 
     @PostMapping
