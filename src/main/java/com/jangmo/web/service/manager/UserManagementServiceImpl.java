@@ -11,13 +11,13 @@ import com.jangmo.web.constants.SmsType;
 import com.jangmo.web.exception.AuthException;
 import com.jangmo.web.exception.InvalidStateException;
 import com.jangmo.web.exception.NotFoundException;
+import com.jangmo.web.exception.conflict.ConflictStateException;
 import com.jangmo.web.infra.sms.SmsProvider;
 import com.jangmo.web.model.dto.request.UserListSearchRequest;
 import com.jangmo.web.model.dto.response.MemberDetailResponse;
 import com.jangmo.web.model.dto.response.MercenaryDetailResponse;
 import com.jangmo.web.model.dto.response.UserListResponse;
 import com.jangmo.web.model.entity.MatchEntity;
-import com.jangmo.web.model.entity.api.KakaoApiUsageEntity;
 import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.model.entity.user.MercenaryEntity;
 import com.jangmo.web.model.entity.user.MercenaryTransientEntity;
@@ -67,7 +67,7 @@ public class UserManagementServiceImpl implements UserManagementService {
                 () -> new NotFoundException(ErrorMessage.MERCENARY_NOT_FOUND)
         );
         if (mercenary.getMercenaryTransient() != null)
-            throw new InvalidStateException(ErrorMessage.MERCENARY_ALREADY_TRANSIENT_EXISTS);
+            throw new ConflictStateException(ErrorMessage.MERCENARY_ALREADY_TRANSIENT_EXISTS);
 
         MatchEntity match = matchRepository.findById(matchId).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.MATCH_NOT_FOUND)
@@ -146,25 +146,21 @@ public class UserManagementServiceImpl implements UserManagementService {
 
     @Override
     @Transactional
-    public void updateMemberRole(String memberId, UserRole role) {
+    public void updateMemberRole(String memberId, UserRole newRole) {
         MemberEntity apiCaller = getMember(memberId);
-
-        if (apiCaller.getRole() == role)
+        UserRole currentRole = apiCaller.getRole();
+        if (currentRole == newRole)
             throw new InvalidStateException(ErrorMessage.MEMBER_ALREADY_HAS_ROLE);
 
         if (apiCaller.getRole() == UserRole.MANAGER) {
             kakaoApiUsageRepository.deleteByApiCaller(apiCaller);
         } else {
-            if (role == UserRole.MANAGER) {
-                kakaoApiUsageRepository.findByApiCaller(apiCaller).orElseGet(
-                        () -> {
-                            KakaoApiUsageEntity kakaoApiUsage = KakaoApiUsageEntity.create(apiCaller);
-                            return kakaoApiUsageRepository.save(kakaoApiUsage);
-                        }
-                );
+            if (newRole == UserRole.MANAGER) {
+                if (apiCaller.getKakaoApiUsage() == null)
+                    apiCaller.createKakaoApiUsage();
             }
         }
-        apiCaller.updateRole(role);
+        apiCaller.updateRole(newRole);
     }
 
     @Transactional

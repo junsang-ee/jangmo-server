@@ -54,9 +54,9 @@ public class MemberEntity extends UserEntity implements Serializable {
 
     @OneToOne(mappedBy = "apiCaller",
             fetch = FetchType.LAZY,
-            cascade = CascadeType.REMOVE,
+            cascade = {CascadeType.REMOVE, CascadeType.PERSIST},
             orphanRemoval = true)
-    private KakaoApiUsageEntity kakaoUsages;
+    private KakaoApiUsageEntity kakaoApiUsage;
 
     private MemberEntity(String name, String mobile,
                          Gender gender, LocalDate birth,
@@ -68,7 +68,7 @@ public class MemberEntity extends UserEntity implements Serializable {
         this.city = city;
         this.district = district;
         this.uniform = null;
-        this.kakaoUsages = null;
+        this.kakaoApiUsage = null;
     }
 
     public static MemberEntity create(final MemberSignUpRequest signup,
@@ -100,5 +100,9 @@ public class MemberEntity extends UserEntity implements Serializable {
     public void updateAddress(City city, District district) {
         this.city = city;
         this.district = district;
+    }
+
+    public void createKakaoApiUsage() {
+        this.kakaoApiUsage = KakaoApiUsageEntity.create(this);
     }
 }

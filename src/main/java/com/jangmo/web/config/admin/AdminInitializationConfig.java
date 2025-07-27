@@ -34,46 +34,52 @@ public class AdminInitializationConfig implements ApplicationRunner {
     private final DistrictRepository districtRepository;
 
     @Value("${jangmo.admin.mobile}")
-    private String mobile;
+    private String adminMobile;
 
     @Value("${jangmo.admin.password}")
-    private String password;
+    private String adminPassword;
 
     @Value("${jangmo.admin.name}")
-    private String name;
+    private String adminName;
 
     @Override
     @Transactional
     public void run(ApplicationArguments args) throws Exception {
         log.info("Administrator Account initialize...");
-        if (memberRepository.findByMobile("01043053451").isPresent()) {
+        MemberEntity admin = memberRepository.findByMobile(adminMobile).orElseGet(
+                () -> null
+        );
+        if (admin != null) {
             log.info("Administrator's Account is already exists!");
-            log.info("Exit Administrator initialize");
-            return;
+        } else {
+            log.info("Administrator's Account is Not! exists");
+            log.info("Create Administrator`s Account...");
+            City city = cityRepository.findById(1L).orElseThrow(
+                    () -> new NotFoundException(ErrorMessage.CITY_NOT_FOUND)
+            );
+            District district = districtRepository.findById(21L).orElseThrow(
+                    () -> new NotFoundException(ErrorMessage.DISTRICT_NOT_FOUND)
+            );
+            MemberSignUpRequest signup = new MemberSignUpRequest(
+                    adminName,
+                    adminMobile,
+                    Gender.MALE,
+                    LocalDate.of(1994, 3, 16),
+                    adminPassword,
+                    city.getId(),
+                    district.getId()
+            );
+            admin = MemberEntity.create(
+                    signup, city, district
+            );
+            memberRepository.save(admin);
         }
-        City city = cityRepository.findById(1L).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.CITY_NOT_FOUND)
-        );
-        District district = districtRepository.findById(21L).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.DISTRICT_NOT_FOUND)
-        );
-        MemberSignUpRequest signup = new MemberSignUpRequest(
-                name,
-                mobile,
-                Gender.MALE,
-                LocalDate.of(1994, 3, 16),
-                password,
-                city.getId(),
-                district.getId()
-        );
 
-        MemberEntity admin = MemberEntity.create(
-                signup, city, district
-        );
-        admin.updateStatus(MemberStatus.ENABLED);
         admin.updateRole(UserRole.ADMIN);
-        memberRepository.save(admin);
+        admin.updateStatus(MemberStatus.ENABLED);
+        if (admin.getKakaoApiUsage() == null)
+            admin.createKakaoApiUsage();
         log.info("Complete Create Administrator Account!");
-        log.info("Exit initialize");
+        log.info("Exit Administrator initialize");
     }
 }

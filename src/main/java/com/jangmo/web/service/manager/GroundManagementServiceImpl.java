@@ -40,7 +40,7 @@ public class GroundManagementServiceImpl implements GroundManagementService {
     private final WebClient webClient;
 
     @Override
-    public List<SearchPlaceResponse> searchGrounds(String keyword) {
+    public List<SearchPlaceResponse> searchGrounds(String searcherId, String keyword) {
         KakaoPlaceSearchResponse apiResponse = webClientExecutor.get(
                 webClient, ApiType.KAKAO, keyword, KakaoPlaceSearchResponse.class
         ).block();

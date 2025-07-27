@@ -10,6 +10,7 @@ public class LocationUtil {
             case "경기":
                 return "경기도";
             case "강원":
+            case "강원특별자치도":
                 return "강원도";
             case "충북":
                 return "충청북도";

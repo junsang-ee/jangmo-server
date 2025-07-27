@@ -86,9 +86,13 @@ response:
       user.duplicated:
         code: "4012"
         message: "해당 휴대폰 번호로 등록된 유저가 이미 존재합니다."
-      kakao.api.denied:
-        code: "4013"
-        message: "카카오 맵 사용 설정이 정상적으로 적용되어 있지 않습니다. 관리자에게 문의하새요."
+      kakao.api:
+        denied:
+          code: "4013"
+          message: "카카오 맵 사용 설정이 정상적으로 적용되어 있지 않습니다. 관리자에게 문의하새요."
+        exceeded:
+          code: "4014"
+          message: "카카오 API 호출 가능 횟수를 초과했습니다."
       code.invalid:
         code: "4020"
         message: "잘못된 인증 코드 입니다."
