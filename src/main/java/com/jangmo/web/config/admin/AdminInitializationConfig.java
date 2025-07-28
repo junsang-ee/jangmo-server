@@ -46,40 +46,43 @@ public class AdminInitializationConfig implements ApplicationRunner {
     @Transactional
     public void run(ApplicationArguments args) throws Exception {
         log.info("Administrator Account initialize...");
-        MemberEntity admin = memberRepository.findByMobile(adminMobile).orElseGet(
-                () -> null
+        memberRepository.findByMobile(adminMobile).ifPresentOrElse(
+                admin -> {
+                    log.info("Administrator's Account is already exists!");
+                    initializeAdmin(admin);
+                }, () -> {
+                    log.info("Administrator's Account is Not! exists");
+                    log.info("Create Administrator`s Account...");
+                    City city = cityRepository.findById(1L).orElseThrow(
+                            () -> new NotFoundException(ErrorMessage.CITY_NOT_FOUND)
+                    );
+                    District district = districtRepository.findById(21L).orElseThrow(
+                            () -> new NotFoundException(ErrorMessage.DISTRICT_NOT_FOUND)
+                    );
+                    MemberSignUpRequest signup = new MemberSignUpRequest(
+                            adminName,
+                            adminMobile,
+                            Gender.MALE,
+                            LocalDate.of(1994, 3, 16),
+                            adminPassword,
+                            city.getId(),
+                            district.getId()
+                    );
+                    MemberEntity admin = MemberEntity.create(
+                            signup, city, district
+                    );
+                    memberRepository.save(admin);
+                    initializeAdmin(admin);
+                }
         );
-        if (admin != null) {
-            log.info("Administrator's Account is already exists!");
-        } else {
-            log.info("Administrator's Account is Not! exists");
-            log.info("Create Administrator`s Account...");
-            City city = cityRepository.findById(1L).orElseThrow(
-                    () -> new NotFoundException(ErrorMessage.CITY_NOT_FOUND)
-            );
-            District district = districtRepository.findById(21L).orElseThrow(
-                    () -> new NotFoundException(ErrorMessage.DISTRICT_NOT_FOUND)
-            );
-            MemberSignUpRequest signup = new MemberSignUpRequest(
-                    adminName,
-                    adminMobile,
-                    Gender.MALE,
-                    LocalDate.of(1994, 3, 16),
-                    adminPassword,
-                    city.getId(),
-                    district.getId()
-            );
-            admin = MemberEntity.create(
-                    signup, city, district
-            );
-            memberRepository.save(admin);
-        }
+        log.info("Complete Create Administrator Account!");
+        log.info("Exit Administrator initialize");
+    }
 
+    private void initializeAdmin(MemberEntity admin) {
         admin.updateRole(UserRole.ADMIN);
         admin.updateStatus(MemberStatus.ENABLED);
         if (admin.getKakaoApiUsage() == null)
             admin.createKakaoApiUsage();
-        log.info("Complete Create Administrator Account!");
-        log.info("Exit Administrator initialize");
     }
 }

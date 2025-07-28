@@ -1,5 +1,6 @@
 package com.jangmo.web.model.dto.response.vote;
 
+import com.jangmo.web.model.entity.vote.MatchVoteEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +21,12 @@ public class MatchVoteCreateResponse {
 
     private final String creatorName;
 
-    public static MatchVoteCreateResponse of(final LocalDate startAt,
-                                             final LocalDate endAt,
-                                             final LocalDate matchAt,
-                                             final String creatorName) {
+    public static MatchVoteCreateResponse of(final MatchVoteEntity matchVote) {
         return new MatchVoteCreateResponse(
-                startAt, endAt, matchAt, creatorName
+                matchVote.getStartAt(),
+                matchVote.getEndAt(),
+                matchVote.getMatchAt(),
+                matchVote.getCreatedBy().getName()
         );
     }
 
