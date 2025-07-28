@@ -2,13 +2,11 @@ package com.jangmo.web.service.manager;
 
 import com.jangmo.web.constants.Gender;
 import com.jangmo.web.constants.UserRole;
-import com.jangmo.web.constants.message.ErrorMessage;
 import com.jangmo.web.constants.user.MemberStatus;
 import com.jangmo.web.constants.MercenaryRetentionStatus;
 import com.jangmo.web.constants.user.MercenaryStatus;
 import com.jangmo.web.constants.match.MatchType;
 import com.jangmo.web.constants.vote.VoteSelectionType;
-import com.jangmo.web.exception.NotFoundException;
 import com.jangmo.web.model.dto.request.vote.MatchVoteCreateRequest;
 import com.jangmo.web.model.dto.request.MemberSignUpRequest;
 import com.jangmo.web.model.dto.request.MercenaryRegistrationRequest;
@@ -25,9 +23,6 @@ import com.jangmo.web.model.entity.user.MercenaryEntity;
 import com.jangmo.web.model.entity.user.MercenaryTransientEntity;
 
 import com.jangmo.web.repository.*;
-
-import com.jangmo.web.service.manager.UserManagementServiceImpl;
-import com.jangmo.web.service.manager.VoteManagementServiceImpl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

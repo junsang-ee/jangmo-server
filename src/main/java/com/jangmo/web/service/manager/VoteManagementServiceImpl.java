@@ -43,12 +43,7 @@ public class VoteManagementServiceImpl implements VoteManagementService {
                 createdBy, request, rawVoters
         );
         matchVoteRepository.save(matchVote);
-        return MatchVoteCreateResponse.of(
-                matchVote.getStartAt(),
-                matchVote.getEndAt(),
-                matchVote.getMatchAt(),
-                matchVote.getCreatedBy().getName()
-        );
+        return MatchVoteCreateResponse.of(matchVote);
     }
 
     @Override

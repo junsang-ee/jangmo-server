@@ -1,0 +1,48 @@
+package com.jangmo.web.model.entity.board;
+
+import com.jangmo.web.constants.ReplyTargetType;
+import com.jangmo.web.model.entity.user.MemberEntity;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+
+import static lombok.AccessLevel.PROTECTED;
+
+@Getter
+@NoArgsConstructor(access = PROTECTED)
+@Entity(name = "reply")
+public class ReplyEntity extends AbstractPostEntity {
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ReplyTargetType targetType;
+
+    @Column(nullable = false)
+    private String targetId;
+
+    @Column(nullable = false)
+    private String content;
+
+    private ReplyEntity(MemberEntity createdBy,
+                        ReplyTargetType targetType,
+                        String targetId,
+                        String content) {
+        super(createdBy);
+        this.targetType = targetType;
+        this.targetId = targetId;
+        this.content = content;
+    }
+
+    public static ReplyEntity create(final MemberEntity createdBy,
+                                     final ReplyTargetType targetType,
+                                     final String targetId,
+                                     final String content) {
+        return new ReplyEntity(
+                createdBy, targetType, targetId, content
+        );
+    }
+}
