@@ -48,15 +48,14 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class UserManagementServiceTest {
 
-    @Autowired MemberRepository memberRepository;
-    @Autowired MercenaryRepository mercenaryRepository;
-    @Autowired CityRepository cityRepository;
-    @Autowired DistrictRepository districtRepository;
-    @Autowired MatchVoteRepository matchVoteRepository;
-    @Autowired UserManagementServiceImpl userManagementService;
-    @Autowired VoteManagementServiceImpl voteService;
-
-    @Autowired KakaoApiUsageRepository kakaoApiUsageRepository;
+    private final MemberRepository memberRepository;
+    private final MercenaryRepository mercenaryRepository;
+    private final CityRepository cityRepository;
+    private final DistrictRepository districtRepository;
+    private final MatchVoteRepository matchVoteRepository;
+    private final UserManagementServiceImpl userManagementService;
+    private final VoteManagementServiceImpl voteService;
+    private final KakaoApiUsageRepository kakaoApiUsageRepository;
 
     @DisplayName("Member 등록 승인 테스트")
     @Test

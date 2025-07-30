@@ -108,6 +108,22 @@ response:
       not.found:
         code: "5010"
         message: "해당 매치를 찾을 수 없습니다."
+    board:
+      not.found:
+        code: "5050"
+        message: "해당 게시판을 찾을 수 없습니다."
+    post:
+      not.found:
+        code: "5060"
+        message: "해당 게시글을 찾을 수 없습니다."
+    vote:
+      not.found:
+        code: "5020"
+        message: "해당 투표를 찾을 수 없습니다."
+    match.vote:
+      not.found:
+        code: "5021"
+        message: "해당 매치 투표를 찾을 수 없습니다."
     member:
       not.found:
         code: "5001"

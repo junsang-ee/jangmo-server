@@ -120,34 +120,34 @@ public class UserManagementServiceImpl implements UserManagementService {
 
     @Override
     public MemberDetailResponse getMemberDetail(String memberId) {
-        MemberEntity member = getMember(memberId);
+        MemberEntity member = getMemberById(memberId);
         return MemberDetailResponse.of(member);
     }
 
     @Override
     public MercenaryDetailResponse getMercenaryDetail(String mercenaryId) {
-        MercenaryEntity mercenary = getMercenary(mercenaryId);
+        MercenaryEntity mercenary = getMercenaryById(mercenaryId);
         return MercenaryDetailResponse.of(mercenary);
     }
 
     @Override
     @Transactional
     public void updateMemberStatus(String memberId, MemberStatus status) {
-        MemberEntity member = getMember(memberId);
+        MemberEntity member = getMemberById(memberId);
         member.updateStatus(status);
     }
 
     @Override
     @Transactional
     public void updateMercenaryStatus(String mercenaryId, MercenaryStatus status) {
-        MercenaryEntity mercenary = getMercenary(mercenaryId);
+        MercenaryEntity mercenary = getMercenaryById(mercenaryId);
         mercenary.updateStatus(status);
     }
 
     @Override
     @Transactional
     public void updateMemberRole(String memberId, UserRole newRole) {
-        MemberEntity apiCaller = getMember(memberId);
+        MemberEntity apiCaller = getMemberById(memberId);
         UserRole currentRole = apiCaller.getRole();
         if (currentRole == newRole)
             throw new InvalidStateException(ErrorMessage.MEMBER_ALREADY_HAS_ROLE);
@@ -185,13 +185,13 @@ public class UserManagementServiceImpl implements UserManagementService {
         );
     }
 
-    private MemberEntity getMember(String memberId) {
+    private MemberEntity getMemberById(String memberId) {
         return memberRepository.findById(memberId).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND)
         );
     }
 
-    private MercenaryEntity getMercenary(String mercenaryId) {
+    private MercenaryEntity getMercenaryById(String mercenaryId) {
         return mercenaryRepository.findById(mercenaryId).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.MERCENARY_NOT_FOUND)
         );
