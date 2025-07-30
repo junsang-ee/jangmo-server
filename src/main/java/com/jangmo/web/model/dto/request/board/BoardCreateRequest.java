@@ -1,0 +1,14 @@
+package com.jangmo.web.model.dto.request.board;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import javax.validation.constraints.NotBlank;
+
+@Getter
+@NoArgsConstructor
+public class BoardCreateRequest {
+
+    @NotBlank(message = "게시판 이름은 필수 항목입니다.")
+    private String name;
+}

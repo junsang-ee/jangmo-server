@@ -1,6 +1,7 @@
 package com.jangmo.web.model.entity.board;
 
 import com.jangmo.web.constants.ReplyTargetType;
+import com.jangmo.web.model.dto.request.board.ReplyCreateRequest;
 import com.jangmo.web.model.entity.user.MemberEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,11 +39,12 @@ public class ReplyEntity extends AbstractPostEntity {
     }
 
     public static ReplyEntity create(final MemberEntity createdBy,
-                                     final ReplyTargetType targetType,
-                                     final String targetId,
-                                     final String content) {
+                                     final ReplyCreateRequest request) {
         return new ReplyEntity(
-                createdBy, targetType, targetId, content
+                createdBy,
+                request.getTargetType(),
+                request.getTargetId(),
+                request.getContent()
         );
     }
 }

@@ -16,6 +16,7 @@ import com.jangmo.web.repository.MatchVoteRepository;
 import com.jangmo.web.repository.UserRepository;
 import com.jangmo.web.service.manager.VoteManagementServiceImpl;
 
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -32,17 +33,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @Slf4j
+@RequiredArgsConstructor
 @SpringBootTest
 public class VoteManagementServiceTest {
 
-    @Autowired
-    VoteManagementServiceImpl voteService;
+    private final VoteManagementServiceImpl voteService;
 
-    @Autowired UserRepository userRepository;
+    private final  UserRepository userRepository;
 
-    @Autowired MatchVoteRepository matchVoteRepository;
+    private final  MatchVoteRepository matchVoteRepository;
 
-    @Autowired MatchRepository matchRepository;
+    private final  MatchRepository matchRepository;
 
 
     @DisplayName("match 투표 생성 테스트")

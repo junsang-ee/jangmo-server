@@ -25,7 +25,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @Slf4j
-@RequiredArgsConstructor
 @ExtendWith(MockitoExtension.class)
 public class SmsProviderTest {
 
