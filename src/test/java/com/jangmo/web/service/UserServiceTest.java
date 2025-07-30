@@ -14,7 +14,6 @@ import com.jangmo.web.repository.DistrictRepository;
 import com.jangmo.web.repository.MemberRepository;
 import com.jangmo.web.utils.EncryptUtil;
 
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,14 +31,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
-@RequiredArgsConstructor
 @SpringBootTest
 public class UserServiceTest {
 
-    private final  UserServiceImpl userService;
-    private final  MemberRepository memberRepository;
-    private final  CityRepository cityRepository;
-    private final  DistrictRepository districtRepository;
+    @Autowired UserServiceImpl userService;
+    @Autowired MemberRepository memberRepository;
+    @Autowired CityRepository cityRepository;
+    @Autowired DistrictRepository districtRepository;
 
     private MemberEntity testMember;
 
