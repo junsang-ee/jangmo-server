@@ -33,17 +33,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @Slf4j
-@RequiredArgsConstructor
 @SpringBootTest
 public class VoteManagementServiceTest {
 
-    private final VoteManagementServiceImpl voteService;
+    @Autowired VoteManagementServiceImpl voteService;
 
-    private final  UserRepository userRepository;
+    @Autowired UserRepository userRepository;
 
-    private final  MatchVoteRepository matchVoteRepository;
+    @Autowired MatchVoteRepository matchVoteRepository;
 
-    private final  MatchRepository matchRepository;
+    @Autowired MatchRepository matchRepository;
 
 
     @DisplayName("match 투표 생성 테스트")

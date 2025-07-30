@@ -41,7 +41,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.junit.jupiter.api.DisplayName;
@@ -64,18 +63,17 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 
 @Slf4j
-@RequiredArgsConstructor
 @SpringBootTest
 public class AuthServiceTest {
 
-    private final MemberRepository memberRepository;
-    private final MercenaryRepository mercenaryRepository;
-    private final MatchVoteRepository matchVoteRepository;
-    private final MercenaryTransientRepository mercenaryTransientRepository;
-    private final VoteManagementServiceImpl voteService;
-    private final JwtConfig jwtConfig;
-    private final AuthServiceImpl authService;
-    private final CacheAccessor cacheAccessor;
+    @Autowired MemberRepository memberRepository;
+    @Autowired MercenaryRepository mercenaryRepository;
+    @Autowired MatchVoteRepository matchVoteRepository;
+    @Autowired MercenaryTransientRepository mercenaryTransientRepository;
+    @Autowired VoteManagementServiceImpl voteService;
+    @Autowired JwtConfig jwtConfig;
+    @Autowired AuthServiceImpl authService;
+    @Autowired CacheAccessor cacheAccessor;
 
     @MockBean
     private SmsProvider smsProvider;
