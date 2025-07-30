@@ -1,7 +1,7 @@
 package com.jangmo.web.controller.manager;
 
-import com.jangmo.web.model.dto.request.board.BoardCreateRequest;
-import com.jangmo.web.model.dto.response.board.BoardCreateResponse;
+import com.jangmo.web.model.dto.request.board.manager.BoardCreateRequest;
+import com.jangmo.web.model.dto.response.board.manager.BoardCreateResponse;
 import com.jangmo.web.model.dto.response.common.ApiSuccessResponse;
 import com.jangmo.web.service.manager.board.BoardManagementService;
 import lombok.RequiredArgsConstructor;

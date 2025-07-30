@@ -1,7 +1,7 @@
 package com.jangmo.web.service.manager.board;
 
-import com.jangmo.web.model.dto.request.board.PostCreateRequest;
-import com.jangmo.web.model.dto.response.board.PostCreateResponse;
+import com.jangmo.web.model.dto.request.board.manager.PostCreateRequest;
+import com.jangmo.web.model.dto.response.board.manager.PostCreateResponse;
 import com.jangmo.web.model.entity.board.BoardEntity;
 import com.jangmo.web.model.entity.board.PostEntity;
 import com.jangmo.web.model.entity.user.MemberEntity;
