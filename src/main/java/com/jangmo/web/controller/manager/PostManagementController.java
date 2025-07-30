@@ -1,8 +1,8 @@
 package com.jangmo.web.controller.manager;
 
 
-import com.jangmo.web.model.dto.request.board.PostCreateRequest;
-import com.jangmo.web.model.dto.response.board.PostCreateResponse;
+import com.jangmo.web.model.dto.request.board.manager.PostCreateRequest;
+import com.jangmo.web.model.dto.response.board.manager.PostCreateResponse;
 import com.jangmo.web.model.dto.response.common.ApiSuccessResponse;
 import com.jangmo.web.service.manager.board.PostManagementService;
 import lombok.RequiredArgsConstructor;
