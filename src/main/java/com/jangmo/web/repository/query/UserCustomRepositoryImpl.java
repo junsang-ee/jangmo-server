@@ -26,8 +26,8 @@ import static com.jangmo.web.model.entity.user.QMemberEntity.memberEntity;
 import static com.jangmo.web.model.entity.user.QMercenaryEntity.mercenaryEntity;
 
 @Slf4j
-@Repository
 @RequiredArgsConstructor
+@Repository
 public class UserCustomRepositoryImpl implements UserCustomRepository {
 
     private final JPAQueryFactory queryFactory;
