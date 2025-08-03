@@ -20,7 +20,7 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/{postId}")
-    public ResponseEntity<ApiSuccessResponse<PostEntity>> list(
+    public ResponseEntity<ApiSuccessResponse<PostEntity>> detail(
             @PathVariable String postId
     ) {
         return wrap(postService.detail(postId));
