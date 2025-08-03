@@ -47,7 +47,4 @@ public class PostEntity extends AbstractPostEntity {
         return new PostEntity(createdBy, title, content, board);
     }
 
-
-
-
 }
