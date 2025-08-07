@@ -3,6 +3,7 @@ package com.jangmo.web.service.manager.board;
 import com.jangmo.web.constants.message.ErrorMessage;
 import com.jangmo.web.exception.NotFoundException;
 import com.jangmo.web.model.dto.request.board.manager.PostCreateRequest;
+import com.jangmo.web.model.dto.request.board.manager.PostUpdateRequest;
 import com.jangmo.web.model.dto.response.board.manager.PostCreateResponse;
 import com.jangmo.web.model.entity.board.BoardEntity;
 import com.jangmo.web.model.entity.board.PostEntity;
@@ -31,18 +32,30 @@ public class PostManagementServiceImpl implements PostManagementService {
         MemberEntity createdBy = getMemberById(memberId);
         PostEntity post = PostEntity.create(
                 createdBy,
-                request.getTitle(),
-                request.getContent(),
+                request,
                 parentBoard
         );
         postRepository.save(post);
         return PostCreateResponse.of(post.getTitle());
     }
 
+    @Override
+    @Transactional
+    public void update(String postId, PostUpdateRequest request) {
+        PostEntity post = getPostById(postId);
+        post.update(request);
+    }
+
 
     private BoardEntity getBoardById(String boardId) {
         return boardRepository.findById(boardId).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.BOARD_NOT_FOUND)
+        );
+    }
+
+    private PostEntity getPostById(String postId) {
+        return postRepository.findById(postId).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.POST_NOT_FOUND)
         );
     }
 

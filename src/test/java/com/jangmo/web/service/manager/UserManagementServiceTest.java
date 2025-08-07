@@ -27,10 +27,13 @@ import com.jangmo.web.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import org.junit.jupiter.api.TestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -44,9 +47,20 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
-@RequiredArgsConstructor
 @SpringBootTest
 public class UserManagementServiceTest {
+
+    static final String MEMBER_APPROVE = "회원(Member) 등록 승인 테스트";
+    static final String MERCENARY_APPROVE = "용병(Mercenary) 등록 승인 테스트";
+    static final String USER_REGISTER_APPROVE = "User(회원, 용병) 가입 및 등록 승인 요청 대기자 리스트 테스트";
+
+    static final String MEMBER_UPDATE_STATUS = "Member(회원) 상태 변경 테스트";
+    static final String MERCENARY_UPDATE_STATUS = "Mercenary(용병) 상태 변경 리스트";
+    static final String MEMBER_UPDATE_ROLE_KAKAO_USAGE = "Member(회원) 권한(role) 변경 테스트 및 Kakao 사용량 데이터 생성 테스트";
+    static final String USER_LIST = "관리자 및 본인 제외 전체 유저 리스트 테스트";
+
+    @Value("${jangmo.admin.mobile}")
+    String adminMobile;
 
     @Autowired MemberRepository memberRepository;
     @Autowired MercenaryRepository mercenaryRepository;
@@ -57,7 +71,48 @@ public class UserManagementServiceTest {
     @Autowired VoteManagementServiceImpl voteService;
     @Autowired KakaoApiUsageRepository kakaoApiUsageRepository;
 
-    @DisplayName("Member 등록 승인 테스트")
+    City city = null;
+    District district = null;
+
+    MemberEntity admin = null;
+
+    @BeforeEach
+    void init(TestInfo testInfo) {
+        String displayName = testInfo.getDisplayName();
+        switch (displayName) {
+            case USER_LIST:
+                initAdmin();
+            case MEMBER_APPROVE:
+            case MEMBER_UPDATE_STATUS:
+            case MEMBER_UPDATE_ROLE_KAKAO_USAGE:
+                initCity();
+                break;
+            case MERCENARY_APPROVE:
+                initAdmin();
+                break;
+            default: break;
+        }
+    }
+
+    private void initCity() {
+        city = cityRepository.findById(1L).orElseGet(
+                () -> null
+        );
+        district = districtRepository.findById(1L).orElseGet(
+                () -> null
+        );
+        assertNotNull(city);
+        assertNotNull(district);
+    }
+
+    private void initAdmin() {
+        admin = memberRepository.findByMobile(adminMobile).orElseGet(
+                () -> null
+        );
+        assertNotNull(admin);
+    }
+
+    @DisplayName(MEMBER_APPROVE)
     @Test
     @Transactional
     void memberApproveTest() {
@@ -71,22 +126,20 @@ public class UserManagementServiceTest {
                 1L,
                 1L
         );
-        City city = cityRepository.findById(1L).orElseThrow();
-        District district = districtRepository.findById(1L).orElseThrow();
-        MemberEntity member = memberRepository.save(
-                MemberEntity.create(signup, city, district)
-        );
+        MemberEntity member = MemberEntity.create(signup, city, district);
+        memberRepository.save(member);
 
-        log.info("Before approval member status : {}", member.getStatus());
         assertEquals(member.getStatus(), MemberStatus.PENDING);
+        log.info("Before approval member status : {}", member.getStatus());
+
         userManagementService.approveMember(member.getId());
 
-        log.info("After approval member status : {}", member.getStatus());
         assertEquals(member.getStatus(), MemberStatus.ENABLED);
+        log.info("After approval member status : {}", member.getStatus());
     }
 
 
-    @DisplayName("Mercenary 등록 승인 테스트")
+    @DisplayName(MERCENARY_APPROVE)
     @Test
     @Transactional
     void mercenaryApproveTest() {
@@ -97,9 +150,8 @@ public class UserManagementServiceTest {
                 MercenaryRetentionStatus.KEEP
         );
 
-        MercenaryEntity mercenary = mercenaryRepository.save(
-                MercenaryEntity.create(registration)
-        );
+        MercenaryEntity mercenary = MercenaryEntity.create(registration);
+        mercenaryRepository.save(mercenary);
 
         LocalDate now = LocalDate.now();
         LocalDate endAt = now.plusDays(1);
@@ -111,7 +163,6 @@ public class UserManagementServiceTest {
                 endAt,
                 VoteSelectionType.SINGLE
         );
-        MemberEntity admin = memberRepository.findByMobile("01043053451").get();
         voteService.createMatchVote(admin.getId(), matchVoteCreateRequest);
 
         MatchVoteEntity matchVote = matchVoteRepository.findByMatchAt(matchAt).get(0);
@@ -136,7 +187,7 @@ public class UserManagementServiceTest {
         log.info("After approve mercenary status : {}", mercenary.getStatus());
     }
 
-    @DisplayName("User(회원, 용병) 가입 및 등록 승인 요청 대기자 리스트 테스트")
+    @DisplayName(USER_REGISTER_APPROVE)
     @Test
     void getApprovalUsersTest() {
         MemberSignUpRequest firstSignup = new MemberSignUpRequest(
@@ -170,10 +221,10 @@ public class UserManagementServiceTest {
         );
     }
 
-    @DisplayName("관리자 및 본인 제외 전체 유저 리스트 테스트")
+    @DisplayName(USER_LIST)
     @Transactional
     @Test
-    void getUsersTest() {
+    void getUserListTest() {
         LocalDate birth = LocalDate.of(1994, 3, 16);
         MemberSignUpRequest firstSignupRequest = new MemberSignUpRequest(
                 "firstTestMember",
@@ -229,8 +280,6 @@ public class UserManagementServiceTest {
                 1L,
                 1L
         );
-        City city = cityRepository.findById(1L).get();
-        District district = districtRepository.findById(1L).get();
         MemberEntity firstMember = MemberEntity.create(firstSignupRequest, city, district);
         MemberEntity secondMember = MemberEntity.create(secondSignupRequest, city, district);
         MemberEntity thirdMember = MemberEntity.create(thirdSignupRequest, city, district);
@@ -280,7 +329,6 @@ public class UserManagementServiceTest {
                 MercenaryRetentionStatus.KEEP
         );
 
-        UserEntity admin = memberRepository.findByMobile("01043053451").get();
         MercenaryEntity firstMercenary = MercenaryEntity.create(
                 firstMercenaryRegistration
         );
@@ -327,12 +375,10 @@ public class UserManagementServiceTest {
 
     }
 
-    @DisplayName("회원 상태 변경 테스트")
+    @DisplayName(MEMBER_UPDATE_STATUS)
     @Transactional
     @Test
     void updateMemberStatusTest() {
-        City city = cityRepository.findById(1L).get();
-        District district = districtRepository.findById(1L).get();
         LocalDate birth = LocalDate.of(1994, 3, 16);
         MemberSignUpRequest signup = new MemberSignUpRequest(
                 "firstTestMember",
@@ -361,7 +407,7 @@ public class UserManagementServiceTest {
     }
 
 
-    @DisplayName("용병 상태 변경 테스트")
+    @DisplayName(MERCENARY_UPDATE_STATUS)
     @Transactional
     @Test
     void updateMercenaryStatusTest() {
@@ -385,12 +431,10 @@ public class UserManagementServiceTest {
         log.info("After update status : {}", mercenary.getStatus());
     }
 
-    @DisplayName("회원 권한(role) 변경 테스트 및 Kakao 사용량 데이터 생성 테스트")
+    @DisplayName(MEMBER_UPDATE_ROLE_KAKAO_USAGE)
     @Transactional
     @Test
     void updateMemberRoleTest() {
-        City city = cityRepository.findById(1L).get();
-        District district = districtRepository.findById(1L).get();
         LocalDate birth = LocalDate.of(1994, 3, 16);
         MemberSignUpRequest signup = new MemberSignUpRequest(
                 "firstTestMember",
@@ -413,8 +457,8 @@ public class UserManagementServiceTest {
                 () -> null
         );
         assertNotNull(afterKakaoApiUsage);
-        log.info("afterKakaoApiUsage id : {}", afterKakaoApiUsage.getId());
-        log.info("afterKakaoApiUsage apiCallerName : {}", afterKakaoApiUsage.getApiCaller().getName());
+        log.info("after KakaoApiUsage id : {}", afterKakaoApiUsage.getId());
+        log.info("after KakaoApiUsage apiCallerName : {}", afterKakaoApiUsage.getApiCaller().getName());
     }
 
 

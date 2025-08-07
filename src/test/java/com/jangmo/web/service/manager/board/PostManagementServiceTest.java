@@ -1,6 +1,7 @@
 package com.jangmo.web.service.manager.board;
 
 import com.jangmo.web.model.dto.request.board.manager.PostCreateRequest;
+import com.jangmo.web.model.dto.request.board.manager.PostUpdateRequest;
 import com.jangmo.web.model.dto.response.board.manager.PostCreateResponse;
 import com.jangmo.web.model.entity.board.BoardEntity;
 import com.jangmo.web.model.entity.board.PostEntity;
@@ -9,20 +10,24 @@ import com.jangmo.web.repository.MemberRepository;
 import com.jangmo.web.repository.board.BoardRepository;
 import com.jangmo.web.repository.board.PostRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @SpringBootTest
 public class PostManagementServiceTest {
+    final static String POST_CREATE = "게시판(Post) 생성 테스트";
+    final static String POST_UPDATE = "게시판(Post) 수정 테스트";
 
     @Autowired PostManagementServiceImpl postManagementService;
 
@@ -32,22 +37,35 @@ public class PostManagementServiceTest {
 
     @Autowired MemberRepository memberRepository;
 
-    @DisplayName("Post(게시판) 생성 테스트")
+    @Value("${jangmo.admin.mobile}")
+    String adminMobile;
+
+    BoardEntity testParentBoard = null;
+
+    MemberEntity admin = null;
+
+    @BeforeEach
+    void init(TestInfo testInfo) {
+        initAdmin();
+        String displayName = testInfo.getDisplayName();
+        if (displayName.equals(POST_CREATE) || displayName.equals(POST_UPDATE)) {
+            initBoard();
+        }
+    }
+
+
+
+    @DisplayName(POST_CREATE)
     @Test
     @Transactional
     void postCreateTest() {
-        BoardEntity board = BoardEntity.create("테스트 게시판");
-        boardRepository.save(board);
-        assertNotNull(board);
-        log.info("board id :: {}", board.getId());
-        MemberEntity admin = memberRepository.findByMobile("01043053451").get();
         PostCreateRequest postCreateRequest = new PostCreateRequest(
                 "게시판 테스트 title",
                 "게시판 테스트 content"
         );
         PostCreateResponse result = postManagementService.create(
                 admin.getId(),
-                board.getId(),
+                testParentBoard.getId(),
                 postCreateRequest
         );
 
@@ -59,4 +77,56 @@ public class PostManagementServiceTest {
         log.info("post title : {}", post.getTitle());
         log.info("post content : {}", post.getContent());
     }
+
+
+    @DisplayName(POST_UPDATE)
+    @Test
+    @Transactional
+    void postUpdateTest() {
+        PostCreateRequest createRequest = new PostCreateRequest(
+                "게시판 테스트 title",
+                "게시판 테스트 content"
+        );
+        PostEntity post = PostEntity.create(
+                admin,
+                createRequest,
+                testParentBoard
+        );
+        postRepository.save(post);
+        PostUpdateRequest updateRequest = new PostUpdateRequest(
+                "게시판 테스트 title 수정",
+                "게시판 테스트 content 수정"
+        );
+        postManagementService.update(
+                post.getId(),
+                updateRequest
+        );
+        PostEntity originPost = postRepository.findByTitle(
+                createRequest.getTitle()
+        ).orElseGet(() -> null);
+
+        assertNull(originPost);
+
+        log.info("post update title :: {}", post.getTitle());
+        log.info("post update content :: {}", post.getContent());
+
+
+    }
+
+    @Transactional
+    private void initBoard() {
+        BoardEntity board = BoardEntity.create("테스트 게시판");
+        boardRepository.save(board);
+        assertNotNull(board.getId());
+        testParentBoard = board;
+    }
+
+    private void initAdmin() {
+        admin = memberRepository.findByMobile(adminMobile).orElseGet(
+                () -> null
+        );
+        assertNotNull(admin);
+    }
+
+
 }

@@ -2,25 +2,25 @@ package com.jangmo.web.service.manager;
 
 import com.jangmo.web.constants.UserRole;
 import com.jangmo.web.constants.match.MatchType;
-import com.jangmo.web.constants.message.ErrorMessage;
 import com.jangmo.web.constants.user.MemberStatus;
 import com.jangmo.web.constants.vote.VoteSelectionType;
-import com.jangmo.web.exception.NotFoundException;
 import com.jangmo.web.model.dto.request.vote.MatchVoteCreateRequest;
 import com.jangmo.web.model.dto.response.vote.MatchVoteCreateResponse;
 import com.jangmo.web.model.entity.MatchEntity;
+import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.model.entity.vote.MatchVoteEntity;
-import com.jangmo.web.model.entity.user.UserEntity;
 import com.jangmo.web.repository.MatchRepository;
 import com.jangmo.web.repository.MatchVoteRepository;
+import com.jangmo.web.repository.MemberRepository;
 import com.jangmo.web.repository.UserRepository;
-import com.jangmo.web.service.manager.VoteManagementServiceImpl;
 
-import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import org.junit.jupiter.api.TestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,18 +40,42 @@ public class VoteManagementServiceTest {
 
     @Autowired UserRepository userRepository;
 
+    @Autowired
+    MemberRepository memberRepository;
+
     @Autowired MatchVoteRepository matchVoteRepository;
 
     @Autowired MatchRepository matchRepository;
 
+    static final String MATCH_VOTE_CREATE = "매치 투표(MatchVote 생성 테스트";
 
-    @DisplayName("match 투표 생성 테스트")
+    @Value("${jangmo.admin.mobile}")
+    String adminMobile;
+
+    MemberEntity admin = null;
+
+    @BeforeEach
+    void init(TestInfo testInfo) {
+        String display = testInfo.getDisplayName();
+        switch (display) {
+            case MATCH_VOTE_CREATE:
+                initAdmin();
+                break;
+            default: break;
+        }
+    }
+
+    void initAdmin() {
+        admin = memberRepository.findByMobile(adminMobile).orElseGet(
+                () -> null
+        );
+        assertNotNull(admin);
+    }
+
+    @DisplayName(MATCH_VOTE_CREATE)
     @Test
     @Transactional
     void matchVoteCreateTest() {
-        UserEntity admin = userRepository.findByMobile("01043053451").orElseThrow(
-                () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND)
-        );
         LocalDate now = LocalDate.now();
         LocalDate matchAt = now.plusDays(2);
         LocalDate voteEndAt = now.plusDays(1);

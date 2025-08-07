@@ -75,23 +75,41 @@ public class AuthServiceTest {
     @Autowired AuthServiceImpl authService;
     @Autowired CacheAccessor cacheAccessor;
 
+    static final String AUTH_CODE_SEND = "인증 코드 전송 및 휴대폰 번호 캐시 저장 결과 테스트";
+    static final String AUTH_CODE_VERIFY = "인증 코드 검증 및 휴대폰 인증 여부 캐시 저장 테스트";
+    static final String MEMBER_SIGNUP_SCENARIO = "회원(Member) 가입 시나리오 테스트";
+    static final String MERCENARY_REGISTER_SCENARIO = "용병 등록 시나리오 테스트";
+    static final String DUPLICATED_AUTH_CODE = "인증 번호 요청 중복 에러 테스트";
+    static final String MEMBER_LOGIN = "회원(Member) 로그인 테스트";
+    static final String MERCENARY_LOGIN = "용병(Mercenary) 로그인 테스트";
+    static final String MEMBER_PASSWORD_RESET_SCENARIO = "회원(Member) 비밀번호 재설정 시나리오 테스트";
+    static final String MERCENARY_CODE_RESET_SCENARIO = "용병(Mercenary) 코드 재발급 시나리오 테스트";
+
+
     @MockBean
     private SmsProvider smsProvider;
 
     @BeforeEach
     void init(TestInfo testInfo) {
-        if (testInfo.getDisplayName().equals("Member 로그인 테스트") ||
-            testInfo.getDisplayName().equals("Mercenary 로그인 테스트")) {
-            ReflectionTestUtils.setField(
-                    jwtConfig,
-                    "secret",
-                    //test_json_web_token_secret_key_for_hmac
-                    "dGVzdF9qc29uX3dlYl90b2tlbl9zZWNyZXRfa2V5X2Zvcl9obWFj"
-            );
+        String display = testInfo.getDisplayName();
+        switch (display) {
+            case MEMBER_LOGIN:
+            case MERCENARY_LOGIN:
+                initTempJwtSecret();
+                break;
         }
     }
 
-    @DisplayName("인증 코드 전송 및 휴대폰 번호 캐시 저장 결과 테스트")
+    void initTempJwtSecret() {
+        ReflectionTestUtils.setField(
+                jwtConfig,
+                "secret",
+                //test_json_web_token_secret_key_for_hmac
+                "dGVzdF9qc29uX3dlYl90b2tlbl9zZWNyZXRfa2V5X2Zvcl9obWFj"
+        );
+    }
+
+    @DisplayName(AUTH_CODE_SEND)
     @Test
     @Transactional
     void sendAuthCodeTest() {
@@ -115,7 +133,7 @@ public class AuthServiceTest {
         log.info("cached authCode : {}", cachedCode);
     }
 
-    @DisplayName("인증 코드 검증 및 휴대폰 인증 여부 캐시 저장 테스트")
+    @DisplayName(AUTH_CODE_VERIFY)
     @Test
     @Transactional
     void verifyCodeTest() {
@@ -145,6 +163,7 @@ public class AuthServiceTest {
                 signupMobile,
                 Boolean.class
         ).orElseGet(() -> false);
+
         log.info("isCachedVerified :: {}", isCachedVerified);
         assertTrue(isCachedVerified);
 
@@ -167,7 +186,7 @@ public class AuthServiceTest {
      *     <li> 회원가입 처리 => signupMember() </li>
      * </ol>
      */
-    @DisplayName("회원 가입 시나리오 테스트")
+    @DisplayName(MEMBER_SIGNUP_SCENARIO)
     @Test
     @Transactional
     void memberSignupIntegrationTest() {
@@ -209,7 +228,6 @@ public class AuthServiceTest {
         assertTrue(isCachedVerified);
 
         log.info("Before signup isCachedVerified :: {}", isCachedVerified);
-
 
         /**
          * signupMember
@@ -269,7 +287,8 @@ public class AuthServiceTest {
      *     <li> 용병 등록 처리 => registerMercenary() </li>
      * </ol>
      */
-    @DisplayName("용병 등록 시나리오 테스트")
+
+    @DisplayName(MERCENARY_REGISTER_SCENARIO)
     @Test
     @Transactional
     void registerMercenaryTest() {
@@ -353,7 +372,7 @@ public class AuthServiceTest {
         assertEquals(savedMercenary.getStatus(), MercenaryStatus.PENDING);
     }
 
-    @DisplayName("인증 번호 요청 중복 에러 테스트")
+    @DisplayName(DUPLICATED_AUTH_CODE)
     @Test
     @Transactional
     void sendAuthCodeDuplicatedErrorTest() {
@@ -365,7 +384,7 @@ public class AuthServiceTest {
         authService.sendAuthCode(request);
     }
 
-    @DisplayName("Member 로그인 테스트")
+    @DisplayName(MEMBER_LOGIN)
     @Test
     @Transactional
     void memberLoginTest() {
@@ -407,7 +426,7 @@ public class AuthServiceTest {
         assertEquals(signupMember.getId(), userId);
     }
 
-    @DisplayName("용병 로그인 테스트")
+    @DisplayName(MERCENARY_LOGIN)
     @Test
     @Transactional
     void mercenaryLoginTest() {
@@ -510,7 +529,7 @@ public class AuthServiceTest {
      *     <li> 기존 비밀 번호와 비매칭 검증 </li>
      * </ol>
      */
-    @DisplayName("회원 비밀 번호 재설정 시나리오 테스트")
+    @DisplayName(MEMBER_PASSWORD_RESET_SCENARIO)
     @Test
     @Transactional
     void resetMemberPasswordTest() {
@@ -609,7 +628,7 @@ public class AuthServiceTest {
      *     <li> 기존 용병 코드와 비매칭 검증 </li>
      * </ol>
      */
-    @DisplayName("용병 코드 재발급 시나리오 테스트")
+    @DisplayName(MERCENARY_CODE_RESET_SCENARIO)
     @Test
     @Transactional
     void resetMercenaryCodeTest() {

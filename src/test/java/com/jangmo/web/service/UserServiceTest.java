@@ -1,9 +1,7 @@
 package com.jangmo.web.service;
 
 import com.jangmo.web.constants.Gender;
-import com.jangmo.web.constants.message.ErrorMessage;
 import com.jangmo.web.constants.user.MemberStatus;
-import com.jangmo.web.exception.NotFoundException;
 import com.jangmo.web.model.dto.request.MemberSignUpRequest;
 import com.jangmo.web.model.entity.UniformEntity;
 import com.jangmo.web.model.entity.administrative.City;
@@ -39,25 +37,30 @@ public class UserServiceTest {
     @Autowired CityRepository cityRepository;
     @Autowired DistrictRepository districtRepository;
 
-    private MemberEntity testMember;
+    static final String MEMBER_UPDATE_PASSWORD = "회원(Member) 비밀번호 변경 테스트";
+    static final String MEMBER_REGISTER_UNIFORM = "회원(Member) 유니폼 등록 테스트";
+    static final String MEMBER_UPDATE_BACK_NUMBER = "회원(Member) 유니폼 등번호 변경 테스트";
+
+    MemberEntity testMember = null;
+
+    City city = null;
+    District district = null;
 
     @BeforeEach
-    void setUpMember(TestInfo testInfo) {
+    void init(TestInfo testInfo) {
         String displayName = testInfo.getDisplayName();
-        if (displayName.equals("회원(Member) 비밀번호 변경 테스트") ||
-            displayName.equals("회원(Member) 유니폼 등록 테스트") ||
-            displayName.equals("회원(Member) 유니폼 등번호 변경 테스트")) {
-            testMember = createTestMember();
+        switch (displayName) {
+            case MEMBER_UPDATE_PASSWORD:
+            case MEMBER_REGISTER_UNIFORM:
+            case MEMBER_UPDATE_BACK_NUMBER:
+                initCity();
+                initTestMember();
+            default: break;
         }
     }
 
-    private MemberEntity createTestMember() {
-        City city = cityRepository.findById(1L).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.CITY_NOT_FOUND)
-        );
-        District district = districtRepository.findById(1L).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.DISTRICT_NOT_FOUND)
-        );
+    @Transactional
+    void initTestMember() {
         MemberSignUpRequest signUpRequest = new MemberSignUpRequest(
                 "김회원",
                 "01012341234",
@@ -70,10 +73,19 @@ public class UserServiceTest {
         MemberEntity member = MemberEntity.create(signUpRequest, city, district);
         memberRepository.save(member);
         assertNotNull(member);
-        return member;
+        testMember = member;
     }
 
-    @DisplayName("회원(Member) 비밀번호 변경 테스트")
+    void initCity() {
+        city = cityRepository.findById(1L).orElseGet(() -> null);
+        district = districtRepository.findById(1L).orElseGet(() -> null);
+        assertNotNull(city);
+        assertNotNull(district);
+    }
+
+
+
+    @DisplayName(MEMBER_UPDATE_PASSWORD)
     @Test
     @Transactional
     void memberUpdatePasswordTest() {
@@ -84,7 +96,7 @@ public class UserServiceTest {
         assertTrue(EncryptUtil.matches("newPassword!@", testMember.getPassword()));
     }
 
-    @DisplayName("회원(Member) 유니폼 등록 테스트")
+    @DisplayName(MEMBER_REGISTER_UNIFORM)
     @Test
     @Transactional
     void registerUniformInfoTest() {
@@ -95,7 +107,7 @@ public class UserServiceTest {
         log.info("uniform backNumber :: {}", uniform.getBackNumber());
     }
 
-    @DisplayName("회원(Member) 유니폼 등번호 변경 테스트")
+    @DisplayName(MEMBER_UPDATE_BACK_NUMBER)
     @Test
     @Transactional
     public void updateBackNumberTest() {
