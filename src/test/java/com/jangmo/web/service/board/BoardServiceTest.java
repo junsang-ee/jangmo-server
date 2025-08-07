@@ -14,7 +14,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 @Slf4j
 @SpringBootTest
 public class BoardServiceTest {
@@ -23,10 +22,12 @@ public class BoardServiceTest {
 
     @Autowired BoardRepository boardRepository;
 
-    @DisplayName("Board(게시판) 리스트 가져오기 테스트")
+    static final String BOARD_LIST = "게시판(Board) 리스트 가져오기 테스트";
+
+    @DisplayName(BOARD_LIST)
     @Test
     void getBoardListTest() {
-        BoardCreateRequest firstCRequest = new BoardCreateRequest(
+        BoardCreateRequest firstRequest = new BoardCreateRequest(
                 "first test board"
         );
 
@@ -38,7 +39,7 @@ public class BoardServiceTest {
                 "third test board"
         );
 
-        BoardEntity firstBoard = BoardEntity.create(firstCRequest.getName());
+        BoardEntity firstBoard = BoardEntity.create(firstRequest.getName());
         BoardEntity secondBoard = BoardEntity.create(secondRequest.getName());
         BoardEntity thirdBoard = BoardEntity.create(thirdRequest.getName());
 

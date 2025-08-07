@@ -2,6 +2,8 @@ package com.jangmo.web.model.entity.board;
 
 
 import com.jangmo.web.constants.PostActivationStatus;
+import com.jangmo.web.model.dto.request.board.manager.PostCreateRequest;
+import com.jangmo.web.model.dto.request.board.manager.PostUpdateRequest;
 import com.jangmo.web.model.entity.user.MemberEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,10 +43,19 @@ public class PostEntity extends AbstractPostEntity {
     }
 
     public static PostEntity create(final MemberEntity createdBy,
-                                    final String title,
-                                    final String content,
+                                    final PostCreateRequest createRequest,
                                     final BoardEntity board) {
-        return new PostEntity(createdBy, title, content, board);
+        return new PostEntity(
+                createdBy,
+                createRequest.getTitle(),
+                createRequest.getContent(),
+                board
+        );
+    }
+
+    public void update(PostUpdateRequest update) {
+        this.title = update.getTitle();
+        this.content = update.getContent();
     }
 
 }

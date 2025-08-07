@@ -1,6 +1,7 @@
 package com.jangmo.web.service.manager.board;
 
 import com.jangmo.web.model.dto.request.board.manager.BoardCreateRequest;
+import com.jangmo.web.model.dto.request.board.manager.BoardUpdateRequest;
 import com.jangmo.web.model.dto.response.board.manager.BoardCreateResponse;
 import com.jangmo.web.model.entity.board.BoardEntity;
 import com.jangmo.web.repository.board.BoardRepository;
@@ -25,21 +26,51 @@ public class BoardManagementServiceTest {
 
     @Autowired BoardRepository boardRepository;
 
-    @DisplayName("board(게시판) 생성 테스트")
+    static final String BOARD_CREATE = "게시판(Board) 생성 테스트";
+    static final String BOARD_UPDATE = "게시판(Board) 수정 테스트";
+
+
+    @DisplayName(BOARD_CREATE)
     @Test
     @Transactional
     void boardCreateTest() {
         BoardCreateRequest createRequest = new BoardCreateRequest("게시판 테스트");
-
         BoardCreateResponse response = boardManagementService.create(createRequest);
         assertNotNull(response);
-        List<BoardEntity> boards = boardRepository.findAll();
-        assertEquals(1, boards.size());
-        log.info("boards size :: {}", boards.size());
-        BoardEntity board = boards.get(0);
-        assertNotNull(response.getName(), board.getName());
-        log.info("response name :: {}", response.getName());
+        BoardEntity board = boardRepository.findByName(createRequest.getName()).orElseGet(
+                () -> null
+        );
+        assertNotNull(board);
+        assertEquals(response.getName(), board.getName());
         log.info("board name :: {}", board.getName());
+    }
+
+    @DisplayName(BOARD_UPDATE)
+    @Test
+    @Transactional
+    void boardUpdateTest() {
+        BoardCreateRequest createRequest = new BoardCreateRequest("게시판 테스트");
+        BoardEntity board = BoardEntity.create(createRequest.getName());
+        boardRepository.save(board);
+        assertNotNull(board.getId());
+        assertNotNull(
+                boardRepository.findByName(board.getName()).orElseGet(
+                        () -> null
+                )
+        );
+        log.info("board name : {}", board.getName());
+        assertEquals(createRequest.getName(), board.getName());
+        BoardUpdateRequest updateRequest = new BoardUpdateRequest("게시판 수정 테스트");
+        boardManagementService.update(board.getId(), updateRequest);
+
+        assertEquals(board.getName(), updateRequest.getName());
+
+        assertNotNull(
+                boardRepository.findByName(updateRequest.getName()).orElseGet(
+                        () -> null
+                )
+        );
+        log.info("update board name :: {}", board.getName());
     }
 
 }

@@ -41,5 +41,7 @@ public class BoardEntity extends ModificationTimestampEntity {
         return new BoardEntity(name);
     }
 
-
+    public void update(String name) {
+        this.name = name;
+    }
 }
