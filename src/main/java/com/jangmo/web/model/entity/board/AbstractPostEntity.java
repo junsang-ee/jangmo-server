@@ -21,6 +21,7 @@ public class AbstractPostEntity extends ModificationTimestampEntity {
             updatable = false)
     private MemberEntity createdBy;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PostActivationStatus status;
 
