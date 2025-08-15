@@ -13,7 +13,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @NoArgsConstructor(access = PROTECTED)
 @MappedSuperclass
-public class AbstractPostEntity extends ModificationTimestampEntity {
+public abstract class AbstractPostEntity extends ModificationTimestampEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by",
@@ -21,8 +21,8 @@ public class AbstractPostEntity extends ModificationTimestampEntity {
             updatable = false)
     private MemberEntity createdBy;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private PostActivationStatus status;
 
     protected AbstractPostEntity(MemberEntity createdBy) {
