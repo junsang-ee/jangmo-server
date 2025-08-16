@@ -2,6 +2,7 @@ package com.jangmo.web.model.entity.vote;
 
 import com.jangmo.web.constants.VoteType;
 import com.jangmo.web.model.dto.request.vote.GeneralVoteCreateRequest;
+import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.model.entity.user.UserEntity;
 import com.jangmo.web.model.entity.vote.user.GeneralVoteUserEntity;
 import lombok.Getter;
@@ -28,7 +29,7 @@ public class GeneralVoteEntity extends VoteEntity {
             orphanRemoval = true)
     private List<GeneralVoteUserEntity> voters;
 
-    private GeneralVoteEntity(UserEntity createdBy,
+    private GeneralVoteEntity(MemberEntity createdBy,
                               GeneralVoteCreateRequest request,
                               List<UserEntity> rawVoters) {
         super(
@@ -45,7 +46,7 @@ public class GeneralVoteEntity extends VoteEntity {
 
     }
 
-    public static GeneralVoteEntity create(final UserEntity createdBy,
+    public static GeneralVoteEntity create(final MemberEntity createdBy,
                                            final GeneralVoteCreateRequest request,
                                            final List<UserEntity> rawVoters) {
         return new GeneralVoteEntity(createdBy, request, rawVoters);

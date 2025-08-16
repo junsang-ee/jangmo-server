@@ -3,6 +3,7 @@ package com.jangmo.web.model.entity.vote;
 import com.jangmo.web.constants.VoteType;
 import com.jangmo.web.model.dto.request.vote.MatchVoteCreateRequest;
 import com.jangmo.web.model.entity.MatchEntity;
+import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.model.entity.vote.user.MatchVoteUserEntity;
 import com.jangmo.web.model.entity.user.UserEntity;
 import lombok.Getter;
@@ -36,7 +37,7 @@ public class MatchVoteEntity extends VoteEntity {
             orphanRemoval = true)
     private List<MatchVoteUserEntity> voters;
 
-    private MatchVoteEntity(UserEntity createdBy,
+    private MatchVoteEntity(MemberEntity createdBy,
                             MatchVoteCreateRequest request,
                             List<UserEntity> rawVoters) {
         super(
@@ -59,7 +60,7 @@ public class MatchVoteEntity extends VoteEntity {
         );
     }
 
-    public static MatchVoteEntity create(final UserEntity createdBy,
+    public static MatchVoteEntity create(final MemberEntity createdBy,
                                          final MatchVoteCreateRequest request,
                                          final List<UserEntity> rawVoters) {
         return new MatchVoteEntity(createdBy, request, rawVoters);

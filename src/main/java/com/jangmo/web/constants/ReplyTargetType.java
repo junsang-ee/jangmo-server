@@ -3,7 +3,7 @@ package com.jangmo.web.constants;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 public enum ReplyTargetType {
-    POST, MATCH, VOTE;
+    POST, MATCH_VOTE, GENERAL_VOTE;
 
     @JsonCreator
     public static ReplyTargetType getValue(String value) {

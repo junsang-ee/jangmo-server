@@ -4,7 +4,7 @@ import com.jangmo.web.constants.GroundType;
 
 import com.jangmo.web.model.entity.administrative.City;
 import com.jangmo.web.model.entity.administrative.District;
-import com.jangmo.web.model.entity.user.UserEntity;
+import com.jangmo.web.model.entity.user.MemberEntity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -50,7 +50,7 @@ public class GroundEntity extends CreationUserEntity {
     @JoinColumn(name = "district", nullable = false)
     private District district;
 
-    private GroundEntity(UserEntity createdBy,
+    private GroundEntity(MemberEntity createdBy,
                          String placeId,
                          String placeName,
                          String addressName,
@@ -72,7 +72,7 @@ public class GroundEntity extends CreationUserEntity {
         this.district = district;
     }
 
-    public static GroundEntity create(final UserEntity createdBy,
+    public static GroundEntity create(final MemberEntity createdBy,
                                       final String placeId,
                                       final String placeName,
                                       final String addressName,
@@ -83,8 +83,10 @@ public class GroundEntity extends CreationUserEntity {
                                       final City city,
                                       final District district) {
         return new GroundEntity(
-                createdBy, placeId,
-                placeName, addressName,
+                createdBy,
+                placeId,
+                placeName,
+                addressName,
                 roadAddressName,
                 longitude, latitude,
                 type, city, district

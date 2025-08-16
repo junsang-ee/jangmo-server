@@ -11,9 +11,11 @@ import com.jangmo.web.model.dto.response.api.KakaoPlaceSearchResponse;
 import com.jangmo.web.model.entity.GroundEntity;
 import com.jangmo.web.model.entity.administrative.City;
 import com.jangmo.web.model.entity.administrative.District;
+import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.model.entity.user.UserEntity;
 import com.jangmo.web.repository.CityRepository;
 import com.jangmo.web.repository.DistrictRepository;
+import com.jangmo.web.repository.MemberRepository;
 import com.jangmo.web.repository.UserRepository;
 import com.jangmo.web.utils.LocationUtil;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +37,8 @@ public class GroundManagementServiceImpl implements GroundManagementService {
     private final DistrictRepository districtRepository;
 
     private final UserRepository userRepository;
+
+    private final MemberRepository memberRepository;
 
     @Qualifier("kakaoWebClient")
     private final WebClient webClient;
@@ -64,7 +68,7 @@ public class GroundManagementServiceImpl implements GroundManagementService {
     public GroundCreateResponse createGround(String createdById, GroundCreateRequest request) {
         City city = getCityById(request.getCityId());
         District district = getDistrictById(request.getDistrictId());
-        UserEntity createdBy = getUser(createdById);
+        MemberEntity createdBy = getMemberById(createdById);
         GroundEntity ground = GroundEntity.create(
                 createdBy,
                 request.getPlaceId(),
@@ -74,8 +78,7 @@ public class GroundManagementServiceImpl implements GroundManagementService {
                 request.getLongitude(),
                 request.getLatitude(),
                 request.getGroundType(),
-                city,
-                district
+                city, district
         );
         return GroundCreateResponse.of(ground);
     }
@@ -87,9 +90,9 @@ public class GroundManagementServiceImpl implements GroundManagementService {
         return mainCategory.contains("스포츠,레저") && subCategory.contains("축구");
     }
 
-    private UserEntity getUser(String userId) {
-        return userRepository.findById(userId).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND)
+    private MemberEntity getMemberById(String memberId) {
+        return memberRepository.findById(memberId).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND)
         );
     }
 
