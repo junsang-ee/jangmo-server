@@ -8,11 +8,13 @@ import com.jangmo.web.model.dto.request.vote.GeneralVoteCreateRequest;
 import com.jangmo.web.model.dto.request.vote.MatchVoteCreateRequest;
 import com.jangmo.web.model.dto.response.vote.GeneralVoteCreateResponse;
 import com.jangmo.web.model.dto.response.vote.MatchVoteCreateResponse;
+import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.model.entity.vote.GeneralVoteEntity;
 import com.jangmo.web.model.entity.vote.MatchVoteEntity;
 import com.jangmo.web.model.entity.user.UserEntity;
 import com.jangmo.web.repository.GeneralVoteRepository;
 import com.jangmo.web.repository.MatchVoteRepository;
+import com.jangmo.web.repository.MemberRepository;
 import com.jangmo.web.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -34,10 +36,12 @@ public class VoteManagementServiceImpl implements VoteManagementService {
 
     private final UserRepository userRepository;
 
+    private final MemberRepository memberRepository;
+
     @Override
     @Transactional
     public MatchVoteCreateResponse createMatchVote(String userId, MatchVoteCreateRequest request) {
-        UserEntity createdBy = getUserById(userId);
+        MemberEntity createdBy = getMemberId(userId);
         List<UserEntity> rawVoters = getRawMatchVoters();
         MatchVoteEntity matchVote = MatchVoteEntity.create(
                 createdBy, request, rawVoters
@@ -49,7 +53,7 @@ public class VoteManagementServiceImpl implements VoteManagementService {
     @Override
     @Transactional
     public GeneralVoteCreateResponse createGeneralVote(String userId, GeneralVoteCreateRequest request) {
-        UserEntity createdBy = getUserById(userId);
+        MemberEntity createdBy = getMemberById(userId);
         List<UserEntity> rawVoters = getRawGeneralVoters();
         GeneralVoteEntity generalVote = GeneralVoteEntity.create(
                 createdBy, request, rawVoters
@@ -72,9 +76,15 @@ public class VoteManagementServiceImpl implements VoteManagementService {
     }
 
 
-    private UserEntity getUserById(String userId) {
-        return userRepository.findById(userId).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND)
+    private MemberEntity getMemberId(String memberId) {
+        return memberRepository.findById(memberId).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND)
+        );
+    }
+
+    private MemberEntity getMemberById(String memberId) {
+        return memberRepository.findById(memberId).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND)
         );
     }
 

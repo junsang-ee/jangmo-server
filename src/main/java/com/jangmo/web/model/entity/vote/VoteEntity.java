@@ -2,8 +2,10 @@ package com.jangmo.web.model.entity.vote;
 
 import com.jangmo.web.constants.VoteType;
 import com.jangmo.web.constants.vote.VoteSelectionType;
+import com.jangmo.web.model.entity.CommentTargetEntity;
 import com.jangmo.web.model.entity.CreationUserEntity;
 
+import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.model.entity.user.UserEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +21,7 @@ import static lombok.AccessLevel.PROTECTED;
 @NoArgsConstructor(access = PROTECTED)
 @Inheritance(strategy = JOINED)
 @Entity(name = "vote")
-public class VoteEntity extends CreationUserEntity {
+public class VoteEntity extends CommentTargetEntity {
 
     @Column(nullable = false)
     private String title;
@@ -38,7 +40,7 @@ public class VoteEntity extends CreationUserEntity {
     @Column(nullable = false)
     private VoteType voteType;
 
-    protected VoteEntity(UserEntity createdBy,
+    protected VoteEntity(MemberEntity createdBy,
                          String title,
                          LocalDate startAt,
                          LocalDate endAt,

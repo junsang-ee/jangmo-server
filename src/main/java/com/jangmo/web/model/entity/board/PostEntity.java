@@ -1,9 +1,9 @@
 package com.jangmo.web.model.entity.board;
 
-
-import com.jangmo.web.constants.PostActivationStatus;
+import com.jangmo.web.constants.board.PostActivationStatus;
 import com.jangmo.web.model.dto.request.board.manager.PostCreateRequest;
 import com.jangmo.web.model.dto.request.board.manager.PostUpdateRequest;
+import com.jangmo.web.model.entity.CommentTargetEntity;
 import com.jangmo.web.model.entity.user.MemberEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +15,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @NoArgsConstructor(access = PROTECTED)
 @Entity(name = "post")
-public class PostEntity extends AbstractPostEntity {
+public class PostEntity extends CommentTargetEntity {
 
     @Column(nullable = false)
     private String title;
@@ -24,12 +24,14 @@ public class PostEntity extends AbstractPostEntity {
     @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false)
-    private PostActivationStatus status;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parentBoard", nullable = false)
     private BoardEntity parentBoard;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private PostActivationStatus status;
+
 
     private PostEntity(MemberEntity createdBy,
                        String title,

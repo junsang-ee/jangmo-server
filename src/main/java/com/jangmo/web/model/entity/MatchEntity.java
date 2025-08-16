@@ -2,6 +2,7 @@ package com.jangmo.web.model.entity;
 
 import com.jangmo.web.constants.match.MatchStatus;
 import com.jangmo.web.constants.match.MatchType;
+import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.model.entity.user.UserEntity;
 import com.jangmo.web.model.entity.vote.MatchVoteEntity;
 import lombok.Getter;
@@ -49,11 +50,11 @@ public class MatchEntity extends CreationUserEntity {
     @JoinColumn(name = "match_detail")
     private MatchDetailEntity matchDetail;
 
-    private MatchEntity(UserEntity user,
+    private MatchEntity(MemberEntity createdBy,
                         LocalDate matchAt,
                         MatchType type,
                         MatchVoteEntity matchVote) {
-        super(user);
+        super(createdBy);
         this.matchAt = matchAt;
         this.type = type;
         this.matchVote = matchVote;
@@ -61,11 +62,11 @@ public class MatchEntity extends CreationUserEntity {
         this.matchDetail = null;
     }
 
-    public static MatchEntity create(final UserEntity user,
+    public static MatchEntity create(final MemberEntity createdBy,
                                      final LocalDate matchAt,
                                      final MatchType type,
                                      final MatchVoteEntity matchVote) {
-        return new MatchEntity(user, matchAt, type, matchVote);
+        return new MatchEntity(createdBy, matchAt, type, matchVote);
     }
 
 }

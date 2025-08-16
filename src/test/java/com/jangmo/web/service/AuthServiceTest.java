@@ -662,7 +662,7 @@ public class AuthServiceTest {
          */
 
         assertNull(mercenary.getMercenaryTransient());
-        UserEntity admin = memberRepository.findByMobile("01043053451").get();
+        MemberEntity admin = memberRepository.findByMobile("01043053451").get();
         LocalDate tomorrow = LocalDate.now().plusDays(1);
         String originMercenaryCode = "test123456";
 

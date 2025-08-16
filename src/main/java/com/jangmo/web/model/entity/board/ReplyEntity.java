@@ -1,7 +1,9 @@
 package com.jangmo.web.model.entity.board;
 
 import com.jangmo.web.constants.ReplyTargetType;
+import com.jangmo.web.constants.board.ReplyActivationStatus;
 import com.jangmo.web.model.dto.request.board.ReplyCreateRequest;
+import com.jangmo.web.model.entity.CreationUserEntity;
 import com.jangmo.web.model.entity.user.MemberEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +18,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @NoArgsConstructor(access = PROTECTED)
 @Entity(name = "reply")
-public class ReplyEntity extends AbstractPostEntity {
+public class ReplyEntity extends CreationUserEntity {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -28,6 +30,10 @@ public class ReplyEntity extends AbstractPostEntity {
     @Column(nullable = false)
     private String content;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ReplyActivationStatus status;
+
     private ReplyEntity(MemberEntity createdBy,
                         ReplyTargetType targetType,
                         String targetId,
@@ -36,6 +42,7 @@ public class ReplyEntity extends AbstractPostEntity {
         this.targetType = targetType;
         this.targetId = targetId;
         this.content = content;
+        this.status = ReplyActivationStatus.ENABLED;
     }
 
     public static ReplyEntity create(final MemberEntity createdBy,
