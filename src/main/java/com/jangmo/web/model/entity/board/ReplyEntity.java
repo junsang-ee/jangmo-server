@@ -3,15 +3,13 @@ package com.jangmo.web.model.entity.board;
 import com.jangmo.web.constants.ReplyTargetType;
 import com.jangmo.web.constants.board.ReplyActivationStatus;
 import com.jangmo.web.model.dto.request.board.ReplyCreateRequest;
+import com.jangmo.web.model.entity.CommentTargetEntity;
 import com.jangmo.web.model.entity.CreationUserEntity;
 import com.jangmo.web.model.entity.user.MemberEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.*;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -21,37 +19,30 @@ import static lombok.AccessLevel.PROTECTED;
 public class ReplyEntity extends CreationUserEntity {
 
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private ReplyTargetType targetType;
-
-    @Column(nullable = false)
-    private String targetId;
-
-    @Column(nullable = false)
     private String content;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "comment_target", nullable = false)
+    private CommentTargetEntity target;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ReplyActivationStatus status;
 
     private ReplyEntity(MemberEntity createdBy,
-                        ReplyTargetType targetType,
-                        String targetId,
+                        CommentTargetEntity target,
                         String content) {
         super(createdBy);
-        this.targetType = targetType;
-        this.targetId = targetId;
         this.content = content;
+        this.target = target;
         this.status = ReplyActivationStatus.ENABLED;
     }
 
     public static ReplyEntity create(final MemberEntity createdBy,
+                                     final CommentTargetEntity target,
                                      final ReplyCreateRequest request) {
         return new ReplyEntity(
-                createdBy,
-                request.getTargetType(),
-                request.getTargetId(),
-                request.getContent()
+                createdBy, target, request.getContent()
         );
     }
 }

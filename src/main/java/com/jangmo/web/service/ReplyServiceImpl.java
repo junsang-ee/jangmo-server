@@ -5,6 +5,7 @@ import com.jangmo.web.constants.message.ErrorMessage;
 import com.jangmo.web.exception.NotFoundException;
 import com.jangmo.web.model.dto.request.board.ReplyCreateRequest;
 import com.jangmo.web.model.dto.response.board.ReplyCreateResponse;
+import com.jangmo.web.model.entity.CommentTargetEntity;
 import com.jangmo.web.model.entity.board.ReplyEntity;
 import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.repository.MatchVoteRepository;
@@ -12,6 +13,7 @@ import com.jangmo.web.repository.MemberRepository;
 import com.jangmo.web.repository.VoteRepository;
 import com.jangmo.web.repository.board.PostRepository;
 import com.jangmo.web.repository.board.ReplyRepository;
+import com.jangmo.web.repository.board.ReplyTargetRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,13 +32,22 @@ public class ReplyServiceImpl implements ReplyService {
 
     private final VoteRepository voteRepository;
 
+    private final ReplyTargetRepository replyTargetRepository;
+
     @Override
     @Transactional
-    public ReplyCreateResponse create(String memberId, ReplyCreateRequest request) {
+    public ReplyCreateResponse create(String memberId,
+                                      String targetId,
+                                      ReplyTargetType targetType,
+                                      ReplyCreateRequest request) {
         MemberEntity createdBy = getMemberById(memberId);
-        validateTarget(request.getTargetType(), request.getTargetId());
+
+        validateTarget(targetId, targetType);
+        CommentTargetEntity commentTarget = replyTargetRepository.findById(targetId).orElseThrow(
+        );
         ReplyEntity reply = ReplyEntity.create(
                 createdBy,
+                commentTarget,
                 request
         );
         replyRepository.save(reply);
@@ -49,8 +60,8 @@ public class ReplyServiceImpl implements ReplyService {
         );
     }
 
-    private void validateTarget(ReplyTargetType target, String targetId) {
-        switch (target) {
+    private void validateTarget(String targetId, ReplyTargetType targetType) {
+        switch (targetType) {
             case GENERAL_VOTE:
                 voteRepository.findById(targetId).orElseThrow(
                         () -> new NotFoundException(ErrorMessage.VOTE_NOT_FOUND)
