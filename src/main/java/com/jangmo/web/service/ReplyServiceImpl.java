@@ -5,7 +5,7 @@ import com.jangmo.web.constants.message.ErrorMessage;
 import com.jangmo.web.exception.NotFoundException;
 import com.jangmo.web.model.dto.request.board.ReplyCreateRequest;
 import com.jangmo.web.model.dto.response.board.ReplyCreateResponse;
-import com.jangmo.web.model.entity.CommentTargetEntity;
+import com.jangmo.web.model.entity.ReplyTargetEntity;
 import com.jangmo.web.model.entity.board.ReplyEntity;
 import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.repository.MatchVoteRepository;
@@ -43,7 +43,7 @@ public class ReplyServiceImpl implements ReplyService {
         MemberEntity createdBy = getMemberById(memberId);
 
         validateTarget(targetId, targetType);
-        CommentTargetEntity commentTarget = replyTargetRepository.findById(targetId).orElseThrow(
+        ReplyTargetEntity commentTarget = replyTargetRepository.findById(targetId).orElseThrow(
         );
         ReplyEntity reply = ReplyEntity.create(
                 createdBy,
@@ -51,7 +51,7 @@ public class ReplyServiceImpl implements ReplyService {
                 request
         );
         replyRepository.save(reply);
-        return ReplyCreateResponse.of(reply);
+        return ReplyCreateResponse.of(reply.getContent());
     }
 
     private MemberEntity getMemberById(String memberId) {

@@ -3,12 +3,14 @@ package com.jangmo.web.service.manager.board;
 import com.jangmo.web.model.dto.request.board.manager.PostCreateRequest;
 import com.jangmo.web.model.dto.request.board.manager.PostUpdateRequest;
 import com.jangmo.web.model.dto.response.board.manager.PostCreateResponse;
+import com.jangmo.web.model.entity.ReplyTargetEntity;
 import com.jangmo.web.model.entity.board.BoardEntity;
 import com.jangmo.web.model.entity.board.PostEntity;
 import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.repository.MemberRepository;
 import com.jangmo.web.repository.board.BoardRepository;
 import com.jangmo.web.repository.board.PostRepository;
+import com.jangmo.web.repository.board.ReplyTargetRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,8 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -36,6 +36,8 @@ public class PostManagementServiceTest {
     @Autowired PostRepository postRepository;
 
     @Autowired MemberRepository memberRepository;
+
+    @Autowired ReplyTargetRepository replyTargetRepository;
 
     @Value("${jangmo.admin.mobile}")
     String adminMobile;
@@ -60,8 +62,8 @@ public class PostManagementServiceTest {
     @Transactional
     void postCreateTest() {
         PostCreateRequest postCreateRequest = new PostCreateRequest(
-                "게시판 테스트 title",
-                "게시판 테스트 content"
+                "testTitle",
+                "testContent"
         );
         PostCreateResponse result = postManagementService.create(
                 admin.getId(),
@@ -71,11 +73,20 @@ public class PostManagementServiceTest {
 
         assertNotNull(result);
         assertEquals(result.getTitle(), postCreateRequest.getTitle());
-        List<PostEntity> posts = postRepository.findAll();
-        PostEntity post = posts.get(0);
+        PostEntity post = postRepository.findByTitle(
+                postCreateRequest.getTitle()
+        ).orElseGet(() -> null);
         assertNotNull(post);
+        assert post.getId() != null;
+        ReplyTargetEntity commentTarget = replyTargetRepository.findById(
+                post.getId()
+        ).orElseGet(() -> null);
+        assertNotNull(commentTarget);
         log.info("post title : {}", post.getTitle());
         log.info("post content : {}", post.getContent());
+        assertEquals(post.getId(), commentTarget.getId());
+        log.info("post id :: {}", post.getId());
+        log.info("commentTarget id :: {}", commentTarget.getId());
     }
 
 
@@ -84,8 +95,8 @@ public class PostManagementServiceTest {
     @Transactional
     void postUpdateTest() {
         PostCreateRequest createRequest = new PostCreateRequest(
-                "게시판 테스트 title",
-                "게시판 테스트 content"
+                "testTile",
+                "testContent"
         );
         PostEntity post = PostEntity.create(
                 admin,
@@ -94,8 +105,8 @@ public class PostManagementServiceTest {
         );
         postRepository.save(post);
         PostUpdateRequest updateRequest = new PostUpdateRequest(
-                "게시판 테스트 title 수정",
-                "게시판 테스트 content 수정"
+                "updatedTestTile",
+                "updatedTestContent"
         );
         postManagementService.update(
                 post.getId(),
@@ -115,7 +126,7 @@ public class PostManagementServiceTest {
 
     @Transactional
     private void initBoard() {
-        BoardEntity board = BoardEntity.create("테스트 게시판");
+        BoardEntity board = BoardEntity.create("test board");
         boardRepository.save(board);
         assertNotNull(board.getId());
         testParentBoard = board;
