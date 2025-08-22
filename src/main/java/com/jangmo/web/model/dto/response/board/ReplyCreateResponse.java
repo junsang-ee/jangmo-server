@@ -12,13 +12,8 @@ public class ReplyCreateResponse {
 
     private final String content;
 
-    private final ReplyTargetType parentTarget;
-
-    public static ReplyCreateResponse of(final ReplyEntity reply) {
-        return new ReplyCreateResponse(
-                reply.getContent(),
-                reply.getTargetType()
-        );
+    public static ReplyCreateResponse of(final String content) {
+        return new ReplyCreateResponse(content);
     }
 
 }
