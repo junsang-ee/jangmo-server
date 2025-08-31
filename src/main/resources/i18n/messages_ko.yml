@@ -129,7 +129,7 @@ response:
         code: "5001"
         message: "해당 회원을 찾을 수 없습니다."
       disabled:
-        code: " 6001"
+        code: "6001"
         message: "해당 회원은 이용 제한된 회원입니다."
       retired:
         code: "6002"
