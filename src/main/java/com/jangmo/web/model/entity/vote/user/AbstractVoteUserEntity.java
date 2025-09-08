@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
 
 import static lombok.AccessLevel.PROTECTED;
@@ -23,6 +25,7 @@ public abstract class AbstractVoteUserEntity extends ModificationTimestampEntity
     private String voterName;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private UserRole voterRole;
 
     protected AbstractVoteUserEntity(final UserEntity voter) {

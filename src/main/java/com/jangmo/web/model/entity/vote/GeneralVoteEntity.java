@@ -1,6 +1,6 @@
 package com.jangmo.web.model.entity.vote;
 
-import com.jangmo.web.constants.VoteType;
+import com.jangmo.web.constants.vote.VoteType;
 import com.jangmo.web.model.dto.request.vote.GeneralVoteCreateRequest;
 import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.model.entity.user.UserEntity;
