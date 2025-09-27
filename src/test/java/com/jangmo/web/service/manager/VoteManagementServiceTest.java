@@ -9,10 +9,7 @@ import com.jangmo.web.model.dto.response.vote.MatchVoteCreateResponse;
 import com.jangmo.web.model.entity.MatchEntity;
 import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.model.entity.vote.MatchVoteEntity;
-import com.jangmo.web.repository.MatchRepository;
-import com.jangmo.web.repository.MatchVoteRepository;
-import com.jangmo.web.repository.MemberRepository;
-import com.jangmo.web.repository.UserRepository;
+import com.jangmo.web.repository.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -40,10 +37,9 @@ public class VoteManagementServiceTest {
 
     @Autowired UserRepository userRepository;
 
-    @Autowired
-    MemberRepository memberRepository;
+    @Autowired MemberRepository memberRepository;
 
-    @Autowired MatchVoteRepository matchVoteRepository;
+    @Autowired VoteRepository voteRepository;
 
     @Autowired MatchRepository matchRepository;
 
@@ -87,7 +83,7 @@ public class VoteManagementServiceTest {
                 VoteSelectionType.SINGLE
         );
         MatchVoteCreateResponse response = voteService.createMatchVote(admin.getId(), createRequest);
-        List<MatchVoteEntity> matchVoteList = matchVoteRepository.findByMatchAt(matchAt);
+        List<MatchVoteEntity> matchVoteList = voteRepository.findByMatchAt(matchAt);
         log.info("matchVoteList size: " + matchVoteList.size());
         MatchVoteEntity matchVote = matchVoteList.get(0);
 

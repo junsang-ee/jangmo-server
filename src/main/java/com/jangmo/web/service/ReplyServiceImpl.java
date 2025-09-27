@@ -8,7 +8,6 @@ import com.jangmo.web.model.dto.response.board.ReplyCreateResponse;
 import com.jangmo.web.model.entity.ReplyTargetEntity;
 import com.jangmo.web.model.entity.board.ReplyEntity;
 import com.jangmo.web.model.entity.user.MemberEntity;
-import com.jangmo.web.repository.MatchVoteRepository;
 import com.jangmo.web.repository.MemberRepository;
 import com.jangmo.web.repository.VoteRepository;
 import com.jangmo.web.repository.board.PostRepository;
@@ -28,8 +27,6 @@ public class ReplyServiceImpl implements ReplyService {
 
     private final MemberRepository memberRepository;
 
-    private final MatchVoteRepository matchVoteRepository;
-
     private final VoteRepository voteRepository;
 
     private final ReplyTargetRepository replyTargetRepository;
@@ -43,11 +40,11 @@ public class ReplyServiceImpl implements ReplyService {
         MemberEntity createdBy = getMemberById(memberId);
 
         validateTarget(targetId, targetType);
-        ReplyTargetEntity commentTarget = replyTargetRepository.findById(targetId).orElseThrow(
+        ReplyTargetEntity replyTarget = replyTargetRepository.findById(targetId).orElseThrow(
         );
         ReplyEntity reply = ReplyEntity.create(
                 createdBy,
-                commentTarget,
+                replyTarget,
                 request
         );
         replyRepository.save(reply);
@@ -63,13 +60,9 @@ public class ReplyServiceImpl implements ReplyService {
     private void validateTarget(String targetId, ReplyTargetType targetType) {
         switch (targetType) {
             case GENERAL_VOTE:
+            case MATCH_VOTE:
                 voteRepository.findById(targetId).orElseThrow(
                         () -> new NotFoundException(ErrorMessage.VOTE_NOT_FOUND)
-                );
-                break;
-            case MATCH_VOTE:
-                matchVoteRepository.findById(targetId).orElseThrow(
-                        () -> new NotFoundException(ErrorMessage.MATCH_VOTE_NOT_FOUND)
                 );
                 break;
             case POST:

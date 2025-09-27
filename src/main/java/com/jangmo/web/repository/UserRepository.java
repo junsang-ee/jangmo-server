@@ -45,8 +45,7 @@ public interface UserRepository extends JpaRepository<UserEntity, String>,
     @Query(value = "SELECT u FROM user u " +
                 "LEFT JOIN member mem ON u.id = mem.id " +
                 "LEFT JOIN mercenary mer ON u.id = mer.id " +
-                    "WHERE mem.status = 'PENDING' or mer.status = 'PENDING'",
-            nativeQuery = true)
+                    "WHERE mem.status = 'PENDING' or mer.status = 'PENDING'")
     List<UserEntity> findApprovalUsers();
 
     Page<UserEntity> findByIdNotAndRoleNot(String id, UserRole role, Pageable pageable);

@@ -21,7 +21,7 @@ public class ReplyEntity extends CreationUserEntity {
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "comment_target", nullable = false)
+    @JoinColumn(name = "reply_target", nullable = false)
     private ReplyTargetEntity target;
 
     @Column(nullable = false)

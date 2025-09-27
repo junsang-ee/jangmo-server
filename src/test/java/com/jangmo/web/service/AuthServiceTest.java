@@ -68,7 +68,7 @@ public class AuthServiceTest {
 
     @Autowired MemberRepository memberRepository;
     @Autowired MercenaryRepository mercenaryRepository;
-    @Autowired MatchVoteRepository matchVoteRepository;
+    @Autowired VoteRepository voteRepository;
     @Autowired MercenaryTransientRepository mercenaryTransientRepository;
     @Autowired VoteManagementServiceImpl voteService;
     @Autowired JwtConfig jwtConfig;
@@ -462,7 +462,9 @@ public class AuthServiceTest {
                 matchVoteCreateRequest
         );
         assertNotNull(matchVoteResponse);
-        MatchVoteEntity matchVote = matchVoteRepository.findByMatchAt(matchVoteResponse.getMatchAt()).get(0);
+        MatchVoteEntity matchVote = voteRepository.findByMatchAt(
+                matchVoteResponse.getMatchAt()
+        ).get(0);
         assertNotNull(matchVote);
         assertNotNull(matchVote.getMatch());
 
@@ -679,7 +681,7 @@ public class AuthServiceTest {
                 matchVoteCreateRequest,
                 null
         );
-        matchVoteRepository.save(matchVote);
+        voteRepository.save(matchVote);
 
         MercenaryTransientEntity transientEntity = MercenaryTransientEntity.create(
                 originMercenaryCode, matchVote.getMatch()
