@@ -2,15 +2,21 @@ package com.jangmo.web.controller.manager;
 
 import com.jangmo.web.model.dto.request.vote.GeneralVoteCreateRequest;
 import com.jangmo.web.model.dto.request.vote.MatchVoteCreateRequest;
+import com.jangmo.web.model.dto.request.vote.VoteListRequest;
 import com.jangmo.web.model.dto.response.vote.MatchVoteCreateResponse;
 import com.jangmo.web.model.dto.response.common.ApiSuccessResponse;
+import com.jangmo.web.model.dto.response.vote.VoteListResponse;
 import com.jangmo.web.service.manager.VoteManagementService;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import java.util.List;
 
 import static com.jangmo.web.model.dto.response.common.ApiSuccessResponse.wrap;
 
@@ -37,8 +43,9 @@ public class VoteManagementController {
 
 
     @GetMapping
-    public ResponseEntity<ApiSuccessResponse<Object>> getVoteAll() {
-        return wrap(null);
+    public ResponseEntity<ApiSuccessResponse<List<VoteListResponse>>> getVotes(
+            @Validated @ParameterObject VoteListRequest request) {
+        return wrap(voteManagementService.getVotes(request));
     }
 
     @DeleteMapping("/{voteId}")

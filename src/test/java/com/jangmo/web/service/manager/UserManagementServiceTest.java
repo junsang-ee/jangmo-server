@@ -66,7 +66,7 @@ public class UserManagementServiceTest {
     @Autowired MercenaryRepository mercenaryRepository;
     @Autowired CityRepository cityRepository;
     @Autowired DistrictRepository districtRepository;
-    @Autowired MatchVoteRepository matchVoteRepository;
+    @Autowired VoteRepository voteRepository;
     @Autowired UserManagementServiceImpl userManagementService;
     @Autowired VoteManagementServiceImpl voteService;
     @Autowired KakaoApiUsageRepository kakaoApiUsageRepository;
@@ -165,7 +165,7 @@ public class UserManagementServiceTest {
         );
         voteService.createMatchVote(admin.getId(), matchVoteCreateRequest);
 
-        MatchVoteEntity matchVote = matchVoteRepository.findByMatchAt(matchAt).get(0);
+        MatchVoteEntity matchVote = voteRepository.findByMatchAt(matchAt).get(0);
         MatchEntity match = matchVote.getMatch();
         assertNotNull(match);
         assertEquals(match, matchVote.getMatch());

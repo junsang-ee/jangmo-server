@@ -6,16 +6,15 @@ import com.jangmo.web.constants.message.ErrorMessage;
 import com.jangmo.web.exception.NotFoundException;
 import com.jangmo.web.model.dto.request.vote.GeneralVoteCreateRequest;
 import com.jangmo.web.model.dto.request.vote.MatchVoteCreateRequest;
+import com.jangmo.web.model.dto.request.vote.VoteListRequest;
 import com.jangmo.web.model.dto.response.vote.GeneralVoteCreateResponse;
 import com.jangmo.web.model.dto.response.vote.MatchVoteCreateResponse;
+import com.jangmo.web.model.dto.response.vote.VoteListResponse;
 import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.model.entity.vote.GeneralVoteEntity;
 import com.jangmo.web.model.entity.vote.MatchVoteEntity;
 import com.jangmo.web.model.entity.user.UserEntity;
-import com.jangmo.web.repository.GeneralVoteRepository;
-import com.jangmo.web.repository.MatchVoteRepository;
-import com.jangmo.web.repository.MemberRepository;
-import com.jangmo.web.repository.UserRepository;
+import com.jangmo.web.repository.*;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,13 +29,11 @@ import java.util.List;
 @Service
 public class VoteManagementServiceImpl implements VoteManagementService {
 
-    private final MatchVoteRepository matchVoteRepository;
-
-    private final GeneralVoteRepository generalVoteRepository;
-
     private final UserRepository userRepository;
 
     private final MemberRepository memberRepository;
+
+    private final VoteRepository voteRepository;
 
     @Override
     @Transactional
@@ -46,7 +43,7 @@ public class VoteManagementServiceImpl implements VoteManagementService {
         MatchVoteEntity matchVote = MatchVoteEntity.create(
                 createdBy, request, rawVoters
         );
-        matchVoteRepository.save(matchVote);
+        voteRepository.save(matchVote);
         return MatchVoteCreateResponse.of(matchVote);
     }
 
@@ -58,12 +55,18 @@ public class VoteManagementServiceImpl implements VoteManagementService {
         GeneralVoteEntity generalVote = GeneralVoteEntity.create(
                 createdBy, request, rawVoters
         );
-        generalVoteRepository.save(generalVote);
+
+        voteRepository.save(generalVote);
         return GeneralVoteCreateResponse.of(
                 generalVote.getStartAt(),
                 generalVote.getEndAt(),
                 generalVote.getCreatedBy().getName()
         );
+    }
+
+    @Override
+    public List<VoteListResponse> getVotes(VoteListRequest request) {
+        return voteRepository.findVotes(request);
     }
 
     private List<UserEntity> getRawGeneralVoters() {

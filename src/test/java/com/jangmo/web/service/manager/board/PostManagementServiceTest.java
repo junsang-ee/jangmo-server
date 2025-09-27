@@ -78,15 +78,15 @@ public class PostManagementServiceTest {
         ).orElseGet(() -> null);
         assertNotNull(post);
         assert post.getId() != null;
-        ReplyTargetEntity commentTarget = replyTargetRepository.findById(
+        ReplyTargetEntity replyTarget = replyTargetRepository.findById(
                 post.getId()
         ).orElseGet(() -> null);
-        assertNotNull(commentTarget);
+        assertNotNull(replyTarget);
         log.info("post title : {}", post.getTitle());
         log.info("post content : {}", post.getContent());
-        assertEquals(post.getId(), commentTarget.getId());
+        assertEquals(post.getId(), replyTarget.getId());
         log.info("post id :: {}", post.getId());
-        log.info("commentTarget id :: {}", commentTarget.getId());
+        log.info("replyTarget id :: {}", replyTarget.getId());
     }
 
 

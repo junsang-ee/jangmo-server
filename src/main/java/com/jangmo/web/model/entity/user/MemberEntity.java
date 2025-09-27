@@ -53,7 +53,6 @@ public class MemberEntity extends UserEntity implements Serializable {
     private UniformEntity uniform;
 
     @OneToOne(mappedBy = "apiCaller",
-            fetch = FetchType.LAZY,
             cascade = {CascadeType.REMOVE, CascadeType.PERSIST},
             orphanRemoval = true)
     private KakaoApiUsageEntity kakaoApiUsage;
