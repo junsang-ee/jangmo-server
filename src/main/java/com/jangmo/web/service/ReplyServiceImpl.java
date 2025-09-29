@@ -9,7 +9,7 @@ import com.jangmo.web.model.entity.ReplyTargetEntity;
 import com.jangmo.web.model.entity.board.ReplyEntity;
 import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.repository.MemberRepository;
-import com.jangmo.web.repository.VoteRepository;
+import com.jangmo.web.repository.vote.VoteRepository;
 import com.jangmo.web.repository.board.PostRepository;
 import com.jangmo.web.repository.board.ReplyRepository;
 import com.jangmo.web.repository.board.ReplyTargetRepository;
