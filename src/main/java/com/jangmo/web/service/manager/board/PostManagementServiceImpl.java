@@ -8,7 +8,7 @@ import com.jangmo.web.model.dto.response.board.manager.PostCreateResponse;
 import com.jangmo.web.model.entity.board.BoardEntity;
 import com.jangmo.web.model.entity.board.PostEntity;
 import com.jangmo.web.model.entity.user.MemberEntity;
-import com.jangmo.web.repository.MemberRepository;
+import com.jangmo.web.repository.user.MemberRepository;
 import com.jangmo.web.repository.board.BoardRepository;
 import com.jangmo.web.repository.board.PostRepository;
 import lombok.RequiredArgsConstructor;

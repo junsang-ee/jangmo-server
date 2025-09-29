@@ -25,6 +25,9 @@ import com.jangmo.web.model.entity.user.UserEntity;
 
 import com.jangmo.web.repository.*;
 
+import com.jangmo.web.repository.user.MemberRepository;
+import com.jangmo.web.repository.user.MercenaryRepository;
+import com.jangmo.web.repository.user.UserRepository;
 import com.jangmo.web.utils.CodeGeneratorUtil;
 import lombok.RequiredArgsConstructor;
 

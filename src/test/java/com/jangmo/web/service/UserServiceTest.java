@@ -9,7 +9,7 @@ import com.jangmo.web.model.entity.administrative.District;
 import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.repository.CityRepository;
 import com.jangmo.web.repository.DistrictRepository;
-import com.jangmo.web.repository.MemberRepository;
+import com.jangmo.web.repository.user.MemberRepository;
 import com.jangmo.web.utils.EncryptUtil;
 
 import org.junit.jupiter.api.BeforeEach;

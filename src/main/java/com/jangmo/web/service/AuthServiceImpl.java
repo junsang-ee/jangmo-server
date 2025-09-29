@@ -9,7 +9,6 @@ import com.jangmo.web.constants.cache.CacheType;
 import com.jangmo.web.constants.message.ErrorMessage;
 import com.jangmo.web.constants.user.MercenaryStatus;
 import com.jangmo.web.exception.AuthException;
-import com.jangmo.web.exception.conflict.ConflictException;
 import com.jangmo.web.exception.conflict.DuplicatedException;
 import com.jangmo.web.exception.InvalidStateException;
 import com.jangmo.web.exception.NotFoundException;
@@ -29,6 +28,9 @@ import com.jangmo.web.model.entity.user.MercenaryTransientEntity;
 import com.jangmo.web.repository.*;
 
 
+import com.jangmo.web.repository.user.MemberRepository;
+import com.jangmo.web.repository.user.MercenaryRepository;
+import com.jangmo.web.repository.user.UserRepository;
 import com.jangmo.web.utils.CodeGeneratorUtil;
 import com.jangmo.web.utils.EncryptUtil;
 
