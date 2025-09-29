@@ -14,7 +14,6 @@ import com.jangmo.web.model.dto.request.UserListSearchRequest;
 import com.jangmo.web.model.dto.response.UserListResponse;
 import com.jangmo.web.model.entity.MatchEntity;
 import com.jangmo.web.model.entity.api.KakaoApiUsageEntity;
-import com.jangmo.web.model.entity.user.UserEntity;
 import com.jangmo.web.model.entity.vote.MatchVoteEntity;
 import com.jangmo.web.model.entity.administrative.City;
 import com.jangmo.web.model.entity.administrative.District;
@@ -24,7 +23,7 @@ import com.jangmo.web.model.entity.user.MercenaryTransientEntity;
 
 import com.jangmo.web.repository.*;
 
-import lombok.RequiredArgsConstructor;
+import com.jangmo.web.repository.vote.MatchVoteRepository;
 import lombok.extern.slf4j.Slf4j;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -66,7 +65,7 @@ public class UserManagementServiceTest {
     @Autowired MercenaryRepository mercenaryRepository;
     @Autowired CityRepository cityRepository;
     @Autowired DistrictRepository districtRepository;
-    @Autowired VoteRepository voteRepository;
+    @Autowired MatchVoteRepository matchVoteRepository;
     @Autowired UserManagementServiceImpl userManagementService;
     @Autowired VoteManagementServiceImpl voteService;
     @Autowired KakaoApiUsageRepository kakaoApiUsageRepository;
@@ -165,7 +164,7 @@ public class UserManagementServiceTest {
         );
         voteService.createMatchVote(admin.getId(), matchVoteCreateRequest);
 
-        MatchVoteEntity matchVote = voteRepository.findByMatchAt(matchAt).get(0);
+        MatchVoteEntity matchVote = matchVoteRepository.findByMatchAt(matchAt).get(0);
         MatchEntity match = matchVote.getMatch();
         assertNotNull(match);
         assertEquals(match, matchVote.getMatch());

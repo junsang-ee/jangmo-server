@@ -24,7 +24,6 @@ import com.jangmo.web.model.dto.response.MemberSignupResponse;
 
 import com.jangmo.web.model.dto.response.MercenaryRegistrationResponse;
 import com.jangmo.web.model.entity.MatchEntity;
-import com.jangmo.web.model.entity.user.UserEntity;
 import com.jangmo.web.model.entity.vote.MatchVoteEntity;
 import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.model.entity.user.MercenaryEntity;
@@ -32,6 +31,8 @@ import com.jangmo.web.model.entity.user.MercenaryTransientEntity;
 
 import com.jangmo.web.repository.*;
 
+import com.jangmo.web.repository.vote.MatchVoteRepository;
+import com.jangmo.web.repository.vote.VoteRepository;
 import com.jangmo.web.service.manager.VoteManagementServiceImpl;
 import com.jangmo.web.utils.AgeUtil;
 
@@ -68,7 +69,7 @@ public class AuthServiceTest {
 
     @Autowired MemberRepository memberRepository;
     @Autowired MercenaryRepository mercenaryRepository;
-    @Autowired VoteRepository voteRepository;
+    @Autowired MatchVoteRepository matchVoteRepository;
     @Autowired MercenaryTransientRepository mercenaryTransientRepository;
     @Autowired VoteManagementServiceImpl voteService;
     @Autowired JwtConfig jwtConfig;
@@ -462,7 +463,7 @@ public class AuthServiceTest {
                 matchVoteCreateRequest
         );
         assertNotNull(matchVoteResponse);
-        MatchVoteEntity matchVote = voteRepository.findByMatchAt(
+        MatchVoteEntity matchVote = matchVoteRepository.findByMatchAt(
                 matchVoteResponse.getMatchAt()
         ).get(0);
         assertNotNull(matchVote);
@@ -681,7 +682,7 @@ public class AuthServiceTest {
                 matchVoteCreateRequest,
                 null
         );
-        voteRepository.save(matchVote);
+        matchVoteRepository.save(matchVote);
 
         MercenaryTransientEntity transientEntity = MercenaryTransientEntity.create(
                 originMercenaryCode, matchVote.getMatch()

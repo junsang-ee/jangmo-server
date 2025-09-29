@@ -16,6 +16,9 @@ import com.jangmo.web.model.entity.vote.MatchVoteEntity;
 import com.jangmo.web.model.entity.user.UserEntity;
 import com.jangmo.web.repository.*;
 
+import com.jangmo.web.repository.vote.GeneralVoteRepository;
+import com.jangmo.web.repository.vote.MatchVoteRepository;
+import com.jangmo.web.repository.vote.VoteRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,6 +37,8 @@ public class VoteManagementServiceImpl implements VoteManagementService {
     private final MemberRepository memberRepository;
 
     private final VoteRepository voteRepository;
+    private final MatchVoteRepository matchVoteRepository;
+    private final GeneralVoteRepository generalVoteRepository;
 
     @Override
     @Transactional
@@ -43,7 +48,7 @@ public class VoteManagementServiceImpl implements VoteManagementService {
         MatchVoteEntity matchVote = MatchVoteEntity.create(
                 createdBy, request, rawVoters
         );
-        voteRepository.save(matchVote);
+        matchVoteRepository.save(matchVote);
         return MatchVoteCreateResponse.of(matchVote);
     }
 
@@ -55,8 +60,7 @@ public class VoteManagementServiceImpl implements VoteManagementService {
         GeneralVoteEntity generalVote = GeneralVoteEntity.create(
                 createdBy, request, rawVoters
         );
-
-        voteRepository.save(generalVote);
+        generalVoteRepository.save(generalVote);
         return GeneralVoteCreateResponse.of(
                 generalVote.getStartAt(),
                 generalVote.getEndAt(),
