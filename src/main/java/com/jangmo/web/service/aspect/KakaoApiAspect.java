@@ -8,7 +8,7 @@ import com.jangmo.web.model.dto.response.SearchPlaceResponse;
 import com.jangmo.web.model.entity.api.KakaoApiUsageEntity;
 import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.repository.KakaoApiUsageRepository;
-import com.jangmo.web.repository.MemberRepository;
+import com.jangmo.web.repository.user.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;

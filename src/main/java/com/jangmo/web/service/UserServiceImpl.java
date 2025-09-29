@@ -14,9 +14,9 @@ import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.model.entity.user.MercenaryEntity;
 import com.jangmo.web.model.entity.user.UserEntity;
 
-import com.jangmo.web.repository.MemberRepository;
-import com.jangmo.web.repository.MercenaryRepository;
-import com.jangmo.web.repository.UserRepository;
+import com.jangmo.web.repository.user.MemberRepository;
+import com.jangmo.web.repository.user.MercenaryRepository;
+import com.jangmo.web.repository.user.UserRepository;
 import com.jangmo.web.repository.CityRepository;
 import com.jangmo.web.repository.DistrictRepository;
 

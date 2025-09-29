@@ -8,7 +8,7 @@ import com.jangmo.web.model.dto.response.board.ReplyCreateResponse;
 import com.jangmo.web.model.entity.ReplyTargetEntity;
 import com.jangmo.web.model.entity.board.ReplyEntity;
 import com.jangmo.web.model.entity.user.MemberEntity;
-import com.jangmo.web.repository.MemberRepository;
+import com.jangmo.web.repository.user.MemberRepository;
 import com.jangmo.web.repository.vote.VoteRepository;
 import com.jangmo.web.repository.board.PostRepository;
 import com.jangmo.web.repository.board.ReplyRepository;

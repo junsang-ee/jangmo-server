@@ -11,7 +11,7 @@ import com.jangmo.web.model.entity.administrative.District;
 import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.repository.CityRepository;
 import com.jangmo.web.repository.DistrictRepository;
-import com.jangmo.web.repository.MemberRepository;
+import com.jangmo.web.repository.user.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

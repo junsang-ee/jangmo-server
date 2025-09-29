@@ -31,8 +31,9 @@ import com.jangmo.web.model.entity.user.MercenaryTransientEntity;
 
 import com.jangmo.web.repository.*;
 
+import com.jangmo.web.repository.user.MemberRepository;
+import com.jangmo.web.repository.user.MercenaryRepository;
 import com.jangmo.web.repository.vote.MatchVoteRepository;
-import com.jangmo.web.repository.vote.VoteRepository;
 import com.jangmo.web.service.manager.VoteManagementServiceImpl;
 import com.jangmo.web.utils.AgeUtil;
 
@@ -67,8 +68,10 @@ import static org.mockito.Mockito.verify;
 @SpringBootTest
 public class AuthServiceTest {
 
-    @Autowired MemberRepository memberRepository;
-    @Autowired MercenaryRepository mercenaryRepository;
+    @Autowired
+    MemberRepository memberRepository;
+    @Autowired
+    MercenaryRepository mercenaryRepository;
     @Autowired MatchVoteRepository matchVoteRepository;
     @Autowired MercenaryTransientRepository mercenaryTransientRepository;
     @Autowired VoteManagementServiceImpl voteService;

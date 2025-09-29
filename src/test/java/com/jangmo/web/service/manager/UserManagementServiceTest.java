@@ -23,6 +23,8 @@ import com.jangmo.web.model.entity.user.MercenaryTransientEntity;
 
 import com.jangmo.web.repository.*;
 
+import com.jangmo.web.repository.user.MemberRepository;
+import com.jangmo.web.repository.user.MercenaryRepository;
 import com.jangmo.web.repository.vote.MatchVoteRepository;
 import lombok.extern.slf4j.Slf4j;
 
@@ -61,8 +63,10 @@ public class UserManagementServiceTest {
     @Value("${jangmo.admin.mobile}")
     String adminMobile;
 
-    @Autowired MemberRepository memberRepository;
-    @Autowired MercenaryRepository mercenaryRepository;
+    @Autowired
+    MemberRepository memberRepository;
+    @Autowired
+    MercenaryRepository mercenaryRepository;
     @Autowired CityRepository cityRepository;
     @Autowired DistrictRepository districtRepository;
     @Autowired MatchVoteRepository matchVoteRepository;

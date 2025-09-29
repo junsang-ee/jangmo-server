@@ -11,8 +11,9 @@ import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.model.entity.vote.MatchVoteEntity;
 import com.jangmo.web.repository.*;
 
+import com.jangmo.web.repository.user.MemberRepository;
+import com.jangmo.web.repository.user.UserRepository;
 import com.jangmo.web.repository.vote.MatchVoteRepository;
-import com.jangmo.web.repository.vote.VoteRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,9 +38,11 @@ public class VoteManagementServiceTest {
 
     @Autowired VoteManagementServiceImpl voteService;
 
-    @Autowired UserRepository userRepository;
+    @Autowired
+    UserRepository userRepository;
 
-    @Autowired MemberRepository memberRepository;
+    @Autowired
+    MemberRepository memberRepository;
 
     @Autowired MatchVoteRepository matchVoteRepository;
 

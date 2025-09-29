@@ -1,7 +1,6 @@
 package com.jangmo.web.config;
 
 import com.jangmo.web.model.BaseUuidEntity;
-import com.jangmo.web.repository.UserRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;

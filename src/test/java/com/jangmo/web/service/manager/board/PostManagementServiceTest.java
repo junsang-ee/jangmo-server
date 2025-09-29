@@ -7,7 +7,7 @@ import com.jangmo.web.model.entity.ReplyTargetEntity;
 import com.jangmo.web.model.entity.board.BoardEntity;
 import com.jangmo.web.model.entity.board.PostEntity;
 import com.jangmo.web.model.entity.user.MemberEntity;
-import com.jangmo.web.repository.MemberRepository;
+import com.jangmo.web.repository.user.MemberRepository;
 import com.jangmo.web.repository.board.BoardRepository;
 import com.jangmo.web.repository.board.PostRepository;
 import com.jangmo.web.repository.board.ReplyTargetRepository;

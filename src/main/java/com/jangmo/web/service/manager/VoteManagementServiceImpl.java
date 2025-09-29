@@ -14,8 +14,9 @@ import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.model.entity.vote.GeneralVoteEntity;
 import com.jangmo.web.model.entity.vote.MatchVoteEntity;
 import com.jangmo.web.model.entity.user.UserEntity;
-import com.jangmo.web.repository.*;
 
+import com.jangmo.web.repository.user.MemberRepository;
+import com.jangmo.web.repository.user.UserRepository;
 import com.jangmo.web.repository.vote.GeneralVoteRepository;
 import com.jangmo.web.repository.vote.MatchVoteRepository;
 import com.jangmo.web.repository.vote.VoteRepository;
