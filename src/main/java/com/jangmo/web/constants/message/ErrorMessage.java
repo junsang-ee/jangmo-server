@@ -76,10 +76,6 @@ public enum ErrorMessage {
         return "response.error." + name().toLowerCase().replaceAll("_", ".") + ".message";
     }
 
-    public int getStatusCode() {
-        return status.value();
-    }
-
     public static ErrorMessage from(int code) {
         for (ErrorMessage value : values()) {
             if (value.code == code) {

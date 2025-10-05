@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,7 @@ import java.time.LocalDate;
 
 @Slf4j
 @RequiredArgsConstructor
+@Profile("!test")
 @Component
 public class AdminInitializationConfig implements ApplicationRunner {
     private final MemberRepository memberRepository;
