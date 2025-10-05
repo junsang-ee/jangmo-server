@@ -12,3 +12,16 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     show-sql: true
+  h2:
+    console:
+      path: /h2-console
+      enabled: true
+
+jangmo:
+  jwt:
+    secret: dGVzdF9qc29uX3dlYl90b2tlbl9zZWNyZXRfa2V5X2Zvcl9obWFj
+    valid-time: 1h
+  admin:
+    name: "황준상"
+    mobile: "01012340001"
+    password: "1231231!@"
