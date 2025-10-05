@@ -66,10 +66,6 @@ public class MatchVoteEntity extends VoteEntity {
         return new MatchVoteEntity(createdBy, request, rawVoters);
     }
 
-    public void setVoters(List<MatchVoteUserEntity> voters) {
-        this.voters = voters;
-    }
-
     public void addVoter(MatchVoteUserEntity voter) {
         voters.add(voter);
     }
