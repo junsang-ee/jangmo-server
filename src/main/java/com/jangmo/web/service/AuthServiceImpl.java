@@ -230,10 +230,12 @@ public class AuthServiceImpl implements AuthService {
             getMemberByMobile(mobile);
         } else if (authPurposeType == AuthPurposeType.RESET_MERCENARY_CODE) {
             MercenaryEntity mercenary = getMercenaryByMobile(mobile);
-            if (mercenary.getMercenaryTransient() == null) {
-                if (mercenary.getRetentionStatus() == MercenaryRetentionStatus.DELETE) {
-                    throw new AuthException(ErrorMessage.AUTH_MERCENARY_CODE_NOT_ISSUED);
-                }
+            MercenaryTransientEntity mercenaryTransient = mercenary.getMercenaryTransient();
+
+            if (mercenaryTransient == null || mercenaryTransient.getCode() == null) {
+                if (mercenary.getRetentionStatus() == MercenaryRetentionStatus.KEEP)
+                    throw new AuthException(ErrorMessage.AUTH_MERCENARY_EXPIRED);
+                throw new AuthException(ErrorMessage.AUTH_MERCENARY_CODE_NOT_ISSUED);
             }
 
         }
