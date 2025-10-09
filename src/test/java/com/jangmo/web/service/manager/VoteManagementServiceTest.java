@@ -4,7 +4,7 @@ import com.jangmo.web.constants.Gender;
 import com.jangmo.web.constants.UserRole;
 import com.jangmo.web.constants.match.MatchType;
 import com.jangmo.web.constants.user.MemberStatus;
-import com.jangmo.web.constants.vote.VoteSelectionType;
+import com.jangmo.web.constants.vote.VoteModeType;
 import com.jangmo.web.constants.vote.VoteType;
 import com.jangmo.web.model.dto.request.MemberSignUpRequest;
 import com.jangmo.web.model.dto.request.vote.MatchVoteCreateRequest;
@@ -173,7 +173,7 @@ public class VoteManagementServiceTest {
                 MatchType.FUTSAL,
                 matchAt,
                 voteEndAt,
-                VoteSelectionType.SINGLE
+                VoteModeType.SINGLE
         );
         MatchVoteCreateResponse response = voteService.createMatchVote(
                 admin.getId(), createRequest
@@ -210,7 +210,7 @@ public class VoteManagementServiceTest {
                 MatchType.FUTSAL,
                 now.plusDays(2), // matchAt
                 now.plusDays(1), // voteEndAt
-                VoteSelectionType.SINGLE
+                VoteModeType.SINGLE
         );
 
         MatchVoteCreateRequest secondMatchVoteCreateRequest = new MatchVoteCreateRequest(
@@ -218,7 +218,7 @@ public class VoteManagementServiceTest {
                 MatchType.FUTSAL,
                 now.plusDays(1), // matchAt
                 now,                       // voteEndAt
-                VoteSelectionType.SINGLE
+                VoteModeType.SINGLE
         );
 
         List<UserEntity> voters = userRepository.findUserByMemberStatusAndRoleNot(

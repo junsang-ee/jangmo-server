@@ -1,6 +1,6 @@
 package com.jangmo.web.model.dto.request.vote;
 
-import com.jangmo.web.constants.vote.VoteSelectionType;
+import com.jangmo.web.constants.vote.VoteModeType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -24,5 +24,5 @@ public class GeneralVoteCreateRequest {
     private List<@NotBlank(message = "투표 옵션 값은 비어 있을 수 없습니다.") String> options;
 
     @NotNull(message = "중복 투표 가능 여부는 필수 항목입니다.")
-    private VoteSelectionType selectionType;
+    private VoteModeType modeType;
 }

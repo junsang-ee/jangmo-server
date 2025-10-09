@@ -10,7 +10,7 @@ import com.jangmo.web.constants.MercenaryRetentionStatus;
 import com.jangmo.web.constants.user.MercenaryStatus;
 import com.jangmo.web.constants.match.MatchType;
 import com.jangmo.web.constants.message.ErrorMessage;
-import com.jangmo.web.constants.vote.VoteSelectionType;
+import com.jangmo.web.constants.vote.VoteModeType;
 import com.jangmo.web.exception.AuthException;
 import com.jangmo.web.exception.NotFoundException;
 
@@ -502,7 +502,7 @@ public class AuthServiceTest {
                 MatchType.FUTSAL,
                 matchAt,
                 endAt,
-                VoteSelectionType.SINGLE
+                VoteModeType.SINGLE
         );
 
         MatchVoteEntity matchVote = MatchVoteEntity.create(
@@ -709,7 +709,7 @@ public class AuthServiceTest {
                 MatchType.FUTSAL,
                 tomorrow.plusDays(1),
                 tomorrow,
-                VoteSelectionType.SINGLE
+                VoteModeType.SINGLE
         );
 
         List<UserEntity> rawVoters = Arrays.asList(admin);
