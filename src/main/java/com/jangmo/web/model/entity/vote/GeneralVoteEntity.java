@@ -37,7 +37,7 @@ public class GeneralVoteEntity extends VoteEntity {
                 request.getTitle(),
                 LocalDate.now(),
                 request.getEndAt(),
-                request.getSelectionType(),
+                request.getModeType(),
                 VoteType.GENERAL
         );
         this.voters = GeneralVoteUserEntity.createAll(

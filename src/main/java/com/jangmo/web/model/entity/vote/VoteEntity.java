@@ -1,7 +1,7 @@
 package com.jangmo.web.model.entity.vote;
 
+import com.jangmo.web.constants.vote.VoteModeType;
 import com.jangmo.web.constants.vote.VoteType;
-import com.jangmo.web.constants.vote.VoteSelectionType;
 import com.jangmo.web.model.entity.ReplyTargetEntity;
 
 import com.jangmo.web.model.entity.user.MemberEntity;
@@ -32,7 +32,7 @@ public class VoteEntity extends ReplyTargetEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private VoteSelectionType selectionType;
+    private VoteModeType modeType;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -42,13 +42,13 @@ public class VoteEntity extends ReplyTargetEntity {
                          String title,
                          LocalDate startAt,
                          LocalDate endAt,
-                         VoteSelectionType selectionType,
+                         VoteModeType modeType,
                          VoteType voteType) {
         super(createdBy);
         this.title = title;
         this.startAt = startAt;
         this.endAt = endAt;
-        this.selectionType = selectionType;
+        this.modeType = modeType;
         this.voteType = voteType;
     }
 

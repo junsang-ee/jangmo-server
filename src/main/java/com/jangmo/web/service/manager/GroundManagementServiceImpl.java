@@ -35,8 +35,6 @@ public class GroundManagementServiceImpl implements GroundManagementService {
 
     private final DistrictRepository districtRepository;
 
-    private final UserRepository userRepository;
-
     private final MemberRepository memberRepository;
 
     @Qualifier("kakaoWebClient")

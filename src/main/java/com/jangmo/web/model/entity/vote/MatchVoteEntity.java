@@ -45,7 +45,7 @@ public class MatchVoteEntity extends VoteEntity {
                 request.getTitle(),
                 LocalDate.now(),
                 request.getEndAt(),
-                request.getSelectionType(),
+                request.getModeType(),
                 VoteType.MATCH
         );
         this.matchAt = request.getMatchAt();

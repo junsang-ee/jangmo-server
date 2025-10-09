@@ -6,7 +6,7 @@ import com.jangmo.web.constants.user.MemberStatus;
 import com.jangmo.web.constants.MercenaryRetentionStatus;
 import com.jangmo.web.constants.user.MercenaryStatus;
 import com.jangmo.web.constants.match.MatchType;
-import com.jangmo.web.constants.vote.VoteSelectionType;
+import com.jangmo.web.constants.vote.VoteModeType;
 import com.jangmo.web.model.dto.request.vote.MatchVoteCreateRequest;
 import com.jangmo.web.model.dto.request.MemberSignUpRequest;
 import com.jangmo.web.model.dto.request.MercenaryRegistrationRequest;
@@ -164,7 +164,7 @@ public class UserManagementServiceTest {
                 MatchType.FUTSAL,
                 matchAt,
                 endAt,
-                VoteSelectionType.SINGLE
+                VoteModeType.SINGLE
         );
         voteService.createMatchVote(admin.getId(), matchVoteCreateRequest);
 

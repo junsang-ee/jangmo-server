@@ -1,7 +1,7 @@
 package com.jangmo.web.model.dto.request.vote;
 
 import com.jangmo.web.constants.match.MatchType;
-import com.jangmo.web.constants.vote.VoteSelectionType;
+import com.jangmo.web.constants.vote.VoteModeType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,5 +28,5 @@ public class MatchVoteCreateRequest {
     private LocalDate endAt;
 
     @NotNull(message = "중복 투표 가능 여부는 필수 항목입니다.")
-    private VoteSelectionType selectionType;
+    private VoteModeType modeType;
 }
