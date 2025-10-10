@@ -15,7 +15,6 @@ import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.repository.CityRepository;
 import com.jangmo.web.repository.DistrictRepository;
 import com.jangmo.web.repository.user.MemberRepository;
-import com.jangmo.web.repository.user.UserRepository;
 import com.jangmo.web.utils.LocationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
