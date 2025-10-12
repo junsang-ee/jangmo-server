@@ -1,7 +1,6 @@
 package com.jangmo.web.service;
 
 import com.jangmo.web.constants.message.ErrorMessage;
-import com.jangmo.web.constants.vote.MatchVoteOption;
 import com.jangmo.web.exception.NotFoundException;
 import com.jangmo.web.model.dto.request.vote.MatchVoteCastRequest;
 import com.jangmo.web.model.entity.vote.MatchVoteEntity;
@@ -32,9 +31,6 @@ public class VoteServiceImpl implements VoteService {
         ).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.MATCH_VOTE_USER_NOT_FOUND)
         );
-        MatchVoteOption option = request.getOption();
-        if (option == MatchVoteOption.NOT_VOTED)
-            voter.updateOption(request.getOption());
-
+        voter.updateOption(request.getOption());
     }
 }

@@ -79,7 +79,6 @@ public class AuthServiceTest {
     @Autowired MercenaryRepository mercenaryRepository;
     @Autowired MatchVoteRepository matchVoteRepository;
     @Autowired MercenaryTransientRepository mercenaryTransientRepository;
-    @Autowired VoteManagementServiceImpl voteService;
     @Autowired JwtConfig jwtConfig;
     @Autowired AuthServiceImpl authService;
     @Autowired CacheAccessor cacheAccessor;
