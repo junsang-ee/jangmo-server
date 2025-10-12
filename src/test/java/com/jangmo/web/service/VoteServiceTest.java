@@ -124,25 +124,6 @@ public class VoteServiceTest {
         assertNotNull(memberRepository.findById(testMember.getId()));
     }
 
-    MemberEntity getSavedTestMember() {
-        MemberSignUpRequest signup = new MemberSignUpRequest(
-                "김테스트",
-                "01012341111",
-                Gender.MALE,
-                LocalDate.of(1994, 3, 16),
-                "1231231!",
-                1L,
-                1L
-        );
-        MemberEntity testMember = MemberEntity.create(
-                signup, city, district
-        );
-        memberRepository.save(testMember);
-        assertNotNull(testMember.getId());
-        assertNotNull(memberRepository.findById(testMember.getId()));
-        return testMember;
-    }
-
     MatchVoteEntity getSavedMatchVote() {
         MatchVoteCreateRequest matchVoteCreateRequest = new MatchVoteCreateRequest(
                 "Test Title",
