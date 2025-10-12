@@ -7,6 +7,7 @@ import com.jangmo.web.constants.vote.VoteModeType;
 import com.jangmo.web.model.dto.request.MemberSignUpRequest;
 import com.jangmo.web.model.dto.request.vote.MatchVoteCastRequest;
 import com.jangmo.web.model.dto.request.vote.MatchVoteCreateRequest;
+import com.jangmo.web.model.dto.response.vote.UserMatchVoteStatusResponse;
 import com.jangmo.web.model.entity.administrative.City;
 import com.jangmo.web.model.entity.administrative.District;
 import com.jangmo.web.model.entity.user.MemberEntity;
@@ -34,6 +35,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @Slf4j
@@ -50,6 +52,7 @@ public class VoteServiceTest {
     @Autowired VoteServiceImpl voteService;
 
     static final String CAST_MATCH_VOTE = "매치 투표 테스트";
+    static final String MATCH_VOTE_STATUS = "매치 투표 상태 체크 테스트";
 
     @Value("${jangmo.admin.name}")
     String adminName;
@@ -61,6 +64,7 @@ public class VoteServiceTest {
     String adminMobile;
 
     MemberEntity admin;
+    MemberEntity testMember;
     City city;
     District district;
 
@@ -69,8 +73,10 @@ public class VoteServiceTest {
         String display = testInfo.getDisplayName();
         switch (display) {
             case CAST_MATCH_VOTE:
+            case MATCH_VOTE_STATUS:
                 initCityAndDistrict();
                 createAdmin();
+                createTestMember();
             default: break;
         }
     }
@@ -100,18 +106,27 @@ public class VoteServiceTest {
         assertNotNull(memberRepository.findById(admin.getId()));
     }
 
-    @DisplayName(CAST_MATCH_VOTE)
-    @Test
-    void castMatchVoteTest() {
-        MatchVoteCreateRequest matchVoteCreateRequest = new MatchVoteCreateRequest(
-                "Test Title",
-                MatchType.FUTSAL,
-                LocalDate.now().plusDays(2),
-                LocalDate.now().plusDays(1),
-                VoteModeType.SINGLE
+    void createTestMember() {
+        MemberSignUpRequest signup = new MemberSignUpRequest(
+                "김철수",
+                "01012341111",
+                Gender.MALE,
+                LocalDate.of(1994, 3, 16),
+                "1231231!",
+                1L,
+                1L
         );
-        MemberSignUpRequest memberSignUpRequest = new MemberSignUpRequest(
-                "황테스트",
+        testMember = MemberEntity.create(
+                signup, city, district
+        );
+        memberRepository.save(testMember);
+        assertNotNull(testMember.getId());
+        assertNotNull(memberRepository.findById(testMember.getId()));
+    }
+
+    MemberEntity getSavedTestMember() {
+        MemberSignUpRequest signup = new MemberSignUpRequest(
+                "김테스트",
                 "01012341111",
                 Gender.MALE,
                 LocalDate.of(1994, 3, 16),
@@ -120,43 +135,85 @@ public class VoteServiceTest {
                 1L
         );
         MemberEntity testMember = MemberEntity.create(
-                memberSignUpRequest, city, district
+                signup, city, district
         );
         memberRepository.save(testMember);
-        List<UserEntity> voters = Arrays.asList(admin, testMember);
+        assertNotNull(testMember.getId());
+        assertNotNull(memberRepository.findById(testMember.getId()));
+        return testMember;
+    }
 
-        MatchVoteEntity matchVote = MatchVoteEntity.create(
-            admin, matchVoteCreateRequest, voters
+    MatchVoteEntity getSavedMatchVote() {
+        MatchVoteCreateRequest matchVoteCreateRequest = new MatchVoteCreateRequest(
+                "Test Title",
+                MatchType.FUTSAL,
+                LocalDate.now().plusDays(2),
+                LocalDate.now().plusDays(1),
+                VoteModeType.SINGLE
         );
-
+        List<UserEntity> rawVoters = Arrays.asList(admin, testMember);
+        MatchVoteEntity matchVote = MatchVoteEntity.create(
+                admin, matchVoteCreateRequest, rawVoters
+        );
         matchVoteRepository.save(matchVote);
-
         assertNotNull(matchVote.getId());
         assertNotNull(matchVoteRepository.findById(matchVote.getId()));
+        return matchVote;
+    }
 
+    @DisplayName(CAST_MATCH_VOTE)
+    @Test
+    void castMatchVoteTest() {
+        MatchVoteEntity matchVote = getSavedMatchVote();
         MatchVoteCastRequest matchVoteCastRequest = new MatchVoteCastRequest(
                 MatchVoteOption.ANTE_MERIDIEM
         );
         voteService.castMatchVote(
                 matchVote.getId(),
-                admin.getId(),
+                testMember.getId(),
                 matchVoteCastRequest
         );
 
         MatchVoteUserEntity votedVoter = matchVoteUserRepository.findByMatchVoteAndVoterId(
-                matchVote, admin.getId()
-        ).orElse(null);
-
-        MatchVoteUserEntity notVotedVoter = matchVoteUserRepository.findByMatchVoteAndVoterId(
                 matchVote, testMember.getId()
         ).orElse(null);
 
+        MatchVoteUserEntity netVotedVoter = matchVoteUserRepository.findByMatchVoteAndVoterId(
+                matchVote, admin.getId()
+        ).orElse(null);
+
         assertNotNull(votedVoter);
-        assertNotNull(notVotedVoter);
+        assertNotNull(netVotedVoter);
         assertEquals(MatchVoteOption.ANTE_MERIDIEM, votedVoter.getMatchVoteOption());
-        assertEquals(MatchVoteOption.NOT_VOTED, notVotedVoter.getMatchVoteOption());
-        log.info("admin(voted) voteOption : {}", votedVoter.getMatchVoteOption());
-        log.info("testMember(notVoted) voteOption : {}", notVotedVoter.getMatchVoteOption());
+        log.info("testMember (voted) voteOption : {}", votedVoter.getMatchVoteOption());
+        log.info("Admin (NotVoted) voteOption : {}", netVotedVoter.getMatchVoteOption());
+    }
+
+    @DisplayName(MATCH_VOTE_STATUS)
+    @Test
+    void getMatchVoteStatusTest() {
+
+        MatchVoteEntity matchVote = getSavedMatchVote();
+
+        String testMemberId = testMember.getId();
+
+        MatchVoteUserEntity voter = matchVoteUserRepository.findByMatchVoteAndVoterId(
+                matchVote, testMemberId
+        ).orElse(null);
+
+        assertNotNull(voter);
+
+        voter.updateOption(MatchVoteOption.ABSENT);
+
+        UserMatchVoteStatusResponse response = voteService.getMatchVoteStatus(
+                matchVote.getId(), testMemberId
+        );
+
+        assertTrue(response.isVoted());
+        assertEquals(MatchVoteOption.ABSENT, response.getSelectedOption());
+        log.info("Voter's isVoted : {}", response.isVoted());
+        log.info("Voter's selectedOption : {}", response.getSelectedOption());
     }
 
 }
+
