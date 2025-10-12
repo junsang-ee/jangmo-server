@@ -19,7 +19,7 @@ public class VoteController {
 
     private final VoteService voteService;
 
-    @PostMapping("/{matchVoteId}")
+    @PostMapping("/matches/{matchVoteId}")
     public ResponseEntity<ApiSuccessResponse<Object>> castMatchVote(
             @PathVariable String matchVoteId,
             @AuthenticationPrincipal(expression = "id") String userId,
@@ -28,7 +28,7 @@ public class VoteController {
         return wrap(null);
     }
 
-    @GetMapping("/{matchVoteId}")
+    @GetMapping("/matches/{matchVoteId}")
     public ResponseEntity<ApiSuccessResponse<UserMatchVoteStatusResponse>> getMatchVoteStatus(
             @PathVariable String matchVoteId,
             @AuthenticationPrincipal(expression = "id") String userId) {
