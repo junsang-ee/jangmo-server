@@ -3,6 +3,7 @@ package com.jangmo.web.controller;
 
 import com.jangmo.web.model.dto.request.vote.MatchVoteCastRequest;
 import com.jangmo.web.model.dto.response.common.ApiSuccessResponse;
+import com.jangmo.web.model.dto.response.vote.UserMatchVoteStatusResponse;
 import com.jangmo.web.service.VoteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,5 +26,12 @@ public class VoteController {
             @RequestBody MatchVoteCastRequest request) {
         voteService.castMatchVote(matchVoteId, userId, request);
         return wrap(null);
+    }
+
+    @GetMapping("/{matchVoteId}")
+    public ResponseEntity<ApiSuccessResponse<UserMatchVoteStatusResponse>> getMatchVoteStatus(
+            @PathVariable String matchVoteId,
+            @AuthenticationPrincipal(expression = "id") String userId) {
+        return wrap(voteService.getMatchVoteStatus(matchVoteId, userId));
     }
 }
