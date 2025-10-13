@@ -4,6 +4,7 @@ import com.jangmo.web.constants.message.ErrorMessage;
 import com.jangmo.web.constants.vote.MatchVoteOption;
 import com.jangmo.web.exception.NotFoundException;
 import com.jangmo.web.model.dto.request.vote.MatchVoteCastRequest;
+import com.jangmo.web.model.dto.response.vote.MatchVoteCastResponse;
 import com.jangmo.web.model.dto.response.vote.UserMatchVoteStatusResponse;
 import com.jangmo.web.model.entity.vote.MatchVoteEntity;
 import com.jangmo.web.model.entity.vote.user.MatchVoteUserEntity;
@@ -23,10 +24,12 @@ public class VoteServiceImpl implements VoteService {
 
     @Override
     @Transactional
-    public void castMatchVote(String matchVoteId, String userId, MatchVoteCastRequest request) {
+    public MatchVoteCastResponse castMatchVote(String matchVoteId, String userId, MatchVoteCastRequest request) {
         MatchVoteEntity matchVote = getMatchVote(matchVoteId);
         MatchVoteUserEntity voter = getMatchVoteUser(matchVote, userId);
-        voter.updateOption(request.getOption());
+        MatchVoteOption selectedOption = request.getOption();
+        voter.updateOption(selectedOption);
+        return MatchVoteCastResponse.of(selectedOption);
     }
 
     @Override
