@@ -1,6 +1,7 @@
 package com.jangmo.web.config.validator;
 
 import com.jangmo.web.constants.message.ErrorMessage;
+import com.jangmo.web.constants.vote.MatchVoteOption;
 import com.jangmo.web.exception.FieldValidationException;
 import org.springframework.stereotype.Component;
 
@@ -8,7 +9,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 @Component
-public class ValidFieldsImpl implements ConstraintValidator<ValidFields, String> {
+public class ValidFieldsImpl implements ConstraintValidator<ValidFields, Object> {
 
     private final static String NAME_REGEX = "^[가-힣]{2,}$";
     private final static String PASSWORD_REGEX =
@@ -28,13 +29,16 @@ public class ValidFieldsImpl implements ConstraintValidator<ValidFields, String>
     }
 
     @Override
-    public boolean isValid(String value, ConstraintValidatorContext context) {
+    public boolean isValid(Object value, ConstraintValidatorContext context) {
+        if (value == null) return false;
+
         switch (fieldName) {
-            case "mobile": validMobile(value); break;
-            case "password": validPassword(value); break;
-            case "name": validName(value); break;
-            case "authCode": validAuthCode(value); break;
-            case "mercenaryCode": validMercenaryCode(value); break;
+            case "mobile": validMobile(String.valueOf(value)); break;
+            case "password": validPassword(String.valueOf(value)); break;
+            case "name": validName(String.valueOf(value)); break;
+            case "authCode": validAuthCode(String.valueOf(value)); break;
+            case "mercenaryCode": validMercenaryCode(String.valueOf(value)); break;
+            case "matchVoteOption": validMatchVoteOption(value);
             default: break;
         }
 
@@ -43,26 +47,46 @@ public class ValidFieldsImpl implements ConstraintValidator<ValidFields, String>
 
     private void validMobile(String mobile) {
         if (!mobile.matches(MOBILE_REGEX))
-            throw new FieldValidationException(ErrorMessage.REQUEST_INVALID_MOBILE);
+            throwFieldException(ErrorMessage.REQUEST_INVALID_MOBILE);
     }
 
     private void validPassword(String password) {
         if (!password.matches(PASSWORD_REGEX))
-            throw new FieldValidationException(ErrorMessage.REQUEST_INVALID_PASSWORD);
+            throwFieldException(ErrorMessage.REQUEST_INVALID_PASSWORD);
     }
 
     private void validName(String name) {
         if (!name.matches(NAME_REGEX))
-            throw new FieldValidationException(ErrorMessage.REQUEST_INVALID_NAME);
+            throwFieldException(ErrorMessage.REQUEST_INVALID_NAME);
     }
 
     private void validAuthCode(String code) {
         if (!code.matches(VALID_CODE_REGEX))
-            throw new FieldValidationException(ErrorMessage.REQUEST_INVALID_CODE);
+            throwFieldException(ErrorMessage.REQUEST_INVALID_CODE);
     }
 
     private void validMercenaryCode(String mercenaryCode) {
         if (!mercenaryCode.matches(MERCENARY_CODE_REGEX))
-            throw new FieldValidationException(ErrorMessage.REQUEST_INVALID_MERCENARY_CODE);
+            throwFieldException(ErrorMessage.REQUEST_INVALID_MERCENARY_CODE);
+    }
+
+
+    private void validMatchVoteOption(Object value) {
+        MatchVoteOption enumValue = getEnumValue(value, MatchVoteOption.class);
+        if (enumValue == MatchVoteOption.NOT_VOTED)
+            throw new FieldValidationException(ErrorMessage.MATCH_VOTE_INVALID_OPTION);
+    }
+
+    private <E extends Enum<E>> E getEnumValue(Object value, Class<E> enumClass) {
+        try {
+            return Enum.valueOf(enumClass, value.toString());
+        } catch (IllegalArgumentException e) {
+            throwFieldException(ErrorMessage.REQUEST_BODY_FIELD);
+        }
+        return null;
+    }
+
+    private void throwFieldException(ErrorMessage message) {
+        throw new FieldValidationException(message);
     }
 }
