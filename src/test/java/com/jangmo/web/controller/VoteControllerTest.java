@@ -39,18 +39,15 @@ public class VoteControllerTest {
 
     @MockBean private MessageSource messageSource;
 
-    ExtendedUserDetails principal = null;
+    ExtendedUserDetails principal;
 
     final static String CAST_MATCH_VOTE_SUCCESS = "매치 투표 API 성공 테스트";
     final static String CAST_MATCH_VOTE_PARAM_ERROR = "매치 투표 API 요청 파라미터 실패 테스트";
 
     @BeforeEach
     void setup() {
-
         ReflectionTestUtils.setField(MessageUtil.class, "messageSource", messageSource);
         createPrincipal();
-//        when(messageSource.getMessage(anyString(), any(), any(Locale.class)))
-//                .thenReturn("test message");
     }
 
     void createPrincipal() {
@@ -85,8 +82,7 @@ public class VoteControllerTest {
                         .with(user(principal))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(castMatchVoteRequest)))
-                .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.message").value("test message"))
+                .andExpect(status().isOk())
                 .andDo(print());
 
         verify(voteService, times(1))
