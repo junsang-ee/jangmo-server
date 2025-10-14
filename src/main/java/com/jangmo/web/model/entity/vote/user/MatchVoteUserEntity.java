@@ -54,4 +54,8 @@ public class MatchVoteUserEntity extends AbstractVoteUserEntity {
                 rawVoter -> create(rawVoter, matchVote)
         ).collect(Collectors.toList());
     }
+
+    public void updateOption(MatchVoteOption option) {
+        this.matchVoteOption = option;
+    }
 }
