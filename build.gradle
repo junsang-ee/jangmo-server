@@ -6,9 +6,13 @@ plugins {
 
 group = 'com.jangmo.web'
 version = '1.0-SNAPSHOT'
+description = 'Jangmo Community Project'
+
 
 java {
-    sourceCompatibility = '11'
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 repositories {
