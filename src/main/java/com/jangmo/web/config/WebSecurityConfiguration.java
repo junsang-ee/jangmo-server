@@ -13,7 +13,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -23,8 +24,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(
-        order = AspectOrder.METHOD_SECURITY,
+@EnableMethodSecurity(
         securedEnabled = true,
         jsr250Enabled = true,
         prePostEnabled = true
@@ -62,19 +62,22 @@ public class WebSecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.authorizeRequests()
-                .antMatchers(PERMIT_ANT_PATH).permitAll()
-                .antMatchers(AUTHENTICATED_ANT_PATH).authenticated()
-                .antMatchers(ADMIN_ANT_PATH).hasRole("ADMIN")
-                .antMatchers(MANAGER_ANT_PATH).hasAnyRole("ADMIN", "MANAGER")
-                .anyRequest().authenticated()
-                .and().cors()
-                .and().csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().exceptionHandling()
-                    .authenticationEntryPoint(entryPoint)
-                    .accessDeniedHandler(accessDeniedHandler)
-                .and().addFilterBefore(
+        return http.csrf(csrf -> csrf.disable())
+                .cors(Customizer.withDefaults())
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                ).exceptionHandling(
+                        exceptions -> exceptions
+                                .authenticationEntryPoint(entryPoint)
+                                .accessDeniedHandler(accessDeniedHandler)
+                ).authorizeHttpRequests(
+                        auth -> auth
+                                .requestMatchers(PERMIT_ANT_PATH).permitAll()
+                                .requestMatchers(AUTHENTICATED_ANT_PATH).authenticated()
+                                .requestMatchers(ADMIN_ANT_PATH).hasRole("ADMIN")
+                                .requestMatchers(MANAGER_ANT_PATH).hasAnyRole("ADMIN", "MANAGER")
+                                .anyRequest().authenticated()
+                ).addFilterBefore(
                         new JwtAuthenticationFilter(
                                 BeanSuppliers.beanSupplier(context, JwtTokenProvider.class)
                         ),

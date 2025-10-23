@@ -5,8 +5,8 @@ import com.jangmo.web.constants.vote.MatchVoteOption;
 import com.jangmo.web.exception.FieldValidationException;
 import org.springframework.stereotype.Component;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 @Component
 public class ValidFieldsImpl implements ConstraintValidator<ValidFields, Object> {
