@@ -4,7 +4,7 @@ import com.jangmo.web.config.validator.ValidFields;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 @Getter
 @NoArgsConstructor

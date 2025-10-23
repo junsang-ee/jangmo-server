@@ -1,11 +1,9 @@
 package com.jangmo.web.model.dto.request.board;
 
-import com.jangmo.web.constants.ReplyTargetType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 @Getter
 @NoArgsConstructor
