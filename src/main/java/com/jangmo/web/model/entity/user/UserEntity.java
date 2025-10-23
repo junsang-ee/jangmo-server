@@ -4,22 +4,15 @@ import com.jangmo.web.constants.Gender;
 import com.jangmo.web.constants.UserRole;
 
 import com.jangmo.web.model.ModificationTimestampEntity;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Inheritance;
-import javax.persistence.Table;
-import javax.persistence.Entity;
-import javax.persistence.Column;
-import javax.persistence.Enumerated;
-import javax.persistence.EnumType;
-
 import static lombok.AccessLevel.PROTECTED;
-import static javax.persistence.InheritanceType.JOINED;
 
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-@Inheritance(strategy = JOINED)
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "\"user\"")
 @Entity(name = "user")
 public class UserEntity extends ModificationTimestampEntity {

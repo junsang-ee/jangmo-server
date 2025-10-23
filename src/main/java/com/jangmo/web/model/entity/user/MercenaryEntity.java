@@ -9,14 +9,7 @@ import com.jangmo.web.model.dto.request.MercenaryRegistrationRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Column;
-import javax.persistence.Enumerated;
-import javax.persistence.EnumType;
-import javax.persistence.OneToOne;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.CascadeType;
+import jakarta.persistence.*;
 
 import static lombok.AccessLevel.PROTECTED;
 

@@ -5,10 +5,12 @@ import com.jangmo.web.model.dto.request.board.manager.PostCreateRequest;
 import com.jangmo.web.model.dto.request.board.manager.PostUpdateRequest;
 import com.jangmo.web.model.entity.ReplyTargetEntity;
 import com.jangmo.web.model.entity.user.MemberEntity;
+
+import jakarta.persistence.*;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 
 import static lombok.AccessLevel.PROTECTED;
 

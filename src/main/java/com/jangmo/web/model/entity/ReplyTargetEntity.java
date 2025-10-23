@@ -4,11 +4,11 @@ import com.jangmo.web.model.entity.user.MemberEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Inheritance;
 
-import static javax.persistence.InheritanceType.JOINED;
 import static lombok.AccessLevel.PROTECTED;
+import static jakarta.persistence.InheritanceType.JOINED;
 
 @Getter
 @NoArgsConstructor(access = PROTECTED)

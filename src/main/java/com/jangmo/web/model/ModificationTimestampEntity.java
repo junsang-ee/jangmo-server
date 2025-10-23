@@ -3,8 +3,8 @@ package com.jangmo.web.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Column;
 import java.time.Instant;
 
 @MappedSuperclass

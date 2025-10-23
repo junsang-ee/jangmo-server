@@ -1,6 +1,5 @@
 package com.jangmo.web.utils;
 
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
 

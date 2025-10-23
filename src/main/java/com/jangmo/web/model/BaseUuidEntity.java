@@ -2,20 +2,19 @@ package com.jangmo.web.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.UuidGenerator;
 import org.springframework.data.domain.Persistable;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Id;
+import jakarta.persistence.Column;
 
 @MappedSuperclass
 public abstract class BaseUuidEntity implements Persistable<String> {
+
     @Id
-    @Column(name = "id")
-    @GeneratedValue(generator = "idGenerator")
-    @GenericGenerator(name="idGenerator", strategy = "com.jangmo.web.config.UuidGenerator")
+    @UuidGenerator
+    @Column(name = "id", nullable = false, updatable = false)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String id;
 
