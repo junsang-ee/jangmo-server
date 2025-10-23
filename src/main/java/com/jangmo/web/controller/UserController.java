@@ -11,12 +11,10 @@ import com.jangmo.web.service.UserService;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-
 import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
-
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import static com.jangmo.web.model.dto.response.common.ApiSuccessResponse.wrap;
 
