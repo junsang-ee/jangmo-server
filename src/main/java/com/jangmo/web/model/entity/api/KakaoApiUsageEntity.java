@@ -2,11 +2,12 @@ package com.jangmo.web.model.entity.api;
 
 import com.jangmo.web.model.ModificationTimestampEntity;
 import com.jangmo.web.model.entity.user.MemberEntity;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
-import javax.persistence.*;
 
 import static lombok.AccessLevel.PROTECTED;
 

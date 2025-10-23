@@ -4,7 +4,7 @@ import com.jangmo.web.model.ModificationTimestampEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import static lombok.AccessLevel.PROTECTED;
 

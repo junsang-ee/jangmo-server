@@ -2,11 +2,10 @@ package com.jangmo.web.model.entity.board;
 
 import com.jangmo.web.constants.BoardActivationStatus;
 import com.jangmo.web.model.ModificationTimestampEntity;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
-import javax.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;

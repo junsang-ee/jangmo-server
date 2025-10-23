@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 
 import static lombok.AccessLevel.PROTECTED;
 

@@ -3,12 +3,12 @@ package com.jangmo.web.model.entity.administrative;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import com.jangmo.web.model.SequentialEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
 import java.util.List;
 
 import static lombok.AccessLevel.PROTECTED;

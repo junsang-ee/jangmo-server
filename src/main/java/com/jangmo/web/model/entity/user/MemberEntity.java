@@ -15,7 +15,7 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;

@@ -3,13 +3,11 @@ package com.jangmo.web.model.entity.vote.user;
 import com.jangmo.web.constants.UserRole;
 import com.jangmo.web.model.ModificationTimestampEntity;
 import com.jangmo.web.model.entity.user.UserEntity;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 
 import static lombok.AccessLevel.PROTECTED;
 

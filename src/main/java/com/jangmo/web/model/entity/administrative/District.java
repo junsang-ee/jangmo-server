@@ -2,15 +2,12 @@ package com.jangmo.web.model.entity.administrative;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.jangmo.web.model.SequentialEntity;
+
+import jakarta.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Column;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
 
 import static lombok.AccessLevel.PROTECTED;
 

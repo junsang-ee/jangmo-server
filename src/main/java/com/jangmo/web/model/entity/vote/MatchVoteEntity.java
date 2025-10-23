@@ -6,11 +6,13 @@ import com.jangmo.web.model.entity.MatchEntity;
 import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.model.entity.vote.user.MatchVoteUserEntity;
 import com.jangmo.web.model.entity.user.UserEntity;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 
 import java.time.LocalDate;
 import java.util.List;

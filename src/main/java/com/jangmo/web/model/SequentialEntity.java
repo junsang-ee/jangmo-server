@@ -6,10 +6,10 @@ import com.google.common.base.MoreObjects;
 import lombok.Getter;
 import org.springframework.data.domain.Persistable;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.GenerationType;
 
 @Getter
 @MappedSuperclass
