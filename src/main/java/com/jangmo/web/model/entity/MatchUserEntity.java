@@ -20,8 +20,8 @@ import static lombok.AccessLevel.PROTECTED;
 public class MatchUserEntity extends CreationTimestampEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "match", nullable = false)
-    private MatchEntity match;
+    @JoinColumn(name = "match_detail", nullable = false)
+    private MatchDetailEntity matchDetail;
 
     @Column(nullable = false)
     private String playerId;

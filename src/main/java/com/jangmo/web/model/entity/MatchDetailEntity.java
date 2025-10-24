@@ -28,7 +28,7 @@ public class MatchDetailEntity extends ModificationTimestampEntity {
     @JoinColumn(name = "ground", nullable = false)
     private GroundEntity ground;
 
-    @OneToMany(mappedBy = "match", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "matchDetail", cascade = CascadeType.REMOVE)
     private List<MatchUserEntity> players;
 
 }
