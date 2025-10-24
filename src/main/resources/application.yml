@@ -28,3 +28,26 @@ spring:
     alwaysUseMessageFormat: true
     useCodeAsDefaultMessage: true
     fallbackToSystemLocale: true
+sms:
+  api:
+    key: ${SMS_API_KEY}
+    secret: ${SMS_API_SECRET}
+    sender: ${JANGMO_ADMIN_MOBILE:01043053451}
+    auth-content: "[Jangmo] 인증번호 [{authCode}]를 입력해주세요."
+    mercenary-content: "[Jangmo] 용병코드는 [{mercenaryCode}]입니다."
+kakao:
+  rest:
+    api:
+      key: ${KAKAO_REST_API_KEY}
+      uri: "https://dapi.kakao.com/v2/local/search/"
+lotto:
+  api:
+    uri:
+jangmo:
+  jwt:
+    secret: ${JANGMO_JWT_SECRET}
+    valid-time: ${JANGMO_JWT_VALID_TIME:2h}
+  admin:
+    name: "황준상"
+    mobile: ${JANGMO_ADMIN_MOBILE:01043053451}
+    password: ${JANGMO_ADMIN_PASSWORD}

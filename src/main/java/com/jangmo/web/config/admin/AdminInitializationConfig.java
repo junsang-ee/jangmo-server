@@ -1,5 +1,6 @@
 package com.jangmo.web.config.admin;
 
+import com.jangmo.web.config.properties.AdminProperties;
 import com.jangmo.web.constants.Gender;
 import com.jangmo.web.constants.user.MemberStatus;
 import com.jangmo.web.constants.UserRole;
@@ -35,20 +36,13 @@ public class AdminInitializationConfig implements ApplicationRunner {
 
     private final DistrictRepository districtRepository;
 
-    @Value("${jangmo.admin.mobile}")
-    private String adminMobile;
-
-    @Value("${jangmo.admin.password}")
-    private String adminPassword;
-
-    @Value("${jangmo.admin.name}")
-    private String adminName;
+    private final AdminProperties adminProperties;
 
     @Override
     @Transactional
     public void run(ApplicationArguments args) throws Exception {
         log.info("Administrator Account initialize...");
-        memberRepository.findByMobile(adminMobile).ifPresentOrElse(
+        memberRepository.findByMobile(adminProperties.mobile()).ifPresentOrElse(
                 admin -> {
                     log.info("Administrator's Account is already exists!");
                     initializeAdmin(admin);
@@ -62,11 +56,11 @@ public class AdminInitializationConfig implements ApplicationRunner {
                             () -> new NotFoundException(ErrorMessage.DISTRICT_NOT_FOUND)
                     );
                     MemberSignUpRequest signup = new MemberSignUpRequest(
-                            adminName,
-                            adminMobile,
+                            adminProperties.name(),
+                            adminProperties.mobile(),
                             Gender.MALE,
                             LocalDate.of(1994, 3, 16),
-                            adminPassword,
+                            adminProperties.password(),
                             city.getId(),
                             district.getId()
                     );
