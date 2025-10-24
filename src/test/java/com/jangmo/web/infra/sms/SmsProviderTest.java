@@ -1,10 +1,9 @@
 package com.jangmo.web.infra.sms;
 
 
-import com.jangmo.web.config.sms.SmsConfig;
+import com.jangmo.web.config.properties.SmsProperties;
 import com.jangmo.web.constants.SmsType;
 import com.jangmo.web.utils.CodeGeneratorUtil;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
@@ -29,7 +28,7 @@ import static org.mockito.Mockito.when;
 public class SmsProviderTest {
 
     @Mock
-    private SmsConfig smsConfig;
+    private SmsProperties smsProperties;
 
     @Mock
     private DefaultMessageService messageService;
@@ -42,7 +41,7 @@ public class SmsProviderTest {
 
     @BeforeEach
     void setUp() {
-        when(smsConfig.getSender()).thenReturn("01012341111");
+        when(smsProperties.secret()).thenReturn("01012341111");
         ReflectionTestUtils.setField(smsProvider, "messageService", messageService);
     }
 
@@ -56,9 +55,9 @@ public class SmsProviderTest {
         String expectedContent = "인증번호는 123123 입니다.";
 
         //when
-        when(smsConfig.getAuthContent()).thenReturn("인증번호는 {authCode} 입니다.");
+        when(smsProperties.authContent()).thenReturn("인증번호는 {authCode} 입니다.");
         smsProvider.send(to, code, SmsType.AUTH_CODE);
-        log.info("smsConfig authContent : {}", smsConfig.getAuthContent().replace("{authCode}", code));
+        log.info("smsConfig authContent : {}", smsProperties.authContent().replace("{authCode}", code));
         log.info("expectedContent : {} ", expectedContent);
 
         //then captor (capture)
@@ -81,9 +80,9 @@ public class SmsProviderTest {
         String expectedContent = "용병코드는 " + code + " 입니다.";
 
         //when
-        when(smsConfig.getMercenaryContent()).thenReturn("용병코드는 {mercenaryCode} 입니다.");
+        when(smsProperties.mercenaryContent()).thenReturn("용병코드는 {mercenaryCode} 입니다.");
         smsProvider.send(to, code, SmsType.MERCENARY_CODE);
-        log.info("smsConfig mercenaryContent : {}", smsConfig.getMercenaryContent().replace("{mercenaryCode}", code));
+        log.info("smsConfig mercenaryContent : {}", smsProperties.mercenaryContent().replace("{mercenaryCode}", code));
         log.info("expectedContent : {} ", expectedContent);
 
         //then captor (capture)
