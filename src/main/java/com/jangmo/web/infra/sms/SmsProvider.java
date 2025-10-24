@@ -1,6 +1,6 @@
 package com.jangmo.web.infra.sms;
 
-import com.jangmo.web.config.sms.SmsConfig;
+import com.jangmo.web.config.properties.SmsProperties;
 import com.jangmo.web.constants.SmsType;
 import lombok.RequiredArgsConstructor;
 import net.nurigo.sdk.NurigoApp;
@@ -15,7 +15,7 @@ import jakarta.annotation.PostConstruct;
 @Component
 public class SmsProvider {
 
-    private final SmsConfig smsConfig;
+    private final SmsProperties smsProperties;
 
     private static final String SMS_API_ENDPOINT = "https://api.coolsms.co.kr";
 
@@ -24,8 +24,8 @@ public class SmsProvider {
     @PostConstruct
     public void init() {
         messageService = NurigoApp.INSTANCE.initialize(
-                smsConfig.getKey(),
-                smsConfig.getSecret(),
+                smsProperties.key(),
+                smsProperties.secret(),
                 SMS_API_ENDPOINT
         );
     }
@@ -33,17 +33,17 @@ public class SmsProvider {
     public void send(String to, String code, SmsType type) {
         String content = "";
         if (type == SmsType.AUTH_CODE) {
-            content = smsConfig.getAuthContent().replace(
+            content = smsProperties.authContent().replace(
                     "{authCode}", code
             );
         } else if (type == SmsType.MERCENARY_CODE){
-            content = smsConfig.getMercenaryContent().replace(
+            content = smsProperties.mercenaryContent().replace(
                     "{mercenaryCode}", code
             );
         }
 
         Message message = new Message();
-        message.setFrom(smsConfig.getSender());
+        message.setFrom(smsProperties.sender());
         message.setTo(to);
         message.setText(content);
 
