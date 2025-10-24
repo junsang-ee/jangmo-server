@@ -5,6 +5,7 @@ import com.jangmo.web.constants.message.ErrorMessage;
 import com.jangmo.web.exception.InvalidStateException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -25,13 +26,13 @@ public class WebClientExecutor {
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .onStatus(
-                        HttpStatus::is4xxClientError,
+                        HttpStatusCode::is4xxClientError,
                         clientResponse -> Mono.error(
                                 new InvalidStateException(ErrorMessage.BAD_REQUEST)
                         )
                 )
                 .onStatus(
-                        HttpStatus::is5xxServerError,
+                        HttpStatusCode::is5xxServerError,
                         clientResponse -> Mono.error(
                                 new InvalidStateException(ErrorMessage.INTERNAL_SERVER_ERROR)
                         )
