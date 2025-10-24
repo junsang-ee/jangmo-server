@@ -1,6 +1,8 @@
 package com.jangmo.web.config.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jangmo.web.config.properties.KakaoApiProperties;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -14,13 +16,12 @@ import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Slf4j
-@Setter
-@ConfigurationProperties(prefix = "spring.kakao.rest.api")
+@RequiredArgsConstructor
 @DependsOn("webClientConfiguration")
 @Configuration
 public class KakaoWebClientConfig {
-    private String key;
-    private String uri;
+
+    private final KakaoApiProperties kakaoProperties;
 
     @Bean(name = "kakaoWebClient")
     public WebClient kakaoWebClient(WebClient.Builder webClientBuilder,
@@ -38,9 +39,9 @@ public class KakaoWebClientConfig {
                 .build();
 
         return webClientBuilder
-                .baseUrl(uri)
+                .baseUrl(kakaoProperties.uri())
                 .exchangeStrategies(strategies)
-                .defaultHeader("Authorization", "KakaoAK " + key)
+                .defaultHeader("Authorization", "KakaoAK " + kakaoProperties.key())
                 .build();
     }
 
