@@ -29,8 +29,8 @@ dependencies {
 //    implementation 'com.querydsl:querydsl-core:5.0.0:jakarta'
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
     implementation 'com.querydsl:querydsl-apt:5.0.0:jakarta'
-    annotationProcessor group: 'com.querydsl', name: 'querydsl-apt', version: '5.0.0'
-    annotationProcessor group: 'com.querydsl', name: 'querydsl-apt', version: '5.0.0', classifier: 'jpa'
+    annotationProcessor group: 'com.querydsl', name: 'querydsl-apt', version: '5.0.0:jakarta'
+    annotationProcessor group: 'com.querydsl', name: 'querydsl-apt', version: '5.0.0:jakarta', classifier: 'jpa'
     annotationProcessor('jakarta.annotation:jakarta.annotation-api')
     annotationProcessor('jakarta.persistence:jakarta.persistence-api')
 
