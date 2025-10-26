@@ -1,5 +1,6 @@
 package com.jangmo.web.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
@@ -14,8 +15,12 @@ import java.time.Instant;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class CreationTimestampEntity extends BaseUuidEntity {
+
+    @CreatedDate
     @Column(nullable = false, updatable = false)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @CreatedDate
+    @JsonFormat(shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
+            timezone = "Asia/Seoul")
     private Instant createdAt;
 }
