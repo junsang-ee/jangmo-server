@@ -193,7 +193,7 @@ public class AuthServiceImpl implements AuthService {
                 case DISABLED:
                     throw new AuthException(ErrorMessage.AUTH_DISABLED);
                 case PENDING:
-                    throw new AuthException(ErrorMessage.AUTH_UNAUTHENTICATED);
+                    throw new AuthException(ErrorMessage.AUTH_PENDING);
                 default: return;
             }
         }
@@ -209,11 +209,12 @@ public class AuthServiceImpl implements AuthService {
             throw new AuthException(ErrorMessage.AUTH_MERCENARY_EXPIRED);
 
         if (transientEntity == null) {
-            if (mercenary.getStatus() == MercenaryStatus.PENDING)
-                throw new AuthException(ErrorMessage.AUTH_UNAUTHENTICATED);
-            else
+            if (mercenary.getStatus() == MercenaryStatus.PENDING) {
+                throw new AuthException(ErrorMessage.AUTH_PENDING);
+            } else {
                 log.error("MercenaryTransientEntity is Null Error >> {}, {}",
                         mercenary.getMobile(), mercenary.getStatus());
+            }
             throw new NotFoundException(ErrorMessage.AUTH_MERCENARY_CODE_NOT_ISSUED);
         }
 

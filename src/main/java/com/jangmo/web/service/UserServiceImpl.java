@@ -152,7 +152,7 @@ public class UserServiceImpl implements UserService {
                 case DISABLED:
                     throw new AuthException(ErrorMessage.AUTH_DISABLED);
                 case PENDING:
-                    throw new AuthException(ErrorMessage.AUTH_UNAUTHENTICATED);
+                    throw new AuthException(ErrorMessage.AUTH_PENDING);
                 default: return;
             }
         }
