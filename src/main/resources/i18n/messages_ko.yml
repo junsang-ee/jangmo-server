@@ -89,7 +89,7 @@ response:
       kakao.api:
         denied:
           code: "4013"
-          message: "카카오 맵 사용 설정이 정상적으로 적용되어 있지 않습니다. 관리자에게 문의하새요."
+          message: "해당 유저는 카카오 맵 사용 설정이 정상적으로 적용되어 있지 않습니다. 관리자에게 문의하새요."
         exceeded:
           code: "4014"
           message: "카카오 API 호출 가능 횟수를 초과했습니다."
