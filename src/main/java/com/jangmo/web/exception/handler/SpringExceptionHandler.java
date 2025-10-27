@@ -115,12 +115,12 @@ public class SpringExceptionHandler extends BaseExceptionHandler {
     }
 
     private String getFieldToKorean(String field) {
-        switch (field) {
-            case "year": return "년도";
-            case "month": return "월";
-            case "voteType": return "투표 타입";
-            default: return field;
-        }
+        return switch (field) {
+            case "year" -> "년도";
+            case "month" -> "월";
+            case "voteType" -> "투표 타입";
+            default -> field;
+        };
     }
 
 
