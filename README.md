@@ -26,16 +26,14 @@
 
 ## 기술 스택
 
-| 영역       | 기술                               |
-|----------|----------------------------------|
-| Language | Java 11                          |
-| Backend  | Spring Boot 2.x, Spring Security |
-| DB       | PostgreSQL, JPA (Hibernate)      |
-| Auth     | JWT (JSON Web Token)             |
-| DevOps   | AWS(EC2, RDS) Jenkins(예정)       |
-| Docs     | Swagger (Springdoc) (예정)        |
-
----
+| 영역       | 기술                                                                        |
+|----------|---------------------------------------------------------------------------|
+| Language | Java 21 (11 => 21, upgradedAt. 25.10.23)                                  |
+| Backend  | Spring Boot 3.5.6 (2.7.4 => 3.5.6, upgradedAt. 25.10.23), Spring Security |
+| DB       | PostgreSQL, JPA (Hibernate 6, (5 => 6, upgradedAt. 25.10.23))             |
+| Auth     | JWT (JSON Web Token)                                                      |
+| DevOps   | AWS(EC2, RDS) Jenkins(예정)                                                 |
+| Docs     | Swagger (Springdoc) (예정)                                                  |
 
 ## 프로젝트 배경
 
@@ -58,7 +56,7 @@
 - [x] API 공통 응답 구조화 완료
 - [x] CustomException HttpStatus 및 ErrorMessage 구축 완료
 - [x] Kakao Map API 및 Sms API 연결 완료
-- [ ] 투표 / 매치 / 경기장 도메인 설계 디테일 하게 구상 중
+- [ ] 투표 / 매치 / 경기장 도메인 설계 디테일 하게 구축 예정
 - [ ] 투표와 매치 생성 시 추후 개발 될 Board, Post 연결 구상 중
 - [ ] Swagger 문서 작성 중
 - [ ] CI/CD 자동 배포 구축 예정
@@ -71,8 +69,7 @@
 - **보안**: Spring Security + JWT 기반 로그인 / 인증처리
 - **유지보수**: 엔티티 구조를 단순화하여 추후 확장 대비
 - **단일 책임 원칙**을 고려한 레이어 구조
-- 단위 테스트 기반의 **TDD 개발 프로세스 적용**으로 서비스 로직의 안정성과 유지보수성 확보
-
+- 단위 테스트 기반의 **TDD 개발 프로세스 적용**으로(~TDD ~ing) 서비스 로직의 안정성과 유지보수성 확보 
 ---
 
 ## 프로젝트 구조
