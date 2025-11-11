@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum ErrorMessage {
-
     REQUEST_QUERY_PARAM(100, HttpStatus.BAD_REQUEST),
     REQUEST_BODY_FIELD(101, HttpStatus.BAD_REQUEST),
     REQUEST_INVALID_MOBILE(110, HttpStatus.BAD_REQUEST),
