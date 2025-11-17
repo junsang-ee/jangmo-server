@@ -12,6 +12,7 @@ import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,6 +29,8 @@ public class JwtTokenProvider {
 
     private final ExtendedUserDetailsService userService;
 
+    private final static String TOKEN_PREFIX = "Bearer ";
+
     public String create(String userAgent, String id, UserRole role) {
         Date issuedAt = new Date();
         Date expireAt = new Date(issuedAt.getTime() + jwtConfig.getValidTime().toMillis());
@@ -42,9 +45,9 @@ public class JwtTokenProvider {
     }
 
     public String resolve(HttpServletRequest request) {
-        String token = request.getHeader("Authorization");
-        if (token != null && token.startsWith("Bearer")) {
-            return token.substring(7);
+        String token = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (token != null && token.startsWith(TOKEN_PREFIX)) {
+            return token.substring(TOKEN_PREFIX.length());
         }
         return token;
     }
