@@ -1,26 +1,30 @@
 server:
-  port: 8080
+  port: ${SERVER_PORT}
 
 spring:
   application:
     name: jangmo-community-project
-  profiles:
-    active: local
-  main:
-    allow-circular-references: true
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      idle-timeout: 5000
+      max-lifetime: 420000
+      connection-timeout: 5000
+      validation-timeout: 3000
   jpa:
     hibernate:
       ddl-auto: update
       naming:
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
-    properties:
-      hibernate:
-        jdbc.time_zone: UTC
-        format_sql: true
-        show_sql: true
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+      properties:
+        hibernate:
+          jdbc.time_zone: UTC
+          format_sql: true
+          show_sql: true
+          dialect: org.hibernate.dialect.PostgreSQLDialect
   messages:
     basename: i18n/messages
     encoding: UTF-8
@@ -28,11 +32,17 @@ spring:
     alwaysUseMessageFormat: true
     useCodeAsDefaultMessage: true
     fallbackToSystemLocale: true
+
+  main:
+    allow-circular-references: true
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+
 sms:
   api:
     key: ${SMS_API_KEY}
     secret: ${SMS_API_SECRET}
-    sender: ${JANGMO_ADMIN_MOBILE:01043053451}
+    sender: ${JANGMO_ADMIN_MOBILE}
     auth-content: "[Jangmo] 인증번호 [{authCode}]를 입력해주세요."
     mercenary-content: "[Jangmo] 용병코드는 [{mercenaryCode}]입니다."
 kakao:
@@ -49,5 +59,5 @@ jangmo:
     valid-time: ${JANGMO_JWT_VALID_TIME:2h}
   admin:
     name: "황준상"
-    mobile: ${JANGMO_ADMIN_MOBILE:01043053451}
+    mobile: ${JANGMO_ADMIN_MOBILE}
     password: ${JANGMO_ADMIN_PASSWORD}
