@@ -77,7 +77,8 @@ public class AdminInitializationConfig implements ApplicationRunner {
     private void initializeAdmin(MemberEntity admin) {
         admin.updateRole(UserRole.ADMIN);
         admin.updateStatus(MemberStatus.ENABLED);
-        if (admin.getKakaoApiUsage() == null)
+        if (admin.getKakaoApiUsage() == null) {
             admin.createKakaoApiUsage();
+        }
     }
 }
