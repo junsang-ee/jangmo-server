@@ -11,11 +11,13 @@ import com.jangmo.web.model.entity.administrative.District;
 import com.jangmo.web.model.entity.api.KakaoApiUsageEntity;
 import com.jangmo.web.utils.EncryptUtil;
 
+import com.jangmo.web.validation.DomainPreconditions;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.NoArgsConstructor;
 
 import jakarta.persistence.*;
+import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -73,14 +75,22 @@ public class MemberEntity extends UserEntity implements Serializable {
     public static MemberEntity create(final MemberSignUpRequest signup,
                                       final City city,
                                       final District district) {
+        validate(
+            signup.getName(),
+            signup.getMobile(),
+            signup.getGender(),
+            signup.getBirth(),
+            signup.getPassword()
+        );
+
         return new MemberEntity(
-                signup.getName(),
-                signup.getMobile(),
-                signup.getGender(),
-                signup.getBirth(),
-                EncryptUtil.encode(signup.getPassword()),
-                city,
-                district
+            signup.getName(),
+            signup.getMobile(),
+            signup.getGender(),
+            signup.getBirth(),
+            EncryptUtil.encode(signup.getPassword()),
+            city,
+            district
         );
     }
 
@@ -103,5 +113,29 @@ public class MemberEntity extends UserEntity implements Serializable {
 
     public void createKakaoApiUsage() {
         this.kakaoApiUsage = KakaoApiUsageEntity.create(this);
+    }
+
+    private static void validate(
+            String name,
+            String mobile,
+            Gender gender,
+            LocalDate birth,
+            String password
+    ) {
+        DomainPreconditions.validate(
+                StringUtils.hasText(name), "회원 이름은 비어있을 수 없습니다."
+        );
+        DomainPreconditions.validate(
+                StringUtils.hasText(mobile), "휴대폰번호는 비어있을 수 없습니다."
+        );
+        DomainPreconditions.validate(
+                gender != null, "성별은 필수 항목입니다."
+        );
+        DomainPreconditions.validate(
+                birth != null, "생년월일은 필수 항목입니다."
+        );
+        DomainPreconditions.validate(
+                StringUtils.hasText(password), "비밀번호는 비어있을 수 없습니다."
+        );
     }
 }
