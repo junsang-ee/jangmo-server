@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface VoteRepository extends JpaRepository<VoteEntity, String>,
-        VoteCustomRepository {
+	VoteCustomRepository {
 }

@@ -6,5 +6,5 @@ import com.jangmo.web.model.dto.response.board.ReplyCreateResponse;
 
 public interface ReplyService {
 
-    ReplyCreateResponse create(String memberId, String targetId, ReplyTargetType replyTargetType, ReplyCreateRequest request);
+	ReplyCreateResponse create(String memberId, String targetId, ReplyTargetType replyTargetType, ReplyCreateRequest request);
 }

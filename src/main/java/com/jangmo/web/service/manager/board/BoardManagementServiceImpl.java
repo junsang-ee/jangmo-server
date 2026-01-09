@@ -15,27 +15,27 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class BoardManagementServiceImpl implements BoardManagementService {
 
-    private final BoardRepository boardRepository;
+	private final BoardRepository boardRepository;
 
-    @Override
-    @Transactional
-    public BoardCreateResponse create(BoardCreateRequest request) {
-        BoardEntity board = BoardEntity.create(request.getName());
-        boardRepository.save(board);
-        return BoardCreateResponse.of(board.getName());
-    }
+	@Override
+	@Transactional
+	public BoardCreateResponse create(BoardCreateRequest request) {
+		BoardEntity board = BoardEntity.create(request.getName());
+		boardRepository.save(board);
+		return BoardCreateResponse.of(board.getName());
+	}
 
-    @Override
-    @Transactional
-    public void update(String boardId, BoardUpdateRequest request) {
-        BoardEntity board = getBoardById(boardId);
-        board.update(request.getName());
-    }
+	@Override
+	@Transactional
+	public void update(String boardId, BoardUpdateRequest request) {
+		BoardEntity board = getBoardById(boardId);
+		board.update(request.getName());
+	}
 
-    private BoardEntity getBoardById(String boardId) {
-        return boardRepository.findById(boardId).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.BOARD_NOT_FOUND)
-        );
-    }
+	private BoardEntity getBoardById(String boardId) {
+		return boardRepository.findById(boardId).orElseThrow(
+			() -> new NotFoundException(ErrorMessage.BOARD_NOT_FOUND)
+		);
+	}
 
 }

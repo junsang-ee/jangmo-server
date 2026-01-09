@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface KakaoApiUsageRepository extends JpaRepository<KakaoApiUsageEntity, String> {
-    Optional<KakaoApiUsageEntity> findByApiCaller(MemberEntity apiCaller);
+	Optional<KakaoApiUsageEntity> findByApiCaller(MemberEntity apiCaller);
 
-    void deleteByApiCaller(MemberEntity apiCaller);
+	void deleteByApiCaller(MemberEntity apiCaller);
 }

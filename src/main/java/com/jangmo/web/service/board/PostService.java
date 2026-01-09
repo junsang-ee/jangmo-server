@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface PostService {
 
-    List<PostListResponse> list(String boardId);
+  List<PostListResponse> list(String boardId);
 
-    PostEntity detail(String postId);
+  PostEntity detail(String postId);
 }

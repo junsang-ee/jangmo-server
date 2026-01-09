@@ -16,21 +16,21 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface UserManagementService {
-    void approveMercenary(String mercenaryId, String matchId);
+	void approveMercenary(String mercenaryId, String matchId);
 
-    void approveMember(String memberId);
+	void approveMember(String memberId);
 
-    List<UserEntity> getApprovalUsers();
+	List<UserEntity> getApprovalUsers();
 
-    Page<UserListResponse> getUserList(String myId, UserListSearchRequest request, Pageable pageable);
+	Page<UserListResponse> getUserList(String myId, UserListSearchRequest request, Pageable pageable);
 
-    MemberDetailResponse getMemberDetail(String memberId);
+	MemberDetailResponse getMemberDetail(String memberId);
 
-    MercenaryDetailResponse getMercenaryDetail(String mercenaryId);
+	MercenaryDetailResponse getMercenaryDetail(String mercenaryId);
 
-    void updateMemberStatus(String memberId, MemberStatus status);
+	void updateMemberStatus(String memberId, MemberStatus status);
 
-    void updateMercenaryStatus(String mercenaryId, MercenaryStatus status);
+	void updateMercenaryStatus(String mercenaryId, MercenaryStatus status);
 
-    void updateMemberRole(String memberId, UserRole role);
+	void updateMemberRole(String memberId, UserRole role);
 }

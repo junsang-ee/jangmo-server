@@ -6,10 +6,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface UserCustomRepository {
-    Page<UserListResponse> findByStatusAndUserRole(
-            String adminId,
-            String myId,
-            UserListSearchRequest request,
-            Pageable pageable
-    );
+	Page<UserListResponse> findByStatusAndUserRole(
+		String adminId,
+		String myId,
+		UserListSearchRequest request,
+		Pageable pageable
+	);
 }

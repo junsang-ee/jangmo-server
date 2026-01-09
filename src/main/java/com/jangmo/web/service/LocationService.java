@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface LocationService {
 
-    List<CityListResponse> getCityList();
+	List<CityListResponse> getCityList();
 
-    List<DistrictListResponse> getDistrictsByCityId(Long cityId);
+	List<DistrictListResponse> getDistrictsByCityId(Long cityId);
 
-    List<DistrictListResponse> getDistrictsByCityName(String cityName);
+	List<DistrictListResponse> getDistrictsByCityName(String cityName);
 }

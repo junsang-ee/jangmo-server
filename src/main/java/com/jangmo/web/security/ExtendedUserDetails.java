@@ -9,16 +9,16 @@ import org.springframework.security.core.userdetails.User;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 public class ExtendedUserDetails extends User {
-    private final String id;
+	private final String id;
 
-    public ExtendedUserDetails(String id, String mobile, UserRole role){
-        super(String.valueOf(mobile), "", AuthorityUtils.createAuthorityList("ROLE_" + role.name()));
-        this.id = id;
-    }
+	public ExtendedUserDetails(String id, String mobile, UserRole role){
+		super(String.valueOf(mobile), "", AuthorityUtils.createAuthorityList("ROLE_" + role.name()));
+		this.id = id;
+	}
 
-    public ExtendedUserDetails(String id, int phoneNumber, UserRole role, boolean enabled){
-        super(String.valueOf(phoneNumber), "", enabled, true, true, true,
-                AuthorityUtils.createAuthorityList("ROLE_" + role.name()));
-        this.id = id;
-    }
+	public ExtendedUserDetails(String id, int phoneNumber, UserRole role, boolean enabled){
+		super(String.valueOf(phoneNumber), "", enabled, true, true, true,
+			AuthorityUtils.createAuthorityList("ROLE_" + role.name()));
+		this.id = id;
+	}
 }

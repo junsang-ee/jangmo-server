@@ -11,10 +11,14 @@ import com.jangmo.web.model.entity.administrative.District;
 import com.jangmo.web.model.entity.api.KakaoApiUsageEntity;
 import com.jangmo.web.utils.EncryptUtil;
 
+import com.jangmo.web.validation.DomainPreconditions;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import jakarta.persistence.*;
+
+import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.time.LocalDate;

@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface VoteCustomRepository {
 
-    List<VoteListResponse> findVotes(VoteListRequest request);
+	List<VoteListResponse> findVotes(VoteListRequest request);
 }

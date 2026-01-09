@@ -19,49 +19,46 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class PostManagementServiceImpl implements PostManagementService {
 
-    private final BoardRepository boardRepository;
+	private final BoardRepository boardRepository;
 
-    private final PostRepository postRepository;
+	private final PostRepository postRepository;
 
-    private final MemberRepository memberRepository;
+	private final MemberRepository memberRepository;
 
-    @Override
-    @Transactional
-    public PostCreateResponse create(String memberId, String boardId, PostCreateRequest request) {
-        BoardEntity parentBoard = getBoardById(boardId);
-        MemberEntity createdBy = getMemberById(memberId);
-        PostEntity post = PostEntity.create(
-                createdBy,
-                request,
-                parentBoard
-        );
-        postRepository.save(post);
-        return PostCreateResponse.of(post.getTitle());
-    }
+	@Override
+	@Transactional
+	public PostCreateResponse create(String memberId, String boardId, PostCreateRequest request) {
+		BoardEntity parentBoard = getBoardById(boardId);
+		MemberEntity createdBy = getMemberById(memberId);
+		PostEntity post = PostEntity.create(createdBy, request, parentBoard);
+		postRepository.save(post);
+		return PostCreateResponse.of(post.getTitle());
+	}
 
-    @Override
-    @Transactional
-    public void update(String postId, PostUpdateRequest request) {
-        PostEntity post = getPostById(postId);
-        post.update(request);
-    }
+	@Override
+	@Transactional
+	public void update(String postId, PostUpdateRequest request) {
+		PostEntity post = getPostById(postId);
+		post.update(request);
+	}
 
 
-    private BoardEntity getBoardById(String boardId) {
-        return boardRepository.findById(boardId).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.BOARD_NOT_FOUND)
-        );
-    }
+	private BoardEntity getBoardById(String boardId) {
+		return boardRepository.findById(boardId).orElseThrow(
+			() -> new NotFoundException(ErrorMessage.BOARD_NOT_FOUND)
+		);
+	}
 
-    private PostEntity getPostById(String postId) {
-        return postRepository.findById(postId).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.POST_NOT_FOUND)
-        );
-    }
+	private PostEntity getPostById(String postId) {
+		return postRepository.findById(postId).orElseThrow(
+			() -> new NotFoundException(ErrorMessage.POST_NOT_FOUND)
+		);
+	}
 
-    private MemberEntity getMemberById(String memberId) {
-        return memberRepository.findById(memberId).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND)
-        );
-    }
+	private MemberEntity getMemberById(String memberId) {
+		return memberRepository.findById(memberId).orElseThrow(
+			() -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND)
+		);
+	}
+
 }

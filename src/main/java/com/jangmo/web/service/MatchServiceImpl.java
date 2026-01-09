@@ -14,19 +14,18 @@ import java.util.stream.Collectors;
 @Service
 public class MatchServiceImpl implements MatchService {
 
-    private final MatchRepository matchRepository;
+	private final MatchRepository matchRepository;
 
-    @Override
-    public List<MatchListResponse> getUpcomingMatchList() {
-        List<MatchStatus> matchStatusList = List.of(
-                MatchStatus.CONFIRMED,
-                MatchStatus.PENDING
-        );
-        return matchRepository.findAllByMatchAtAfterAndStatusIn(
-                    LocalDate.now(),
-                    matchStatusList
-                ).stream()
-                .map(MatchListResponse::of)
-                .collect(Collectors.toList());
-    }
+	@Override
+	public List<MatchListResponse> getUpcomingMatchList() {
+		List<MatchStatus> matchStatusList = List.of(
+							MatchStatus.CONFIRMED,
+							MatchStatus.PENDING
+		);
+		return matchRepository.findAllByMatchAtAfterAndStatusIn(
+			LocalDate.now(), matchStatusList
+			).stream()
+			.map(MatchListResponse::of)
+			.collect(Collectors.toList());
+	}
 }
