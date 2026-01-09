@@ -17,23 +17,23 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity(name = "kakao_api_usage")
 public class KakaoApiUsageEntity extends ModificationTimestampEntity {
 
-    @OneToOne
-    @JoinColumn(name = "api_caller", nullable = false)
-    private MemberEntity apiCaller;
+	@OneToOne
+	@JoinColumn(name = "api_caller", nullable = false)
+	private MemberEntity apiCaller;
 
-    private int usedCount;
+	private int usedCount;
 
-    private KakaoApiUsageEntity(MemberEntity apiCaller) {
-        this.apiCaller = apiCaller;
-        this.usedCount = 0;
-    }
+	private KakaoApiUsageEntity(MemberEntity apiCaller) {
+		this.apiCaller = apiCaller;
+		this.usedCount = 0;
+	}
 
-    public static KakaoApiUsageEntity create(final MemberEntity apiCaller) {
-        return new KakaoApiUsageEntity(apiCaller);
-    }
+	public static KakaoApiUsageEntity create(final MemberEntity apiCaller) {
+		return new KakaoApiUsageEntity(apiCaller);
+	}
 
-    public void increaseUsedCount() {
-        this.usedCount++;
-    }
+	public void increaseUsedCount() {
+		this.usedCount++;
+	}
 
 }

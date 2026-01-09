@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserStatusVO {
-    private MemberStatus memberStatus;
-    private MercenaryStatus mercenaryStatus;
-
+	private MemberStatus memberStatus;
+	private MercenaryStatus mercenaryStatus;
 }

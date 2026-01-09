@@ -20,20 +20,22 @@ import static com.jangmo.web.model.dto.response.common.ApiSuccessResponse.wrap;
 @RestController
 public class VoteController {
 
-    private final VoteService voteService;
+	private final VoteService voteService;
 
-    @PostMapping("/matches/{matchVoteId}")
-    public ResponseEntity<ApiSuccessResponse<MatchVoteCastResponse>> castMatchVote(
-            @PathVariable String matchVoteId,
-            @AuthenticationPrincipal(expression = "id") String userId,
-            @RequestBody @Valid MatchVoteCastRequest request) {
-        return wrap(voteService.castMatchVote(matchVoteId, userId, request));
-    }
+	@PostMapping("/matches/{matchVoteId}")
+	public ResponseEntity<ApiSuccessResponse<MatchVoteCastResponse>> castMatchVote(
+		@PathVariable String matchVoteId,
+		@AuthenticationPrincipal(expression = "id") String userId,
+		@RequestBody @Valid MatchVoteCastRequest request
+	) {
+		return wrap(voteService.castMatchVote(matchVoteId, userId, request));
+	}
 
-    @GetMapping("/matches/{matchVoteId}")
-    public ResponseEntity<ApiSuccessResponse<UserMatchVoteStatusResponse>> getMatchVoteStatus(
-            @PathVariable String matchVoteId,
-            @AuthenticationPrincipal(expression = "id") String userId) {
-        return wrap(voteService.getMatchVoteStatus(matchVoteId, userId));
-    }
+	@GetMapping("/matches/{matchVoteId}")
+	public ResponseEntity<ApiSuccessResponse<UserMatchVoteStatusResponse>> getMatchVoteStatus(
+		@PathVariable String matchVoteId,
+		@AuthenticationPrincipal(expression = "id") String userId
+	) {
+		return wrap(voteService.getMatchVoteStatus(matchVoteId, userId));
+	}
 }

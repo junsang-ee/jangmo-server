@@ -13,18 +13,16 @@ import jakarta.persistence.JoinColumn;
 
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @MappedSuperclass
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class CreationUserEntity extends ModificationTimestampEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by",
-            nullable = false,
-            updatable = false)
-    private MemberEntity createdBy;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "created_by", nullable = false, updatable = false)
+	private MemberEntity createdBy;
 
-    protected CreationUserEntity(final MemberEntity createdBy) {
-        this.createdBy = createdBy;
-    }
+	protected CreationUserEntity(final MemberEntity createdBy) {
+		this.createdBy = createdBy;
+	}
 
 }

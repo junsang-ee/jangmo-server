@@ -9,14 +9,15 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserMatchVoteStatusResponse {
 
-    private final boolean isVoted;
+	private final boolean isVoted;
 
-    private final MatchVoteOption selectedOption;
+	private final MatchVoteOption selectedOption;
 
-    public static UserMatchVoteStatusResponse of(
-            final boolean isVoted,
-            final MatchVoteOption selectedOption) {
+	public static UserMatchVoteStatusResponse of(
+		final boolean isVoted,
+		final MatchVoteOption selectedOption
+	) {
+		return new UserMatchVoteStatusResponse(isVoted, selectedOption);
+	}
 
-        return new UserMatchVoteStatusResponse(isVoted, selectedOption);
-    }
 }

@@ -10,73 +10,72 @@ import java.util.List;
 @NoArgsConstructor
 public class KakaoPlaceSearchResponse {
 
-    private Meta meta;
-    private List<Document> documents;
+	private Meta meta;
+	private List<Document> documents;
 
-    @Getter
-    @NoArgsConstructor
-    public static class Meta {
+	@Getter
+	@NoArgsConstructor
+	public static class Meta {
 
-        @JsonProperty("total_count")
-        private int totalCount;
+		@JsonProperty("total_count")
+		private int totalCount;
+		@JsonProperty("pageable_count")
+		private int pageableCount;
 
-        @JsonProperty("pageable_count")
-        private int pageableCount;
+		@JsonProperty("is_end")
+		private boolean isEnd;
 
-        @JsonProperty("is_end")
-        private boolean isEnd;
+		@JsonProperty("same_name")
+		private SameName sameName;
+	}
 
-        @JsonProperty("same_name")
-        private SameName sameName;
-    }
+	@Getter
+	@NoArgsConstructor
+	public static class SameName {
 
-    @Getter
-    @NoArgsConstructor
-    public static class SameName {
+		private List<String> region;
+		private String keyword;
 
-        private List<String> region;
-        private String keyword;
+		@JsonProperty("selected_region")
+		private String selectedRegion;
+	}
 
-        @JsonProperty("selected_region")
-        private String selectedRegion;
-    }
+	@Getter
+	@NoArgsConstructor
+	public static class Document {
 
-    @Getter
-    @NoArgsConstructor
-    public static class Document {
+		@JsonProperty("place_name")
+		private String placeName;
 
-        @JsonProperty("place_name")
-        private String placeName;
+		private String distance;
 
-        private String distance;
+		@JsonProperty("place_url")
+		private String placeUrl;
 
-        @JsonProperty("place_url")
-        private String placeUrl;
+		@JsonProperty("category_name")
+		private String categoryName;
 
-        @JsonProperty("category_name")
-        private String categoryName;
+		@JsonProperty("address_name")
+		private String addressName;
 
-        @JsonProperty("address_name")
-        private String addressName;
+		@JsonProperty("road_address_name")
+		private String roadAddressName;
 
-        @JsonProperty("road_address_name")
-        private String roadAddressName;
+		@JsonProperty("id")
+		private String placeId;
 
-        @JsonProperty("id")
-        private String placeId;
+		private String phone;
 
-        private String phone;
+		@JsonProperty("category_group_code")
+		private String categoryGroupCode;
 
-        @JsonProperty("category_group_code")
-        private String categoryGroupCode;
+		@JsonProperty("category_group_name")
+		private String categoryGroupName;
 
-        @JsonProperty("category_group_name")
-        private String categoryGroupName;
+		@JsonProperty("x")
+		private Double longitude;
 
-        @JsonProperty("x")
-        private Double longitude;
-
-        @JsonProperty("y")
-        private Double latitude;
-    }
+		@JsonProperty("y")
+		private Double latitude;
+	}
 }

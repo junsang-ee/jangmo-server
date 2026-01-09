@@ -19,22 +19,27 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity(name = "general_vote_selection")
 public class GeneralVoteSelectionEntity extends CreationTimestampEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "general_vote_user", nullable = false)
-    private GeneralVoteUserEntity generalVoteUser;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "general_vote_user", nullable = false)
+	private GeneralVoteUserEntity generalVoteUser;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "selected_option", nullable = false)
-    private GeneralVoteOptionEntity selectedOption;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "selected_option", nullable = false)
+	private GeneralVoteOptionEntity selectedOption;
 
-    private GeneralVoteSelectionEntity(GeneralVoteUserEntity generalVoteUser,
-                                       GeneralVoteOptionEntity selectedOption) {
-        this.generalVoteUser = generalVoteUser;
-        this.selectedOption = selectedOption;
-    }
+	private GeneralVoteSelectionEntity(
+		GeneralVoteUserEntity generalVoteUser,
+		GeneralVoteOptionEntity selectedOption
+	) {
+		this.generalVoteUser = generalVoteUser;
+		this.selectedOption = selectedOption;
+	}
 
-    public static GeneralVoteSelectionEntity create(final GeneralVoteUserEntity generalVoteUser,
-                                                    final GeneralVoteOptionEntity selectedOption) {
-        return new GeneralVoteSelectionEntity(generalVoteUser, selectedOption);
-    }
+	public static GeneralVoteSelectionEntity create(
+		final GeneralVoteUserEntity generalVoteUser,
+		final GeneralVoteOptionEntity selectedOption
+	) {
+		return new GeneralVoteSelectionEntity(generalVoteUser, selectedOption);
+	}
+
 }

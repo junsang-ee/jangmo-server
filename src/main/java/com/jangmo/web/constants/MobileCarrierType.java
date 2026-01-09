@@ -6,11 +6,11 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum MobileCarrierType {
-    KT("KT"),
-    SKT("SKT"),
-    LG("LG"),
-    MVNO("알뜰폰");
+	KT("KT"),
+	SKT("SKT"),
+	LG("LG"),
+	MVNO("알뜰폰");
 
-    private final String displayName;
+	private final String displayName;
 
 }

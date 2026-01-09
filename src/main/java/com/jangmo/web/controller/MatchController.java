@@ -18,10 +18,10 @@ import static com.jangmo.web.model.dto.response.common.ApiSuccessResponse.wrap;
 @RestController
 public class MatchController {
 
-    private final MatchService matchService;
+	private final MatchService matchService;
 
-    @GetMapping("/upcoming")
-    public ResponseEntity<ApiSuccessResponse<List<MatchListResponse>>> upcomingMatches() {
-        return wrap(matchService.getUpcomingMatchList());
-    }
+	@GetMapping("/upcoming")
+	public ResponseEntity<ApiSuccessResponse<List<MatchListResponse>>> upcomingMatches() {
+		return wrap(matchService.getUpcomingMatchList());
+	}
 }

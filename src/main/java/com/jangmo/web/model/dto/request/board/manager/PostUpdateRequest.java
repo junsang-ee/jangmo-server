@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostUpdateRequest {
-    private String title;
-    private String content;
+	private String title;
+	private String content;
 }

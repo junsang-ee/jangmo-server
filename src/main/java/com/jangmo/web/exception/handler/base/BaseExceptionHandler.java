@@ -9,20 +9,20 @@ import org.springframework.lang.Nullable;
 
 public class BaseExceptionHandler {
 
-    public String getMessage(String target) {
-        return MessageUtil.getMessage(target);
-    }
-    public String getMessage(String target, @Nullable String[] args) {
-        return MessageUtil.getMessage(target, args);
-    }
+	public String getMessage(String target) {
+		return MessageUtil.getMessage(target);
+	}
+	public String getMessage(String target, @Nullable String[] args) {
+		return MessageUtil.getMessage(target, args);
+	}
 
-    public ResponseEntity<ApiErrorResponse> toResponse(BaseException ex) {
-        ErrorMessage error = ex.error();
-        return toResponse(error, null);
-    }
+	public ResponseEntity<ApiErrorResponse> toResponse(BaseException ex) {
+		ErrorMessage error = ex.error();
+		return toResponse(error, null);
+	}
 
-    public ResponseEntity<ApiErrorResponse> toResponse(ErrorMessage error, String[] args) {
-        String message = getMessage(error.resName(), args);
-        return ApiErrorResponse.toResponse(error, message);
-    }
+	public ResponseEntity<ApiErrorResponse> toResponse(ErrorMessage error, String[] args) {
+		String message = getMessage(error.resName(), args);
+		return ApiErrorResponse.toResponse(error, message);
+	}
 }

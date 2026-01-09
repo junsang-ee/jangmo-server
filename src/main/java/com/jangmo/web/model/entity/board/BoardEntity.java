@@ -18,29 +18,29 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity(name = "board")
 public class BoardEntity extends ModificationTimestampEntity {
 
-    @Column(nullable = false)
-    private String name;
+	@Column(nullable = false)
+	private String name;
 
-    @Column(nullable = false)
-    private BoardActivationStatus status;
+	@Column(nullable = false)
+	private BoardActivationStatus status;
 
-    @OneToMany(mappedBy = "parentBoard",
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.REMOVE,
-            orphanRemoval = true)
-    private List<PostEntity> posts;
+	@OneToMany(mappedBy = "parentBoard",
+		fetch = FetchType.LAZY,
+		cascade = CascadeType.REMOVE,
+		orphanRemoval = true)
+	private List<PostEntity> posts;
 
-    private BoardEntity(String name) {
-        this.name = name;
-        this.status = BoardActivationStatus.ENABLED;
-        this.posts = new ArrayList<>();
-    }
+	private BoardEntity(String name) {
+		this.name = name;
+		this.status = BoardActivationStatus.ENABLED;
+		this.posts = new ArrayList<>();
+	}
 
-    public static BoardEntity create(final String name) {
-        return new BoardEntity(name);
-    }
+	public static BoardEntity create(final String name) {
+		return new BoardEntity(name);
+	}
 
-    public void update(String name) {
-        this.name = name;
-    }
+	public void update(String name) {
+		this.name = name;
+	}
 }

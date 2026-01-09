@@ -11,6 +11,6 @@ import jakarta.validation.constraints.NotBlank;
 @NoArgsConstructor
 public class BoardCreateRequest {
 
-    @NotBlank(message = "게시판 이름은 필수 항목입니다.")
-    private String name;
+	@NotBlank(message = "게시판 이름은 필수 항목입니다.")
+	private String name;
 }

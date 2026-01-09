@@ -20,21 +20,21 @@ import java.util.TimeZone;
 @EnableJpaRepositories(basePackages = "com.jangmo.web.repository")
 @EnableTransactionManagement(order = AspectOrder.TRANSACTION)
 public class JpaConfiguration {
-    static  {
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-    }
+	static  {
+		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+	}
 
-    @PersistenceContext
-    private EntityManager entityManager;
+	@PersistenceContext
+	private EntityManager entityManager;
 
-    @Bean
-    public SecurityEvaluationContextExtension securityEvaluationContextExtension() {
-        return new SecurityEvaluationContextExtension();
-    }
+	@Bean
+	public SecurityEvaluationContextExtension securityEvaluationContextExtension() {
+		return new SecurityEvaluationContextExtension();
+	}
 
-    @Bean
-    public JPAQueryFactory jpaQueryFactory() {
-        return new JPAQueryFactory(entityManager);
-    }
+	@Bean
+	public JPAQueryFactory jpaQueryFactory() {
+		return new JPAQueryFactory(entityManager);
+	}
 
 }

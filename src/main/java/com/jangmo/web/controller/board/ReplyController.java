@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class ReplyController {
 
-    private final ReplyService replyService;
+	private final ReplyService replyService;
 
 
 }

@@ -21,31 +21,33 @@ import static com.jangmo.web.model.dto.response.common.ApiSuccessResponse.wrap;
 @RestController
 public class BoardManagementController {
 
-    private final BoardManagementService boardManagementService;
+	private final BoardManagementService boardManagementService;
 
-    private final PostManagementService postManagementService;
+	private final PostManagementService postManagementService;
 
-    @PostMapping
-    public ResponseEntity<ApiSuccessResponse<BoardCreateResponse>> create(
-            @Valid @RequestBody BoardCreateRequest request) {
-        return wrap(boardManagementService.create(request));
-    }
+	@PostMapping
+	public ResponseEntity<ApiSuccessResponse<BoardCreateResponse>> create(
+		@Valid @RequestBody BoardCreateRequest request
+	) {
+		return wrap(boardManagementService.create(request));
+	}
 
-    @PatchMapping("/{boardId}")
-    public ResponseEntity<ApiSuccessResponse<Object>> update(
-            @PathVariable String boardId,
-            @RequestBody BoardUpdateRequest request) {
-        boardManagementService.update(boardId, request);
-        return wrap(null);
-    }
+	@PatchMapping("/{boardId}")
+	public ResponseEntity<ApiSuccessResponse<Object>> update(
+		@PathVariable String boardId,
+		@RequestBody BoardUpdateRequest request
+	) {
+		boardManagementService.update(boardId, request);
+		return wrap(null);
+	}
 
-    @PostMapping("/{boardId}/posts")
-    public ResponseEntity<ApiSuccessResponse<PostCreateResponse>> createPost(
-            @AuthenticationPrincipal(expression = "id") String memberId,
-            @PathVariable String boardId,
-            @Valid @RequestBody PostCreateRequest request) {
-        return wrap(postManagementService.create(memberId, boardId, request));
-    }
-
+	@PostMapping("/{boardId}/posts")
+	public ResponseEntity<ApiSuccessResponse<PostCreateResponse>> createPost(
+		@AuthenticationPrincipal(expression = "id") String memberId,
+		@PathVariable String boardId,
+		@Valid @RequestBody PostCreateRequest request
+	) {
+		return wrap(postManagementService.create(memberId, boardId, request));
+	}
 
 }

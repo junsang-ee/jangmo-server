@@ -18,18 +18,18 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 public class City extends SequentialEntity {
 
-    @Column(nullable = false)
-    private String name;
+	@Column(nullable = false)
+	private String name;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "city")
-    private List<District> districts;
+	@JsonManagedReference
+	@OneToMany(mappedBy = "city")
+	private List<District> districts;
 
-    public static City of(final String name) {
-        return new City(name);
-    }
+	public static City of(final String name) {
+		return new City(name);
+	}
 
-    protected City(String name) {
-        this.name = name;
-    }
+	protected City(String name) {
+		this.name = name;
+	}
 }

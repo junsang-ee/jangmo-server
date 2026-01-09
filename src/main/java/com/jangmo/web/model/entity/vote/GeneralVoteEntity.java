@@ -22,34 +22,33 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity(name = "general_vote")
 public class GeneralVoteEntity extends VoteEntity {
 
-    @OneToMany(mappedBy = "generalVote",
-            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
-            orphanRemoval = true)
-    private List<GeneralVoteUserEntity> voters;
+	@OneToMany(mappedBy = "generalVote",
+		cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+		orphanRemoval = true)
+	private List<GeneralVoteUserEntity> voters;
 
-    private GeneralVoteEntity(MemberEntity createdBy,
-                              GeneralVoteCreateRequest request,
-                              List<UserEntity> rawVoters) {
-        super(
-                createdBy,
-                request.getTitle(),
-                LocalDate.now(),
-                request.getEndAt(),
-                request.getModeType(),
-                VoteType.GENERAL
-        );
-        this.voters = GeneralVoteUserEntity.createAll(
-                rawVoters, this
-        );
+	private GeneralVoteEntity(
+		MemberEntity createdBy,
+		GeneralVoteCreateRequest request,
+		List<UserEntity> rawVoters
+	) {
+		super(
+			createdBy,
+			request.getTitle(),
+			LocalDate.now(),
+			request.getEndAt(),
+			request.getModeType(),
+			VoteType.GENERAL
+		);
+		this.voters = GeneralVoteUserEntity.createAll(rawVoters, this);
+	}
 
-    }
-
-    public static GeneralVoteEntity create(final MemberEntity createdBy,
-                                           final GeneralVoteCreateRequest request,
-                                           final List<UserEntity> rawVoters) {
-        return new GeneralVoteEntity(createdBy, request, rawVoters);
-    }
-
-
+	public static GeneralVoteEntity create(
+		final MemberEntity createdBy,
+		final GeneralVoteCreateRequest request,
+		final List<UserEntity> rawVoters
+	) {
+		return new GeneralVoteEntity(createdBy, request, rawVoters);
+	}
 
 }

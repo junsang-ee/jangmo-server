@@ -9,16 +9,16 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class PageResponse<T> {
-    private List<T> list;
+	private List<T> list;
 
-    private long totalCount;
+	private long totalCount;
 
-    private int totalPages;
+	private int totalPages;
 
-    public PageResponse(Page<T> page) {
-        this.list = page.getContent();
-        this.totalCount = page.getTotalElements();
-        this.totalPages = page.getTotalPages();
-    }
+	public PageResponse(Page<T> page) {
+		this.list = page.getContent();
+		this.totalCount = page.getTotalElements();
+		this.totalPages = page.getTotalPages();
+	}
 
 }

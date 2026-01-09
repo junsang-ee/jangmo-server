@@ -11,8 +11,8 @@ import static lombok.AccessLevel.PUBLIC;
 @Getter
 @RequiredArgsConstructor(access = PUBLIC)
 public class UserListResponse {
-    private final String userId;
-    private final String userName;
-    private final UserRole role;
-    private final UserStatusVO status;
+	private final String userId;
+	private final String userName;
+	private final UserRole role;
+	private final UserStatusVO status;
 }

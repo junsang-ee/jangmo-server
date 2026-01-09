@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class KakaoSearchRequest {
-    private String keyword;
+	private String keyword;
 }

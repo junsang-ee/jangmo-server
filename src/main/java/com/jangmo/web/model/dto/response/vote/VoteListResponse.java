@@ -12,10 +12,10 @@ import static lombok.AccessLevel.PUBLIC;
 @RequiredArgsConstructor(access = PUBLIC)
 public class VoteListResponse {
 
-    private final String voteId;
-    private final String title;
-    private final VoteType voteType;
-    private final LocalDate startAt;
-    private final LocalDate endAt;
+	private final String voteId;
+	private final String title;
+	private final VoteType voteType;
+	private final LocalDate startAt;
+	private final LocalDate endAt;
 
 }

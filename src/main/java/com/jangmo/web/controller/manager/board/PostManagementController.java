@@ -15,16 +15,15 @@ import static com.jangmo.web.model.dto.response.common.ApiSuccessResponse.wrap;
 @RestController
 public class PostManagementController {
 
-    private final PostManagementService postManagementService;
+	private final PostManagementService postManagementService;
 
-    @PatchMapping("/{postId}")
-    public ResponseEntity<ApiSuccessResponse<Object>> update(
-            @PathVariable String postId,
-            @Valid @RequestBody PostUpdateRequest request) {
-        postManagementService.update(postId, request);
-        return wrap(null);
-    }
-
+	@PatchMapping("/{postId}")
+	public ResponseEntity<ApiSuccessResponse<Object>> update(
+		@PathVariable String postId,
+		@Valid @RequestBody PostUpdateRequest request) {
+		postManagementService.update(postId, request);
+		return wrap(null);
+	}
 
 
 }

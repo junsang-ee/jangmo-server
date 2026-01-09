@@ -8,9 +8,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class BoardCreateResponse {
 
-    private final String name;
+	private final String name;
 
-    public static BoardCreateResponse of(final String name) {
-        return new BoardCreateResponse(name);
-    }
+	public static BoardCreateResponse of(final String name) {
+		return new BoardCreateResponse(name);
+	}
 }
