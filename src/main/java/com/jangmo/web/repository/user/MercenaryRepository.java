@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface MercenaryRepository extends JpaRepository<MercenaryEntity, String> {
-    Optional<MercenaryEntity> findByMobile(String mobile);
+	Optional<MercenaryEntity> findByMobile(String mobile);
 }

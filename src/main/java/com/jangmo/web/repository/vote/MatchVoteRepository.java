@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface MatchVoteRepository extends JpaRepository<MatchVoteEntity, String> {
 
-    List<MatchVoteEntity> findByMatchAt(LocalDate matchAt);
+	List<MatchVoteEntity> findByMatchAt(LocalDate matchAt);
 }

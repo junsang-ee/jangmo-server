@@ -18,31 +18,30 @@ import static com.jangmo.web.model.entity.vote.QVoteEntity.voteEntity;
 @Repository
 public class VoteCustomRepositoryImpl implements VoteCustomRepository {
 
-    private final JPAQueryFactory queryFactory;
+	private final JPAQueryFactory queryFactory;
 
-    @Override
-    public List<VoteListResponse> findVotes(VoteListRequest request) {
-        LocalDate startOfMonth = LocalDate.of(request.getYear(), request.getMonth(), 1);
-        LocalDate endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.lengthOfMonth());
-
-        return queryFactory
-                .select(Projections.constructor(
-                        VoteListResponse.class,
-                        voteEntity.id,
-                        voteEntity.title,
-                        voteEntity.voteType,
-                        voteEntity.startAt,
-                        voteEntity.endAt
-                ))
-                .from(voteEntity)
-                .where(
-                        voteEntity.startAt.loe(endOfMonth),
-                        voteEntity.endAt.goe(startOfMonth),
-                        voteTypeEq(request.getVoteType())
-                ).fetch();
+	@Override
+	public List<VoteListResponse> findVotes(VoteListRequest request) {
+		LocalDate startOfMonth = LocalDate.of(request.getYear(), request.getMonth(), 1);
+		LocalDate endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.lengthOfMonth());
+		return queryFactory
+			.select(Projections.constructor(
+				VoteListResponse.class,
+				voteEntity.id,
+				voteEntity.title,
+				voteEntity.voteType,
+				voteEntity.startAt,
+				voteEntity.endAt
+			))
+			.from(voteEntity)
+			.where(
+				voteEntity.startAt.loe(endOfMonth),
+				voteEntity.endAt.goe(startOfMonth),
+				voteTypeEq(request.getVoteType())
+			).fetch();
     }
 
-    private BooleanExpression voteTypeEq(VoteType voteType) {
-        return voteType != null ? voteEntity.voteType.eq(voteType) : null;
-    }
+	private BooleanExpression voteTypeEq(VoteType voteType) {
+		return voteType != null ? voteEntity.voteType.eq(voteType) : null;
+	}
 }

@@ -6,7 +6,7 @@ import com.jangmo.web.model.dto.response.vote.UserMatchVoteStatusResponse;
 
 public interface VoteService {
 
-    MatchVoteCastResponse castMatchVote(String matchVoteId, String userId, MatchVoteCastRequest request);
+	MatchVoteCastResponse castMatchVote(String matchVoteId, String userId, MatchVoteCastRequest request);
 
-    UserMatchVoteStatusResponse getMatchVoteStatus(String matchVoteId, String userId);
+	UserMatchVoteStatusResponse getMatchVoteStatus(String matchVoteId, String userId);
 }

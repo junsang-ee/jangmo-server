@@ -6,7 +6,7 @@ import com.jangmo.web.model.dto.response.board.manager.BoardCreateResponse;
 
 public interface BoardManagementService {
 
-    BoardCreateResponse create(BoardCreateRequest request);
+	BoardCreateResponse create(BoardCreateRequest request);
 
-    void update(String boardId, BoardUpdateRequest request);
+	void update(String boardId, BoardUpdateRequest request);
 }

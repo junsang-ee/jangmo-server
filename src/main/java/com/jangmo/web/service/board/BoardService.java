@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface BoardService {
 
-    List<BoardListResponse> list();
+	List<BoardListResponse> list();
 }
