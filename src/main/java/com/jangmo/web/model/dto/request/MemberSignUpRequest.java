@@ -2,6 +2,7 @@ package com.jangmo.web.model.dto.request;
 
 import com.jangmo.web.config.validator.ValidFields;
 import com.jangmo.web.constants.Gender;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -22,8 +23,11 @@ public class MemberSignUpRequest {
     @ValidFields(field = "name")
     private String name;
 
+    @Pattern(
+        regexp = "^010-\\d{4}-\\d{4}$",
+        message = "휴대폰 번호 형식이 올바르지 않습니다."
+    )
     @NotBlank(message = "휴대폰 번호는 필수 항목입니다.")
-    @ValidFields(field = "mobile")
     private String mobile;
 
     @NotNull(message = "성별은 필수 항목입니다.")

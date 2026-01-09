@@ -11,9 +11,13 @@ import java.util.ResourceBundle;
 
 public class YamlMessageSource extends ResourceBundleMessageSource {
 
-    @NotNull
-    @Override
-    protected ResourceBundle doGetBundle(@NonNull String basename, @NonNull Locale locale) throws MissingResourceException {
-        return ResourceBundle.getBundle(basename, locale, YamlResourceBundle.Control.INSTANCE);
-    }
+	@NotNull
+	@Override
+	protected ResourceBundle doGetBundle(
+		@NonNull String basename, @NonNull Locale locale
+	) throws MissingResourceException {
+		return ResourceBundle.getBundle(
+			basename, locale, YamlResourceBundle.Control.INSTANCE
+		);
+	}
 }
