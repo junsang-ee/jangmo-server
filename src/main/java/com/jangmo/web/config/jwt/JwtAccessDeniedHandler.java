@@ -13,18 +13,20 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Component
 public class JwtAccessDeniedHandler implements AccessDeniedHandler {
-    private final HandlerExceptionResolver resolver;
+	private final HandlerExceptionResolver resolver;
 
-    public JwtAccessDeniedHandler(
-            @Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver) {
-        this.resolver = resolver;
-    }
+	public JwtAccessDeniedHandler(
+		@Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver) {
+		this.resolver = resolver;
+	}
 
-    @Override
-    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) {
-        resolver.resolveException(request, response, null, new AuthException(
-                ErrorMessage.AUTH_PERMISSION_DENIED
-        ));
-    }
+	@Override
+	public void handle(
+		HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException
+	) {
+		resolver.resolveException(
+			request, response, null, new AuthException(ErrorMessage.AUTH_PERMISSION_DENIED)
+		);
+	}
 }
 

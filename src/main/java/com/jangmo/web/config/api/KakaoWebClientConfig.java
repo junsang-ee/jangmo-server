@@ -19,28 +19,27 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 public class KakaoWebClientConfig {
 
-    private final KakaoApiProperties kakaoProperties;
+	private final KakaoApiProperties kakaoProperties;
 
-    @Bean(name = "kakaoWebClient")
-    public WebClient kakaoWebClient(WebClient.Builder webClientBuilder,
-                                    ObjectMapper objectMapper,
-                                    ExchangeStrategies defaultExchangeStrategies) {
-        ExchangeStrategies strategies = defaultExchangeStrategies.mutate()
-                .codecs(config -> {
-                    config.defaultCodecs().jackson2JsonEncoder(
-                            new Jackson2JsonEncoder(objectMapper, MediaType.APPLICATION_JSON)
-                    );
-                    config.defaultCodecs().jackson2JsonDecoder(
-                            new Jackson2JsonDecoder(objectMapper, MediaType.APPLICATION_JSON)
-                    );
-                })
-                .build();
+	@Bean(name = "kakaoWebClient")
+	public WebClient kakaoWebClient(WebClient.Builder webClientBuilder,
+																	ObjectMapper objectMapper,
+																	ExchangeStrategies defaultExchangeStrategies) {
+		ExchangeStrategies strategies = defaultExchangeStrategies.mutate()
+			.codecs(config -> {
+				config.defaultCodecs().jackson2JsonEncoder(
+					new Jackson2JsonEncoder(objectMapper, MediaType.APPLICATION_JSON)
+				);
+				config.defaultCodecs().jackson2JsonDecoder(
+					new Jackson2JsonDecoder(objectMapper, MediaType.APPLICATION_JSON)
+				);
+			}).build();
 
-        return webClientBuilder
-                .baseUrl(kakaoProperties.uri())
-                .exchangeStrategies(strategies)
-                .defaultHeader("Authorization", "KakaoAK " + kakaoProperties.key())
-                .build();
-    }
+		return webClientBuilder
+						.baseUrl(kakaoProperties.uri())
+						.exchangeStrategies(strategies)
+						.defaultHeader("Authorization", "KakaoAK " + kakaoProperties.key())
+						.build();
+	}
 
 }

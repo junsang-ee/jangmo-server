@@ -96,16 +96,19 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
             final UserRole role,
             final MemberStatus memberStatus,
             final MercenaryStatus mercenaryStatus) {
-        if (!ObjectUtils.isEmpty(role)) {
-            if (role == UserRole.MEMBER) {
-                return memberStatus != null ? memberEntity.status.eq(memberStatus) : null;
-            } else if (role == UserRole.MERCENARY)
-                return mercenaryStatus != null ? mercenaryEntity.status.eq(mercenaryStatus) : null;
-        }
+
         BooleanExpression memberCondition =
                 memberStatus != null ? memberEntity.status.eq(memberStatus) : null;
+
         BooleanExpression mercenaryCondition =
                 mercenaryStatus != null ? mercenaryEntity.status.eq(mercenaryStatus) : null;
+        if (role == UserRole.MEMBER) {
+            return memberCondition;
+        }
+
+        if (role == UserRole.MERCENARY) {
+            return mercenaryCondition;
+        }
         return combineUserStatusCondition(memberCondition, mercenaryCondition);
     }
 
