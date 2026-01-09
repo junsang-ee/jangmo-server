@@ -11,23 +11,23 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.GenerationType;
 
-@Getter
 @MappedSuperclass
 public abstract class SequentialEntity implements Persistable<Long> {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Long id;
 
-    @Override
-    @JsonIgnore
-    public boolean isNew() {
-        return id == null;
-    }
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	private @Getter Long id;
 
-    @Override
-    public String toString() {
-        return MoreObjects.toStringHelper(this).omitNullValues()
-                .add("id", id).toString();
-    }
+	@Override
+	@JsonIgnore
+	public boolean isNew() {
+			return id == null;
+	}
+
+	@Override
+	public String toString() {
+		return MoreObjects.toStringHelper(this).omitNullValues()
+			.add("id", id).toString();
+	}
 }

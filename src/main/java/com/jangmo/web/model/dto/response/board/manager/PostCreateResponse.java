@@ -8,10 +8,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class PostCreateResponse {
 
-    private final String title;
+	private final String title;
 
-    public static PostCreateResponse of(final String title) {
-        return new PostCreateResponse(title);
-    }
+	public static PostCreateResponse of(final String title) {
+		return new PostCreateResponse(title);
+	}
 
 }

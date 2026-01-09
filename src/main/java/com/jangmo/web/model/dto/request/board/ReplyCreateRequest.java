@@ -9,6 +9,6 @@ import jakarta.validation.constraints.NotBlank;
 @NoArgsConstructor
 public class ReplyCreateRequest {
 
-    @NotBlank(message = "댓글 내용은 비어 있을 수 없습니다.")
-    private String content;
+	@NotBlank(message = "댓글 내용은 비어 있을 수 없습니다.")
+	private String content;
 }

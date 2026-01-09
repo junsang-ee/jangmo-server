@@ -16,31 +16,31 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity(name = "reply")
 public class ReplyEntity extends CreationUserEntity {
 
-    @Column(nullable = false)
-    private String content;
+  @Column(nullable = false)
+  private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reply_target", nullable = false)
-    private ReplyTargetEntity target;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "reply_target", nullable = false)
+  private ReplyTargetEntity target;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private ReplyActivationStatus status;
+  @Column(nullable = false)
+  @Enumerated(EnumType.STRING)
+  private ReplyActivationStatus status;
 
-    private ReplyEntity(MemberEntity createdBy,
-                        ReplyTargetEntity target,
-                        String content) {
-        super(createdBy);
-        this.content = content;
-        this.target = target;
-        this.status = ReplyActivationStatus.ENABLED;
-    }
+  private ReplyEntity(MemberEntity createdBy, ReplyTargetEntity target, String content) {
+	super(createdBy);
+	this.content = content;
+	this.target = target;
+	this.status = ReplyActivationStatus.ENABLED;
+  }
 
-    public static ReplyEntity create(final MemberEntity createdBy,
-                                     final ReplyTargetEntity target,
-                                     final ReplyCreateRequest request) {
-        return new ReplyEntity(
-                createdBy, target, request.getContent()
-        );
-    }
+  public static ReplyEntity create(
+  	final MemberEntity createdBy,
+  	final ReplyTargetEntity target,
+	final ReplyCreateRequest request
+  ) {
+	return new ReplyEntity(
+	  createdBy, target, request.getContent()
+	);
+  }
 }

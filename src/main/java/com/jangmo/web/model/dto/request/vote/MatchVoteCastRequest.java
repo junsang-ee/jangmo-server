@@ -13,8 +13,8 @@ import jakarta.validation.constraints.NotNull;
 @AllArgsConstructor
 public class MatchVoteCastRequest {
 
-    @NotNull(message = "투표 옵션은 필수 항목입니다.")
-    @ValidFields(field = "matchVoteOption")
-    private MatchVoteOption option;
+	@NotNull(message = "투표 옵션은 필수 항목입니다.")
+	@ValidFields(field = "matchVoteOption")
+	private MatchVoteOption option;
 
 }

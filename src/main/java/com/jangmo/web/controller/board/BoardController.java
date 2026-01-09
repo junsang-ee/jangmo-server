@@ -21,19 +21,17 @@ import static com.jangmo.web.model.dto.response.common.ApiSuccessResponse.wrap;
 @RestController
 public class BoardController {
 
-    private final BoardService boardService;
+	private final BoardService boardService;
 
-    private final PostService postService;
+	private final PostService postService;
 
-    @GetMapping
-    public ResponseEntity<ApiSuccessResponse<List<BoardListResponse>>> list() {
-        return wrap(boardService.list());
-    }
+	@GetMapping
+	public ResponseEntity<ApiSuccessResponse<List<BoardListResponse>>> list() {
+		return wrap(boardService.list());
+	}
 
-    @GetMapping("/{boardId}/posts")
-    public ResponseEntity<ApiSuccessResponse<List<PostListResponse>>> postList(
-            @PathVariable String boardId
-    ) {
-        return wrap(postService.list(boardId));
-    }
+	@GetMapping("/{boardId}/posts")
+	public ResponseEntity<ApiSuccessResponse<List<PostListResponse>>> postList(@PathVariable String boardId) {
+		return wrap(postService.list(boardId));
+	}
 }

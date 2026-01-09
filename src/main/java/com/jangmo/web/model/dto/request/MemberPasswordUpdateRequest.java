@@ -10,11 +10,11 @@ import jakarta.validation.constraints.NotBlank;
 @NoArgsConstructor
 public class MemberPasswordUpdateRequest {
 
-    @NotBlank(message = "현재 비밀번호는 필수 항목입니다.")
-    @ValidFields(field = "password")
-    private String oldPassword;
+	@NotBlank(message = "현재 비밀번호는 필수 항목입니다.")
+	@ValidFields(field = "password")
+	private String oldPassword;
 
-    @NotBlank(message = "새로운 비밀번호는 필수 항목입니다.")
-    @ValidFields(field = "password")
-    private String newPassword;
+	@NotBlank(message = "새로운 비밀번호는 필수 항목입니다.")
+	@ValidFields(field = "password")
+	private String newPassword;
 }

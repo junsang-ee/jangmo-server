@@ -29,69 +29,74 @@ import static com.jangmo.web.model.dto.response.common.ApiSuccessResponse.wrap;
 @RestController
 public class UserManagementController {
 
-    private final UserManagementService userManagementService;
+	private final UserManagementService userManagementService;
 
-    @GetMapping("/users")
-    public ResponseEntity<ApiSuccessResponse<PageResponse<UserListResponse>>> getUserList(
-            @AuthenticationPrincipal(expression = "id") String myId,
-            @ParameterObject UserListSearchRequest request,
-            Pageable pageable) {
-        return page(userManagementService.getUserList(myId, request, pageable));
-    }
+	@GetMapping("/users")
+	public ResponseEntity<ApiSuccessResponse<PageResponse<UserListResponse>>> getUserList(
+		@AuthenticationPrincipal(expression = "id") String myId,
+		@ParameterObject UserListSearchRequest request,
+		Pageable pageable
+	) {
+		return page(userManagementService.getUserList(myId, request, pageable));
+	}
 
 
-    @GetMapping("/members/{memberId}")
-    public ResponseEntity<ApiSuccessResponse<MemberDetailResponse>> getMemberDetail(@PathVariable String memberId) {
-        return wrap(userManagementService.getMemberDetail(memberId));
-    }
+	@GetMapping("/members/{memberId}")
+	public ResponseEntity<ApiSuccessResponse<MemberDetailResponse>> getMemberDetail(@PathVariable String memberId) {
+		return wrap(userManagementService.getMemberDetail(memberId));
+	}
 
-    @GetMapping("/mercenaries/{mercenaryId}")
-    public ResponseEntity<ApiSuccessResponse<MercenaryDetailResponse>> getMercenaryDetail(@PathVariable String mercenaryId) {
-        return wrap(userManagementService.getMercenaryDetail(mercenaryId));
-    }
+	@GetMapping("/mercenaries/{mercenaryId}")
+	public ResponseEntity<ApiSuccessResponse<MercenaryDetailResponse>> getMercenaryDetail(@PathVariable String mercenaryId) {
+		return wrap(userManagementService.getMercenaryDetail(mercenaryId));
+	}
 
-    @PatchMapping("/mercenaries/{mercenaryId}/approve")
-    public ResponseEntity<ApiSuccessResponse<Object>> approveMercenary(
-            @PathVariable String mercenaryId,
-            @RequestBody MercenaryMatchRequest matchRequest) {
-        userManagementService.approveMercenary(mercenaryId, matchRequest.getMatchId());
-        return wrap(null);
-    }
+	@PatchMapping("/mercenaries/{mercenaryId}/approve")
+	public ResponseEntity<ApiSuccessResponse<Object>> approveMercenary(
+		@PathVariable String mercenaryId,
+		@RequestBody MercenaryMatchRequest matchRequest
+	) {
+		userManagementService.approveMercenary(mercenaryId, matchRequest.getMatchId());
+		return wrap(null);
+	}
 
-    @PatchMapping("/members/{memberId}/approve")
-    public ResponseEntity<ApiSuccessResponse<Object>> approveMember(@PathVariable String memberId) {
-        userManagementService.approveMember(memberId);
-        return wrap(null);
-    }
+	@PatchMapping("/members/{memberId}/approve")
+	public ResponseEntity<ApiSuccessResponse<Object>> approveMember(@PathVariable String memberId) {
+		userManagementService.approveMember(memberId);
+		return wrap(null);
+	}
 
-    @PatchMapping("/members/{memberId}/status/{status}")
-    public ResponseEntity<ApiSuccessResponse<Object>> updateMemberStatus(
-            @PathVariable String memberId,
-            @PathVariable MemberStatus status) {
-        userManagementService.updateMemberStatus(memberId, status);
-        return wrap(null);
-    }
+	@PatchMapping("/members/{memberId}/status/{status}")
+	public ResponseEntity<ApiSuccessResponse<Object>> updateMemberStatus(
+		@PathVariable String memberId,
+		@PathVariable MemberStatus status
+	) {
+		userManagementService.updateMemberStatus(memberId, status);
+		return wrap(null);
+	}
 
-    @PatchMapping("/mercenaries/{mercenaryId}/status/{status}")
-    public ResponseEntity<ApiSuccessResponse<Object>> updateMercenaryStatus(
-            @PathVariable String mercenaryId,
-            @PathVariable MercenaryStatus status) {
-        userManagementService.updateMercenaryStatus(mercenaryId, status);
-        return wrap(null);
-    }
+	@PatchMapping("/mercenaries/{mercenaryId}/status/{status}")
+	public ResponseEntity<ApiSuccessResponse<Object>> updateMercenaryStatus(
+		@PathVariable String mercenaryId,
+		@PathVariable MercenaryStatus status
+	) {
+		userManagementService.updateMercenaryStatus(mercenaryId, status);
+		return wrap(null);
+	}
 
-    @PatchMapping("/members/{memberId}/role")
-    public ResponseEntity<ApiSuccessResponse<Object>> updateMemberRole(
-            @PathVariable String memberId,
-            @RequestBody MemberRoleUpdateRequest request) {
-        userManagementService.updateMemberRole(memberId, request.getRole());
-        return wrap(null);
-    }
+	@PatchMapping("/members/{memberId}/role")
+	public ResponseEntity<ApiSuccessResponse<Object>> updateMemberRole(
+		@PathVariable String memberId,
+		@RequestBody MemberRoleUpdateRequest request
+	) {
+		userManagementService.updateMemberRole(memberId, request.getRole());
+		return wrap(null);
+	}
 
-    @GetMapping("/users/pending-approval")
-    public ResponseEntity<ApiSuccessResponse<List<UserEntity>>> getApprovalUsers() {
-        return wrap(userManagementService.getApprovalUsers());
-    }
+	@GetMapping("/users/pending-approval")
+	public ResponseEntity<ApiSuccessResponse<List<UserEntity>>> getApprovalUsers() {
+		return wrap(userManagementService.getApprovalUsers());
+	}
 
 
 }

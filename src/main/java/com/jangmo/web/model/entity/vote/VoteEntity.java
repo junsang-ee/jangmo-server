@@ -27,35 +27,37 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity(name = "vote")
 public class VoteEntity extends ReplyTargetEntity {
 
-    @Column(nullable = false)
-    private String title;
+	@Column(nullable = false)
+	private String title;
 
-    @Column(nullable = false)
-    private LocalDate startAt;
+	@Column(nullable = false)
+	private LocalDate startAt;
 
-    @Column(nullable = false)
-    private LocalDate endAt;
+	@Column(nullable = false)
+	private LocalDate endAt;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private VoteModeType modeType;
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private VoteModeType modeType;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private VoteType voteType;
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private VoteType voteType;
 
-    protected VoteEntity(MemberEntity createdBy,
-                         String title,
-                         LocalDate startAt,
-                         LocalDate endAt,
-                         VoteModeType modeType,
-                         VoteType voteType) {
-        super(createdBy);
-        this.title = title;
-        this.startAt = startAt;
-        this.endAt = endAt;
-        this.modeType = modeType;
-        this.voteType = voteType;
-    }
+	protected VoteEntity(
+		MemberEntity createdBy,
+		String title,
+		LocalDate startAt,
+		LocalDate endAt,
+		VoteModeType modeType,
+		VoteType voteType
+	) {
+		super(createdBy);
+		this.title = title;
+		this.startAt = startAt;
+		this.endAt = endAt;
+		this.modeType = modeType;
+		this.voteType = voteType;
+	}
 
 }

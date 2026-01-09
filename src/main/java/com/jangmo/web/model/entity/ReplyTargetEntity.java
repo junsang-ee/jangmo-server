@@ -16,8 +16,8 @@ import static jakarta.persistence.InheritanceType.JOINED;
 @Entity(name = "reply_target")
 public abstract class ReplyTargetEntity extends CreationUserEntity {
 
-    protected ReplyTargetEntity(MemberEntity createdBy) {
-        super(createdBy);
-    }
+	protected ReplyTargetEntity(MemberEntity createdBy) {
+		super(createdBy);
+	}
 
 }

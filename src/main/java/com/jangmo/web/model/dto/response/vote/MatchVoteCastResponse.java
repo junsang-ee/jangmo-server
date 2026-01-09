@@ -9,9 +9,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class MatchVoteCastResponse {
 
-    private final MatchVoteOption selectedOption;
+	private final MatchVoteOption selectedOption;
 
-    public static MatchVoteCastResponse of(final MatchVoteOption option) {
-        return new MatchVoteCastResponse(option);
-    }
+	public static MatchVoteCastResponse of(final MatchVoteOption option) {
+		return new MatchVoteCastResponse(option);
+	}
 }

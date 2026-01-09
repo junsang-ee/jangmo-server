@@ -15,15 +15,15 @@ import jakarta.persistence.Enumerated;
 @NoArgsConstructor
 public class UserListSearchRequest {
 
-    @Enumerated(EnumType.STRING)
-    private UserRole role;
+	@Enumerated(EnumType.STRING)
+	private UserRole role;
 
-    @Enumerated(EnumType.STRING)
-    private MemberStatus memberStatus;
+	@Enumerated(EnumType.STRING)
+	private MemberStatus memberStatus;
 
-    @Enumerated(EnumType.STRING)
-    private MercenaryStatus mercenaryStatus;
+	@Enumerated(EnumType.STRING)
+	private MercenaryStatus mercenaryStatus;
 
-    private String searchKeyword;
+	private String searchKeyword;
 
 }

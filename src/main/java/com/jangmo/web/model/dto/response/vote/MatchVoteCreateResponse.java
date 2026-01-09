@@ -13,21 +13,21 @@ import java.time.LocalDate;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class MatchVoteCreateResponse {
 
-    private final LocalDate startAt;
+	private final LocalDate startAt;
 
-    private final LocalDate endAt;
+	private final LocalDate endAt;
 
-    private final LocalDate matchAt;
+	private final LocalDate matchAt;
 
-    private final String creatorName;
+	private final String creatorName;
 
-    public static MatchVoteCreateResponse of(final MatchVoteEntity matchVote) {
-        return new MatchVoteCreateResponse(
-                matchVote.getStartAt(),
-                matchVote.getEndAt(),
-                matchVote.getMatchAt(),
-                matchVote.getCreatedBy().getName()
-        );
-    }
+	public static MatchVoteCreateResponse of(final MatchVoteEntity matchVote) {
+		return new MatchVoteCreateResponse(
+			matchVote.getStartAt(),
+			matchVote.getEndAt(),
+			matchVote.getMatchAt(),
+			matchVote.getCreatedBy().getName()
+		);
+	}
 
 }

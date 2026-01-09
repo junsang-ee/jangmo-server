@@ -6,15 +6,14 @@ import org.springframework.http.ResponseEntity;
 
 @Getter
 public class ApiErrorResponse extends ApiResponse {
-    public ApiErrorResponse(int code, String message) {
-        super(code, message);
-    }
+	public ApiErrorResponse(int code, String message) {
+			super(code, message);
+	}
 
-    public static ResponseEntity<ApiErrorResponse> toResponse(ErrorMessage error, String message) {
-
-        return ResponseEntity.status(error.status())
-                .body(
-                        new ApiErrorResponse(error.code(), message)
-                );
-    }
+	public static ResponseEntity<ApiErrorResponse> toResponse(ErrorMessage error, String message) {
+		return ResponseEntity.status(error.status())
+			.body(
+				new ApiErrorResponse(error.code(), message)
+			);
+	}
 }

@@ -25,50 +25,48 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity(name = "match_vote")
 public class MatchVoteEntity extends VoteEntity {
 
-    @Column(nullable = false)
-    private LocalDate matchAt;
+	@Column(nullable = false)
+	private LocalDate matchAt;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
-            orphanRemoval = true,
-            fetch = FetchType.LAZY)
-    @JoinColumn(name = "match", nullable = false)
-    private MatchEntity match;
+	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+		orphanRemoval = true,
+		fetch = FetchType.LAZY)
+	@JoinColumn(name = "match", nullable = false)
+	private MatchEntity match;
 
-    @OneToMany(mappedBy = "matchVote",
-            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
-            orphanRemoval = true)
-    private List<MatchVoteUserEntity> voters;
+	@OneToMany(mappedBy = "matchVote",
+		cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+		orphanRemoval = true)
+	private List<MatchVoteUserEntity> voters;
 
-    private MatchVoteEntity(MemberEntity createdBy,
-                            MatchVoteCreateRequest request,
-                            List<UserEntity> rawVoters) {
-        super(
-                createdBy,
-                request.getTitle(),
-                LocalDate.now(),
-                request.getEndAt(),
-                request.getModeType(),
-                VoteType.MATCH
-        );
-        this.matchAt = request.getMatchAt();
-        this.match = MatchEntity.create(
-                createdBy,
-                request.getMatchAt(),
-                request.getMatchType(),
-                this
-        );
-        this.voters = MatchVoteUserEntity.createAll(
-                rawVoters, this
-        );
-    }
+	private MatchVoteEntity(
+		MemberEntity createdBy,
+		MatchVoteCreateRequest request,
+		List<UserEntity> rawVoters) {
+		super(
+			createdBy,
+			request.getTitle(),
+			LocalDate.now(),
+			request.getEndAt(),
+			request.getModeType(),
+			VoteType.MATCH
+		);
+		this.matchAt = request.getMatchAt();
+		this.match = MatchEntity.create(
+			createdBy, request.getMatchAt(), request.getMatchType(), this
+		);
+		this.voters = MatchVoteUserEntity.createAll(rawVoters, this);
+	}
 
-    public static MatchVoteEntity create(final MemberEntity createdBy,
-                                         final MatchVoteCreateRequest request,
-                                         final List<UserEntity> rawVoters) {
-        return new MatchVoteEntity(createdBy, request, rawVoters);
-    }
+	public static MatchVoteEntity create(
+		final MemberEntity createdBy,
+		final MatchVoteCreateRequest request,
+		final List<UserEntity> rawVoters
+	) {
+		return new MatchVoteEntity(createdBy, request, rawVoters);
+	}
 
-    public void addVoter(MatchVoteUserEntity voter) {
+	public void addVoter(MatchVoteUserEntity voter) {
         voters.add(voter);
     }
 

@@ -15,40 +15,38 @@ import jakarta.annotation.PostConstruct;
 @Component
 public class SmsProvider {
 
-    private final SmsProperties smsProperties;
+	private final SmsProperties smsProperties;
 
-    private static final String SMS_API_ENDPOINT = "https://api.coolsms.co.kr";
+	private static final String SMS_API_ENDPOINT = "https://api.coolsms.co.kr";
 
-    private DefaultMessageService messageService;
+	private DefaultMessageService messageService;
 
-    @PostConstruct
-    public void init() {
-        messageService = NurigoApp.INSTANCE.initialize(
-                smsProperties.key(),
-                smsProperties.secret(),
-                SMS_API_ENDPOINT
-        );
-    }
+	@PostConstruct
+	public void init() {
+		messageService = NurigoApp.INSTANCE.initialize(
+			smsProperties.key(),
+			smsProperties.secret(),
+			SMS_API_ENDPOINT
+		);
+	}
 
-    public void send(String to, String code, SmsType type) {
-        String content = "";
-        if (type == SmsType.AUTH_CODE) {
-            content = smsProperties.authContent().replace(
-                    "{authCode}", code
-            );
-        } else if (type == SmsType.MERCENARY_CODE){
-            content = smsProperties.mercenaryContent().replace(
-                    "{mercenaryCode}", code
-            );
-        }
+	public void send(String to, String code, SmsType type) {
+		String content = "";
+		if (type == SmsType.AUTH_CODE) {
+			content = smsProperties.authContent().replace(
+				"{authCode}", code
+			);
+		} else if (type == SmsType.MERCENARY_CODE){
+			content = smsProperties.mercenaryContent().replace(
+				"{mercenaryCode}", code
+			);
+		}
 
-        Message message = new Message();
-        message.setFrom(smsProperties.sender());
-        message.setTo(to);
-        message.setText(content);
+		Message message = new Message();
+		message.setFrom(smsProperties.sender());
+		message.setTo(to);
+		message.setText(content);
 
-        messageService.sendOne(
-                new SingleMessageSendingRequest(message)
-        );
-    }
+		messageService.sendOne(new SingleMessageSendingRequest(message));
+	}
 }

@@ -16,22 +16,20 @@ import static lombok.AccessLevel.PROTECTED;
 @MappedSuperclass
 public abstract class AbstractVoteUserEntity extends ModificationTimestampEntity {
 
-    @Column(nullable = false)
-    private String voterId;
+	@Column(nullable = false)
+	private String voterId;
 
-    @Column(nullable = false)
-    private String voterName;
+	@Column(nullable = false)
+	private String voterName;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private UserRole voterRole;
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private UserRole voterRole;
 
-    protected AbstractVoteUserEntity(final UserEntity voter) {
-        this.voterId = voter.getId();
-        this.voterName = voter.getName();
-        this.voterRole = voter.getRole();
-    }
-
-
+	protected AbstractVoteUserEntity(final UserEntity voter) {
+		this.voterId = voter.getId();
+		this.voterName = voter.getName();
+		this.voterRole = voter.getRole();
+	}
 
 }

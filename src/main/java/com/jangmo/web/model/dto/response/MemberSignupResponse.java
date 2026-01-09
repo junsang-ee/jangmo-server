@@ -10,21 +10,20 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class MemberSignupResponse {
-    private final String name;
-    private final String mobile;
-    private final int old;
-    private final String address;
-    private final Gender gender;
+	private final String name;
+	private final String mobile;
+	private final int old;
+	private final String address;
+	private final Gender gender;
 
-    public static MemberSignupResponse of(final MemberEntity member) {
-        String address = member.getCity().getName() +
-                " " + member.getDistrict().getName();
-        return new MemberSignupResponse(
-                member.getName(),
-                member.getMobile(),
-                AgeUtil.calculate(member.getBirth()),
-                address,
-                member.getGender()
-        );
-    }
+	public static MemberSignupResponse of(final MemberEntity member) {
+		String address = member.getCity().getName() + " " + member.getDistrict().getName();
+		return new MemberSignupResponse(
+			member.getName(),
+			member.getMobile(),
+			AgeUtil.calculate(member.getBirth()),
+			address,
+			member.getGender()
+		);
+	}
 }
