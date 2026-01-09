@@ -1,12 +1,14 @@
 package com.jangmo.web.constants.message;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import org.springframework.http.HttpStatus;
 
+import java.text.MessageFormat;
+
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public enum ErrorMessage {
     REQUEST_QUERY_PARAM(100, HttpStatus.BAD_REQUEST),
     REQUEST_BODY_FIELD(101, HttpStatus.BAD_REQUEST),
@@ -15,7 +17,7 @@ public enum ErrorMessage {
     REQUEST_INVALID_NAME(112, HttpStatus.BAD_REQUEST),
     REQUEST_INVALID_CODE(113, HttpStatus.BAD_REQUEST),
     REQUEST_INVALID_MERCENARY_CODE(114, HttpStatus.BAD_REQUEST),
-
+    INVALID_DOMAIN_FIELD(300, HttpStatus.BAD_REQUEST),
     BAD_REQUEST(400, HttpStatus.BAD_REQUEST),
 
     /* 1000 ~ 1100 (signup error) */
@@ -75,6 +77,10 @@ public enum ErrorMessage {
 
     public String resName() {
         return "response.error." + name().toLowerCase().replaceAll("_", ".") + ".message";
+    }
+
+    public String messageFormat(Object... args) {
+        return MessageFormat.format(resName(), args);
     }
 
     public static ErrorMessage from(int code) {
