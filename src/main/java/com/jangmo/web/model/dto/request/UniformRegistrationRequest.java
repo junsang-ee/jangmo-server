@@ -9,6 +9,6 @@ import jakarta.validation.constraints.NotNull;
 @NoArgsConstructor
 public class UniformRegistrationRequest {
 
-    @NotNull(message = "등번호는 필수 항목입니다.")
-    private Integer backNumber;
+	@NotNull(message = "등번호는 필수 항목입니다.")
+	private Integer backNumber;
 }

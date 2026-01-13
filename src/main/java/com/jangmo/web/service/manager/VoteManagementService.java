@@ -10,9 +10,9 @@ import com.jangmo.web.model.dto.response.vote.VoteListResponse;
 import java.util.List;
 
 public interface VoteManagementService {
-    MatchVoteCreateResponse createMatchVote(String userId, MatchVoteCreateRequest request);
+	MatchVoteCreateResponse createMatchVote(String userId, MatchVoteCreateRequest request);
 
-    GeneralVoteCreateResponse createGeneralVote(String userId, GeneralVoteCreateRequest request);
+	GeneralVoteCreateResponse createGeneralVote(String userId, GeneralVoteCreateRequest request);
 
-    List<VoteListResponse> getVotes(VoteListRequest request);
+	List<VoteListResponse> getVotes(VoteListRequest request);
 }

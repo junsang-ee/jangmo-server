@@ -4,7 +4,7 @@ import com.jangmo.web.constants.message.ErrorMessage;
 
 public class ConflictStateException extends ConflictException {
 
-    public ConflictStateException(ErrorMessage error) {
-        super(error);
-    }
+	public ConflictStateException(ErrorMessage error) {
+		super(error);
+	}
 }

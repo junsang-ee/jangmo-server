@@ -16,11 +16,11 @@ import java.time.Instant;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class CreationTimestampEntity extends BaseUuidEntity {
 
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @JsonFormat(shape = JsonFormat.Shape.STRING,
-            pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
-            timezone = "Asia/Seoul")
-    private Instant createdAt;
+	@CreatedDate
+	@Column(nullable = false, updatable = false)
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	@JsonFormat(shape = JsonFormat.Shape.STRING,
+		pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
+		timezone = "Asia/Seoul")
+	private Instant createdAt;
 }

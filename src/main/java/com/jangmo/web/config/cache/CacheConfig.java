@@ -17,18 +17,18 @@ import java.util.stream.Collectors;
 @EnableCaching
 @Configuration
 public class CacheConfig {
-    @Bean
-    public CacheManager cacheManager() {
-        SimpleCacheManager cacheManager = new SimpleCacheManager();
-        List<CaffeineCache> caches = Arrays.stream(CacheType.values())
-                .map(cache -> new CaffeineCache(
-                        cache.getName(),
-                        Caffeine.newBuilder().recordStats()
-                                .expireAfterWrite(cache.getExpiredTime(), TimeUnit.MINUTES)
-                                .maximumSize(cache.getMaximumSize())
-                                .build())
-                ).collect(Collectors.toList());
-        cacheManager.setCaches(caches);
-        return cacheManager;
-    }
+	@Bean
+	public CacheManager cacheManager() {
+		SimpleCacheManager cacheManager = new SimpleCacheManager();
+		List<CaffeineCache> caches = Arrays.stream(CacheType.values())
+			.map(cache -> new CaffeineCache(
+				cache.getName(),
+				Caffeine.newBuilder().recordStats()
+					.expireAfterWrite(cache.getExpiredTime(), TimeUnit.MINUTES)
+					.maximumSize(cache.getMaximumSize())
+					.build())
+			).collect(Collectors.toList());
+		cacheManager.setCaches(caches);
+		return cacheManager;
+	}
 }

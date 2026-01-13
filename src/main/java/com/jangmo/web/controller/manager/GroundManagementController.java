@@ -19,20 +19,22 @@ import static com.jangmo.web.model.dto.response.common.ApiSuccessResponse.wrap;
 @RestController
 public class GroundManagementController {
 
-    private final GroundManagementService groundManagementService;
+	private final GroundManagementService groundManagementService;
 
-    @GetMapping("/{keyword}")
-    public ResponseEntity<ApiSuccessResponse<List<SearchPlaceResponse>>> searchGrounds(
-            @AuthenticationPrincipal(expression = "id") String searcherId,
-            @PathVariable String keyword) {
-        return wrap(groundManagementService.searchGrounds(searcherId, keyword));
-    }
+	@GetMapping("/{keyword}")
+	public ResponseEntity<ApiSuccessResponse<List<SearchPlaceResponse>>> searchGrounds(
+		@AuthenticationPrincipal(expression = "id") String searcherId,
+		@PathVariable String keyword
+	) {
+		return wrap(groundManagementService.searchGrounds(searcherId, keyword));
+	}
 
-    @PostMapping
-    public ResponseEntity<ApiSuccessResponse<GroundCreateResponse>> createGround(
-            @AuthenticationPrincipal(expression = "id") String createdById,
-            @RequestBody GroundCreateRequest request) {
-        return wrap(groundManagementService.createGround(createdById, request));
-    }
+	@PostMapping
+	public ResponseEntity<ApiSuccessResponse<GroundCreateResponse>> createGround(
+		@AuthenticationPrincipal(expression = "id") String createdById,
+		@RequestBody GroundCreateRequest request
+	) {
+			return wrap(groundManagementService.createGround(createdById, request));
+	}
 
 }

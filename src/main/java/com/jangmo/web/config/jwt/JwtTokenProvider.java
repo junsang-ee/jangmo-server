@@ -25,59 +25,59 @@ import java.util.Date;
 @RequiredArgsConstructor
 @Component
 public class JwtTokenProvider {
-    private final JwtConfig jwtConfig;
+	private final JwtConfig jwtConfig;
 
-    private final ExtendedUserDetailsService userService;
+	private final ExtendedUserDetailsService userService;
 
-    private final static String TOKEN_PREFIX = "Bearer ";
+	private final static String TOKEN_PREFIX = "Bearer ";
 
-    public String create(String userAgent, String id, UserRole role) {
-        Date issuedAt = new Date();
-        Date expireAt = new Date(issuedAt.getTime() + jwtConfig.getValidTime().toMillis());
-        return Jwts.builder()
-                .subject(id)
-                .claim("role", role.name())
-                .claim("agent", userAgent)
-                .issuedAt(issuedAt)
-                .expiration(expireAt)
-                .signWith(jwtConfig.getSecretKey(), Jwts.SIG.HS256)
-                .compact();
+	public String create(String userAgent, String id, UserRole role) {
+		Date issuedAt = new Date();
+		Date expireAt = new Date(issuedAt.getTime() + jwtConfig.getValidTime().toMillis());
+		return Jwts.builder()
+			.subject(id)
+			.claim("role", role.name())
+			.claim("agent", userAgent)
+			.issuedAt(issuedAt)
+			.expiration(expireAt)
+			.signWith(jwtConfig.getSecretKey(), Jwts.SIG.HS256)
+			.compact();
     }
 
-    public String resolve(HttpServletRequest request) {
-        String token = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (token != null && token.startsWith(TOKEN_PREFIX)) {
-            return token.substring(TOKEN_PREFIX.length());
-        }
-        return token;
-    }
+	public String resolve(HttpServletRequest request) {
+		String token = request.getHeader(HttpHeaders.AUTHORIZATION);
+		if (token != null && token.startsWith(TOKEN_PREFIX)) {
+			return token.substring(TOKEN_PREFIX.length());
+		}
+		return token;
+	}
 
-    public void validateToken(String token) throws JwtException {
-        Jws<Claims> claims = Jwts.parser()
-                .verifyWith(jwtConfig.getSecretKey())
-                .build().parseSignedClaims(token);
-        log.info("ExpiredAt :: {}", claims.getPayload().getExpiration());
-    }
+	public void validateToken(String token) throws JwtException {
+		Jws<Claims> claims = Jwts.parser()
+			.verifyWith(jwtConfig.getSecretKey())
+			.build().parseSignedClaims(token);
+		log.info("ExpiredAt :: {}", claims.getPayload().getExpiration());
+	}
 
-    public String getUserId(String token) {
-        return Jwts.parser()
-                .verifyWith(jwtConfig.getSecretKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .getSubject();
-    }
+	public String getUserId(String token) {
+		return Jwts.parser()
+			.verifyWith(jwtConfig.getSecretKey())
+			.build()
+			.parseSignedClaims(token)
+			.getPayload()
+			.getSubject();
+	}
 
-    public Authentication getAuthentication(String token) {
-        UserDetails userDetails = userService.loadUserById(getUserId(token));
-        return new UsernamePasswordAuthenticationToken(
-                userDetails,
-                null,
-                userDetails.getAuthorities()
-        );
-    }
+	public Authentication getAuthentication(String token) {
+		UserDetails userDetails = userService.loadUserById(getUserId(token));
+		return new UsernamePasswordAuthenticationToken(
+			userDetails,
+			null,
+			userDetails.getAuthorities()
+		);
+	}
 
-    private UserDetails getDetail(String userId) {
-        return userService.loadUserById(userId);
-    }
+	private UserDetails getDetail(String userId) {
+		return userService.loadUserById(userId);
+	}
 }

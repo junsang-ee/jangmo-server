@@ -30,96 +30,96 @@ import static com.jangmo.web.model.entity.user.QMercenaryEntity.mercenaryEntity;
 @Repository
 public class UserCustomRepositoryImpl implements UserCustomRepository {
 
-    private final JPAQueryFactory queryFactory;
+	private final JPAQueryFactory queryFactory;
 
-    @Override
-    public Page<UserListResponse> findByStatusAndUserRole(
-            String adminId,
-            String myId,
-            UserListSearchRequest request,
-            Pageable pageable) {
-        List<UserListResponse> result = queryFactory
-                .select(Projections.constructor(
-                        UserListResponse.class,
-                        userEntity.id,
-                        userEntity.name,
-                        userEntity.role,
-                        Projections.constructor(
-                                UserStatusVO.class,
-                                memberEntity.status,
-                                mercenaryEntity.status
-                        )
-                ))
-                .from(userEntity)
-                .leftJoin(memberEntity).on(userEntity.id.eq(memberEntity.id))
-                .leftJoin(mercenaryEntity).on(userEntity.id.eq(mercenaryEntity.id))
-                .where(
-                        userEntity.id.ne(myId),
-                        userEntity.id.ne(adminId),
-                        userRoleEq(request.getRole()),
-                        statusEq(
-                                request.getRole(),
-                                request.getMemberStatus(),
-                                request.getMercenaryStatus()
-                        ),
-                        nameContain(request.getSearchKeyword())
-                )
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
+	@Override
+	public Page<UserListResponse> findByStatusAndUserRole(
+		String adminId,
+		String myId,
+		UserListSearchRequest request,
+		Pageable pageable
+	) {
+		List<UserListResponse> result = queryFactory
+			.select(Projections.constructor(
+				UserListResponse.class,
+				userEntity.id,
+				userEntity.name,
+				userEntity.role,
+				Projections.constructor(
+					UserStatusVO.class,
+					memberEntity.status,
+					mercenaryEntity.status
+				)
+			))
+			.from(userEntity)
+			.leftJoin(memberEntity).on(userEntity.id.eq(memberEntity.id))
+			.leftJoin(mercenaryEntity).on(userEntity.id.eq(mercenaryEntity.id))
+			.where(
+				userEntity.id.ne(myId),
+				userEntity.id.ne(adminId),
+				userRoleEq(request.getRole()),
+				statusEq(
+					request.getRole(),
+					request.getMemberStatus(),
+					request.getMercenaryStatus()
+				),
+				nameContain(request.getSearchKeyword())
+			)
+			.offset(pageable.getOffset())
+			.limit(pageable.getPageSize())
+			.fetch();
 
-        JPAQuery<Long> totalCount = queryFactory
-                .select(userEntity.count())
-                .from(userEntity)
-                .leftJoin(memberEntity).on(userEntity.id.eq(memberEntity.id))
-                .leftJoin(mercenaryEntity).on(userEntity.id.eq(mercenaryEntity.id))
-                .where(
-                        userEntity.id.ne(myId),
-                        userEntity.id.ne(adminId),
-                        userRoleEq(request.getRole()),
-                        statusEq(
-                            request.getRole(),
-                            request.getMemberStatus(),
-                            request.getMercenaryStatus()
-                        ),
-                        nameContain(request.getSearchKeyword())
-                );
+		JPAQuery<Long> totalCount = queryFactory
+			.select(userEntity.count())
+			.from(userEntity)
+			.leftJoin(memberEntity).on(userEntity.id.eq(memberEntity.id))
+			.leftJoin(mercenaryEntity).on(userEntity.id.eq(mercenaryEntity.id))
+			.where(
+				userEntity.id.ne(myId),
+				userEntity.id.ne(adminId),
+				userRoleEq(request.getRole()),
+				statusEq(
+					request.getRole(),
+					request.getMemberStatus(),
+					request.getMercenaryStatus()
+				),
+				nameContain(request.getSearchKeyword())
+			);
+		return PageableExecutionUtils.getPage(result, pageable, totalCount::fetchOne);
+	}
 
-        return PageableExecutionUtils.getPage(result, pageable, totalCount::fetchOne);
-    }
+	private BooleanExpression userRoleEq(final UserRole role) {
+		return !ObjectUtils.isEmpty(role) ? userEntity.role.eq(role) : null;
+	}
 
-    private BooleanExpression userRoleEq(final UserRole role) {
-        return !ObjectUtils.isEmpty(role) ? userEntity.role.eq(role) : null;
-    }
+	private BooleanExpression statusEq(
+		final UserRole role,
+		final MemberStatus memberStatus,
+		final MercenaryStatus mercenaryStatus
+	) {
+		BooleanExpression memberCondition =
+			memberStatus != null ? memberEntity.status.eq(memberStatus) : null;
+		BooleanExpression mercenaryCondition =
+			mercenaryStatus != null ? mercenaryEntity.status.eq(mercenaryStatus) : null;
+		if (role == UserRole.MEMBER) {
+			return memberCondition;
+		}
+		if (role == UserRole.MERCENARY) {
+			return mercenaryCondition;
+		}
+		return combineUserStatusCondition(memberCondition, mercenaryCondition);
+	}
+	private BooleanExpression nameContain(final String searchKeyword) {
+		return StringUtils.hasText(searchKeyword) ? userEntity.name.contains(searchKeyword) : null;
+	}
 
-    private BooleanExpression statusEq(
-            final UserRole role,
-            final MemberStatus memberStatus,
-            final MercenaryStatus mercenaryStatus) {
-        if (!ObjectUtils.isEmpty(role)) {
-            if (role == UserRole.MEMBER) {
-                return memberStatus != null ? memberEntity.status.eq(memberStatus) : null;
-            } else if (role == UserRole.MERCENARY)
-                return mercenaryStatus != null ? mercenaryEntity.status.eq(mercenaryStatus) : null;
-        }
-        BooleanExpression memberCondition =
-                memberStatus != null ? memberEntity.status.eq(memberStatus) : null;
-        BooleanExpression mercenaryCondition =
-                mercenaryStatus != null ? mercenaryEntity.status.eq(mercenaryStatus) : null;
-        return combineUserStatusCondition(memberCondition, mercenaryCondition);
-    }
-
-    private BooleanExpression nameContain(final String searchKeyword) {
-        return StringUtils.hasText(searchKeyword) ? userEntity.name.contains(searchKeyword) : null;
-    }
-
-    private BooleanExpression combineUserStatusCondition(BooleanExpression... conditions) {
-        BooleanExpression result = null;
-        for (BooleanExpression condition : conditions) {
-            if (condition != null)
-                result = result == null ? condition : result.or(condition);
-        }
-        return result;
-    }
+	private BooleanExpression combineUserStatusCondition(BooleanExpression... conditions) {
+		BooleanExpression result = null;
+		for (BooleanExpression condition : conditions) {
+			if (condition != null)
+				result = result == null ? condition : result.or(condition);
+		}
+		return result;
+	}
 
 }

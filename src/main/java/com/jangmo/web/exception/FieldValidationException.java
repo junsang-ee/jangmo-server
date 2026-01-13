@@ -6,14 +6,14 @@ import lombok.Getter;
 
 @Getter
 public class FieldValidationException extends BaseException {
-    private String field;
+	private String field;
 
-    public FieldValidationException(ErrorMessage error) {
-        super(error);
-    }
+	public FieldValidationException(ErrorMessage error) {
+		super(error);
+	}
 
-    public FieldValidationException(ErrorMessage error, String field) {
-        super(error);
-        this.field = field;
-    }
+	public FieldValidationException(ErrorMessage error, String field) {
+		super(error);
+		this.field = field;
+	}
 }

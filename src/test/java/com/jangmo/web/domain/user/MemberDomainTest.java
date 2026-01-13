@@ -17,7 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @Slf4j
 @ActiveProfiles("test")
 public class MemberDomainTest {
-
 	@Test
 	void 회원_도메인_생성_성공() {
 		MemberSignUpRequest signUpRequest = new MemberSignUpRequest(
@@ -31,7 +30,6 @@ public class MemberDomainTest {
 		);
 		City city = City.of("서울시");
 		District district = District.of("강남구", city);
-
 		MemberEntity member = MemberEntity.create(
 			signUpRequest, city, district
 		);

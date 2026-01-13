@@ -23,22 +23,24 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity(name = "mercenary_transient")
 public class MercenaryTransientEntity extends SequentialEntity {
 
-    @Column(nullable = false)
-    private String code;
+	@Column(nullable = false)
+	private String code;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "match", nullable = false)
-    private MatchEntity match;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "match", nullable = false)
+	private MatchEntity match;
 
-    public static MercenaryTransientEntity create(final String code,
-                                                  final MatchEntity match) {
-        return new MercenaryTransientEntity(
-                EncryptUtil.encode(code),
-                match
-        );
-    }
+	public static MercenaryTransientEntity create(
+		final String code,
+		final MatchEntity match
+	) {
+		return new MercenaryTransientEntity(
+			EncryptUtil.encode(code),
+			match
+		);
+	}
 
-    public void updateCode(String code) {
-        this.code = EncryptUtil.encode(code);
-    }
+	public void updateCode(String code) {
+		this.code = EncryptUtil.encode(code);
+	}
 }

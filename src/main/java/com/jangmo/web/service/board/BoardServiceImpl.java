@@ -12,12 +12,12 @@ import java.util.stream.Collectors;
 @Service
 public class BoardServiceImpl implements BoardService {
 
-    private final BoardRepository boardRepository;
+	private final BoardRepository boardRepository;
 
-    @Override
-    public List<BoardListResponse> list() {
-        return boardRepository.findAll().stream().map(
-                BoardListResponse::of
-        ).collect(Collectors.toList());
-    }
+	@Override
+	public List<BoardListResponse> list() {
+		return boardRepository.findAll().stream().map(
+			BoardListResponse::of
+		).collect(Collectors.toList());
+	}
 }

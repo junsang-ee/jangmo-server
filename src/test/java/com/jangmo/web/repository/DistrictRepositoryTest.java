@@ -19,29 +19,30 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @Import(JpaConfiguration.class)
 public class DistrictRepositoryTest {
 
-    @Autowired
-    private CityRepository cityRepository;
+	@Autowired
+	private CityRepository cityRepository;
 
-    @Autowired
-    private DistrictRepository districtRepository;
+	@Autowired
+	private DistrictRepository districtRepository;
 
-    static final String CITY_NAME = "서울특별시";
-    static final String DISTRICT_NAME = "강남구";
-    City city;
-    @BeforeEach
-    void setup() {
-        city = City.of(CITY_NAME);
-        cityRepository.save(city);
-    }
+	static final String CITY_NAME = "서울특별시";
+	static final String DISTRICT_NAME = "강남구";
+	City city;
+
+	@BeforeEach
+	void setup() {
+		city = City.of(CITY_NAME);
+		cityRepository.save(city);
+	}
 
 
-    @Test
-    void 시군구_저장_테스트() {
-        District district = District.of(DISTRICT_NAME, city);
-        districtRepository.save(district);
+	@Test
+	void 시군구_저장_테스트() {
+		District district = District.of(DISTRICT_NAME, city);
+		districtRepository.save(district);
 
-        assertNotNull(district.getId());
-        log.info("district id : {}", district.getId());
-    }
+		assertNotNull(district.getId());
+		log.info("district id : {}", district.getId());
+	}
 
 }

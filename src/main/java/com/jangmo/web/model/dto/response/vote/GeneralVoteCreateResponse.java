@@ -12,18 +12,20 @@ import java.time.LocalDate;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class GeneralVoteCreateResponse {
 
-    private final LocalDate startAt;
+	private final LocalDate startAt;
 
-    private final LocalDate endAt;
+	private final LocalDate endAt;
 
-    private final String creatorName;
+	private final String creatorName;
 
-    public static GeneralVoteCreateResponse of(final LocalDate startAt,
-                                               final LocalDate endAt,
-                                               final String creatorName) {
-        return new GeneralVoteCreateResponse(
-                startAt, endAt, creatorName
-        );
-    }
+	public static GeneralVoteCreateResponse of(
+		final LocalDate startAt,
+		final LocalDate endAt,
+		final String creatorName
+	) {
+		return new GeneralVoteCreateResponse(
+			startAt, endAt, creatorName
+		);
+	}
 
 }

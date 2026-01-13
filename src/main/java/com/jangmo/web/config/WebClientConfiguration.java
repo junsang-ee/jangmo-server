@@ -13,21 +13,21 @@ import reactor.netty.http.client.HttpClient;
 @Configuration
 public class WebClientConfiguration {
 
-    HttpClient httpClient = HttpClient.create()
-            .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 10000);
+	HttpClient httpClient = HttpClient.create()
+		.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 10000);
 
-    @Bean
-    public ExchangeStrategies defaultExchangeStrategies() {
-        return ExchangeStrategies.builder().codecs(
-                config -> {
-                    config.defaultCodecs().maxInMemorySize(1024 * 1024);
-                }
-        ).build();
-    }
+	@Bean
+	public ExchangeStrategies defaultExchangeStrategies() {
+		return ExchangeStrategies.builder().codecs(
+			config -> {
+				config.defaultCodecs().maxInMemorySize(1024 * 1024);
+			}
+		).build();
+	}
 
     @Bean
     public WebClient.Builder webClientBuilder() {
-        return WebClient.builder()
-                .clientConnector(new ReactorClientHttpConnector(httpClient));
+			return WebClient.builder()
+				.clientConnector(new ReactorClientHttpConnector(httpClient));
     }
 }

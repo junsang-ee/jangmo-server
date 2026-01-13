@@ -17,31 +17,35 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity(name = "user")
 public class UserEntity extends ModificationTimestampEntity {
 
-    @Column(nullable = false)
-    private String name;
+	@Column(nullable = false)
+	private String name;
 
-    @Column(nullable = false)
-    private String mobile;
+	@Column(nullable = false)
+	private String mobile;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private UserRole role;
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private UserRole role;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private Gender gender;
 
-    protected UserEntity(String name, String mobile,
-                         UserRole role, Gender gender) {
-        this.name = name;
-        this.mobile = mobile;
-        this.role = role;
-        this.gender = gender;
-    }
+	protected UserEntity(
+		String name,
+		String mobile,
+		UserRole role,
+		Gender gender
+	) {
+		this.name = name;
+		this.mobile = mobile;
+		this.role = role;
+		this.gender = gender;
+	}
 
-    public void updateRole(UserRole role) {
-        this.role = role;
-    }
+	public void updateRole(UserRole role) {
+		this.role = role;
+	}
 
 }
 

@@ -7,15 +7,15 @@ import org.springframework.core.NestedRuntimeException;
 
 @Getter
 public class BaseException extends NestedRuntimeException {
-    @Accessors(fluent = true)
-    private ErrorMessage error;
+	@Accessors(fluent = true)
+	private ErrorMessage error;
 
-    public BaseException(String reason) {
-        super(reason);
-    }
+	public BaseException(String reason) {
+		super(reason);
+	}
 
-    public BaseException(ErrorMessage error) {
-        super(error.name());
-        this.error = error;
-    }
+	public BaseException(ErrorMessage error) {
+		super(error.name());
+		this.error = error;
+	}
 }

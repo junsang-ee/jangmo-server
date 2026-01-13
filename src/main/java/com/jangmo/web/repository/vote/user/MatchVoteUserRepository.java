@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 public interface MatchVoteUserRepository extends JpaRepository<MatchVoteUserEntity, String> {
 
-    Optional<MatchVoteUserEntity> findByMatchVoteAndVoterId(MatchVoteEntity matchVote,  String voterId);
+	Optional<MatchVoteUserEntity> findByMatchVoteAndVoterId(MatchVoteEntity matchVote,  String voterId);
 }

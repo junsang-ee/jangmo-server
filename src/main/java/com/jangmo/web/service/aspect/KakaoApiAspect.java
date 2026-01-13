@@ -23,29 +23,29 @@ import java.util.List;
 @Component
 public class KakaoApiAspect {
 
-    private final MemberRepository memberRepository;
+	private final MemberRepository memberRepository;
 
-    private final KakaoApiUsageRepository kakaoApiUsageRepository;
+	private final KakaoApiUsageRepository kakaoApiUsageRepository;
 
-    @Transactional
-    @Around("execution(* com..GroundManagementService.searchGrounds(..)) && args(searcherId, ..)")
-    public List<SearchPlaceResponse> enforceKakaoQuota(ProceedingJoinPoint point, String searcherId)
-            throws Throwable {
-        MemberEntity apiCaller = memberRepository.findById(searcherId).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND)
-        );
-        KakaoApiUsageEntity apiUsage = kakaoApiUsageRepository.findByApiCaller(
-                apiCaller
-        ).orElseThrow(
-                () -> new AuthException(ErrorMessage.AUTH_KAKAO_API_DENIED)
-        );
-        if (apiUsage.getUsedCount() >= 50)
-            throw new AuthException(ErrorMessage.AUTH_KAKAO_API_EXCEEDED);
+	@Transactional
+	@Around("execution(* com..GroundManagementService.searchGrounds(..)) && args(searcherId, ..)")
+	public List<SearchPlaceResponse> enforceKakaoQuota(ProceedingJoinPoint point, String searcherId)
+		throws Throwable {
+		MemberEntity apiCaller = memberRepository.findById(searcherId).orElseThrow(
+			() -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND)
+		);
+		KakaoApiUsageEntity apiUsage = kakaoApiUsageRepository.findByApiCaller(
+			apiCaller
+		).orElseThrow(
+			() -> new AuthException(ErrorMessage.AUTH_KAKAO_API_DENIED)
+		);
+		if (apiUsage.getUsedCount() >= 50)
+			throw new AuthException(ErrorMessage.AUTH_KAKAO_API_EXCEEDED);
 
-        @SuppressWarnings("unchecked")
-        List<SearchPlaceResponse> result = (List<SearchPlaceResponse>) point.proceed();
-        apiUsage.increaseUsedCount();
-        return result;
-    }
+		@SuppressWarnings("unchecked")
+		List<SearchPlaceResponse> result = (List<SearchPlaceResponse>) point.proceed();
+		apiUsage.increaseUsedCount();
+		return result;
+	}
 
 }

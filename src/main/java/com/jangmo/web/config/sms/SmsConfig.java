@@ -10,13 +10,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class SmsConfig {
 
-    private String key;
+  private String key;
 
-    private String secret;
+  private String secret;
 
-    private String sender;
+  private String sender;
 
-    private String authContent;
+  private String authContent;
 
-    private String mercenaryContent;
+  private String mercenaryContent;
 }

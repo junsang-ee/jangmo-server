@@ -9,15 +9,15 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class BoardListResponse {
 
-    private final String boardId;
+	private final String boardId;
 
-    private final String name;
+	private final String name;
 
-    public static BoardListResponse of(final BoardEntity board) {
-        return new BoardListResponse(
-                board.getId(),
-                board.getName()
-        );
-    }
+	public static BoardListResponse of(final BoardEntity board) {
+		return new BoardListResponse(
+			board.getId(),
+			board.getName()
+		);
+	}
 
 }

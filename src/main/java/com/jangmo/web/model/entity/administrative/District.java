@@ -17,20 +17,16 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 public class District extends SequentialEntity {
 
-    @Column(nullable = false)
-    private String name;
+	@Column(nullable = false)
+	private String name;
 
-    @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "city", nullable = false)
-    private City city;
+	@JsonBackReference
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "city", nullable = false)
+	private City city;
 
-    public static District of(final String name, final City city) {
-        return new District(
-                name,
-                city
-        );
-    }
-
+	public static District of(final String name, final City city) {
+		return new District(name, city);
+	}
 
 }

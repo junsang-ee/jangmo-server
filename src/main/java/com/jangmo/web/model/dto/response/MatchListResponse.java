@@ -12,14 +12,14 @@ import static lombok.AccessLevel.PRIVATE;
 @RequiredArgsConstructor(access = PRIVATE)
 public class MatchListResponse {
 
-    private final String matchId;
+	private final String matchId;
 
-    private final LocalDate matchAt;
+	private final LocalDate matchAt;
 
-    public static MatchListResponse of(final MatchEntity match) {
-        return new MatchListResponse(
-                match.getId(),
-                match.getMatchAt()
-        );
-    }
+	public static MatchListResponse of(final MatchEntity match) {
+		return new MatchListResponse(
+			match.getId(),
+			match.getMatchAt()
+		);
+	}
 }

@@ -19,23 +19,25 @@ import static com.jangmo.web.model.dto.response.common.ApiSuccessResponse.wrap;
 @RestController
 public class PostController {
 
-    private final PostService postService;
+	private final PostService postService;
 
-    private final ReplyService replyService;
+	private final ReplyService replyService;
 
-    @GetMapping("/{postId}")
-    public ResponseEntity<ApiSuccessResponse<PostEntity>> detail(
-            @PathVariable String postId) {
-        return wrap(postService.detail(postId));
-    }
+	@GetMapping("/{postId}")
+	public ResponseEntity<ApiSuccessResponse<PostEntity>> detail(
+		@PathVariable String postId
+	) {
+		return wrap(postService.detail(postId));
+	}
 
-    @PostMapping("/{postId}/replies")
-    public ResponseEntity<ApiSuccessResponse<Object>> createReply(
-            @AuthenticationPrincipal(expression = "id") String memberId,
-            @PathVariable String postId,
-            @Valid @RequestBody ReplyCreateRequest request) {
-        replyService.create(memberId, postId, ReplyTargetType.POST, request);
-        return wrap(null);
-    }
+	@PostMapping("/{postId}/replies")
+	public ResponseEntity<ApiSuccessResponse<Object>> createReply(
+		@AuthenticationPrincipal(expression = "id") String memberId,
+		@PathVariable String postId,
+		@Valid @RequestBody ReplyCreateRequest request
+	) {
+		replyService.create(memberId, postId, ReplyTargetType.POST, request);
+		return wrap(null);
+	}
 
 }

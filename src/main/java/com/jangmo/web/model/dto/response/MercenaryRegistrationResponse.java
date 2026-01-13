@@ -9,15 +9,15 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class MercenaryRegistrationResponse {
-    private final String name;
-    private final String mobile;
-    private final Gender gender;
+	private final String name;
+	private final String mobile;
+	private final Gender gender;
 
-    public static MercenaryRegistrationResponse of(final MercenaryEntity mercenary) {
-        return new MercenaryRegistrationResponse(
-                mercenary.getName(),
-                mercenary.getMobile(),
-                mercenary.getGender()
-        );
-    }
+	public static MercenaryRegistrationResponse of(final MercenaryEntity mercenary) {
+		return new MercenaryRegistrationResponse(
+			mercenary.getName(),
+			mercenary.getMobile(),
+			mercenary.getGender()
+		);
+	}
 }

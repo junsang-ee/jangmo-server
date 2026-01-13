@@ -12,12 +12,12 @@ import jakarta.validation.constraints.NotBlank;
 @AllArgsConstructor
 public class ResetPasswordRequest {
 
-    @NotBlank(message = "휴대폰 번호는 필수 항목입니다.")
-    @ValidFields(field = "mobile")
-    private String mobile;
+	@NotBlank(message = "휴대폰 번호는 필수 항목입니다.")
+	@ValidFields(field = "mobile")
+	private String mobile;
 
-    @NotBlank(message = "새로운 비밀번호는 필수 항목입니다.")
-    @ValidFields(field = "password")
-    private String newPassword;
+	@NotBlank(message = "새로운 비밀번호는 필수 항목입니다.")
+	@ValidFields(field = "password")
+	private String newPassword;
 
 }

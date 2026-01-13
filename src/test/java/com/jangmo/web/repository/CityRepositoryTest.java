@@ -18,18 +18,17 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @Import(JpaConfiguration.class)
 public class CityRepositoryTest {
 
-    @Autowired
-    private CityRepository cityRepository;
+	@Autowired
+	private CityRepository cityRepository;
 
-    static final String CITY_NAME = "서울특별시";
+	static final String CITY_NAME = "서울특별시";
 
-    @Test
-    void 시도_저장_테스트() {
-        City city = City.of(CITY_NAME);
-        cityRepository.save(city);
-        assertNotNull(city.getId());
-        log.info("city id : {}", city.getId());
-    }
-
+	@Test
+	void 시도_저장_테스트() {
+		City city = City.of(CITY_NAME);
+		cityRepository.save(city);
+		assertNotNull(city.getId());
+		log.info("city id : {}", city.getId());
+	}
 
 }

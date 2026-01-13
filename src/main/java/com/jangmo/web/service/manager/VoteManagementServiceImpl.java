@@ -33,74 +33,72 @@ import java.util.List;
 @Service
 public class VoteManagementServiceImpl implements VoteManagementService {
 
-    private final UserRepository userRepository;
+	private final UserRepository userRepository;
 
-    private final MemberRepository memberRepository;
+	private final MemberRepository memberRepository;
 
-    private final VoteRepository voteRepository;
-    private final MatchVoteRepository matchVoteRepository;
-    private final GeneralVoteRepository generalVoteRepository;
+	private final VoteRepository voteRepository;
+	private final MatchVoteRepository matchVoteRepository;
+	private final GeneralVoteRepository generalVoteRepository;
 
-    @Override
-    @Transactional
-    public MatchVoteCreateResponse createMatchVote(String userId, MatchVoteCreateRequest request) {
-        MemberEntity createdBy = getMemberId(userId);
-        List<UserEntity> rawVoters = getRawMatchVoters();
-        MatchVoteEntity matchVote = MatchVoteEntity.create(
-                createdBy, request, rawVoters
-        );
-        matchVoteRepository.save(matchVote);
-        return MatchVoteCreateResponse.of(matchVote);
-    }
+	@Override
+	@Transactional
+	public MatchVoteCreateResponse createMatchVote(String userId, MatchVoteCreateRequest request) {
+		MemberEntity createdBy = getMemberId(userId);
+		List<UserEntity> rawVoters = getRawMatchVoters();
+		MatchVoteEntity matchVote = MatchVoteEntity.create(createdBy, request, rawVoters);
+		matchVoteRepository.save(matchVote);
+		return MatchVoteCreateResponse.of(matchVote);
+	}
 
-    @Override
-    @Transactional
-    public GeneralVoteCreateResponse createGeneralVote(String userId, GeneralVoteCreateRequest request) {
-        MemberEntity createdBy = getMemberById(userId);
-        List<UserEntity> rawVoters = getRawGeneralVoters();
-        GeneralVoteEntity generalVote = GeneralVoteEntity.create(
-                createdBy, request, rawVoters
-        );
-        generalVoteRepository.save(generalVote);
-        return GeneralVoteCreateResponse.of(
-                generalVote.getStartAt(),
-                generalVote.getEndAt(),
-                generalVote.getCreatedBy().getName()
-        );
-    }
+	@Override
+	@Transactional
+	public GeneralVoteCreateResponse createGeneralVote(String userId, GeneralVoteCreateRequest request) {
+		MemberEntity createdBy = getMemberById(userId);
+		List<UserEntity> rawVoters = getRawGeneralVoters();
+		GeneralVoteEntity generalVote = GeneralVoteEntity.create(
+			createdBy, request, rawVoters
+		);
+		generalVoteRepository.save(generalVote);
+		return GeneralVoteCreateResponse.of(
+			generalVote.getStartAt(),
+			generalVote.getEndAt(),
+			generalVote.getCreatedBy().getName()
+		);
+	}
 
-    @Override
-    public List<VoteListResponse> getVotes(VoteListRequest request) {
-        return voteRepository.findVotes(request);
-    }
+	@Override
+	public List<VoteListResponse> getVotes(VoteListRequest request) {
+		return voteRepository.findVotes(request);
+	}
 
-    private List<UserEntity> getRawGeneralVoters() {
-        List<MemberStatus> statuses = Arrays.asList(
-                MemberStatus.DISABLED, MemberStatus.PENDING
-        );
-        return userRepository.findUserByMemberStatusNotAndRole(
-                statuses, UserRole.MEMBER
-        );
-    }
+	private List<UserEntity> getRawGeneralVoters() {
+		List<MemberStatus> statuses = Arrays.asList(
+			MemberStatus.DISABLED, MemberStatus.PENDING
+		);
+		return userRepository.findUserByMemberStatusNotAndRole(
+			statuses, UserRole.MEMBER
+		);
+	}
 
 
-    private MemberEntity getMemberId(String memberId) {
-        return memberRepository.findById(memberId).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND)
-        );
-    }
+	private MemberEntity getMemberId(String memberId) {
+		return memberRepository.findById(memberId).orElseThrow(
+			() -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND)
+		);
+	}
 
-    private MemberEntity getMemberById(String memberId) {
-        return memberRepository.findById(memberId).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND)
-        );
-    }
+	private MemberEntity getMemberById(String memberId) {
+		return memberRepository.findById(memberId).orElseThrow(
+			() -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND)
+		);
+	}
 
-    private List<UserEntity> getRawMatchVoters() {
-        return userRepository.findUserByMemberStatusAndRoleNot(
-                MemberStatus.ENABLED,
-                UserRole.MERCENARY
-        );
-    }
+	private List<UserEntity> getRawMatchVoters() {
+		return userRepository.findUserByMemberStatusAndRoleNot(
+			MemberStatus.ENABLED,
+			UserRole.MERCENARY
+		);
+	}
 
 }

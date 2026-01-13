@@ -10,8 +10,8 @@ import java.util.Optional;
 
 @Repository
 public interface PostRepository extends JpaRepository<PostEntity, String> {
-    List<PostEntity> findByParentBoard(BoardEntity board);
+	List<PostEntity> findByParentBoard(BoardEntity board);
 
-    Optional<PostEntity> findByTitle(String title);
+	Optional<PostEntity> findByTitle(String title);
 
 }

@@ -22,34 +22,37 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity(name = "match_vote_user")
 public class MatchVoteUserEntity extends AbstractVoteUserEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "match_vote", nullable = false)
-    private MatchVoteEntity matchVote;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "match_vote", nullable = false)
+	private MatchVoteEntity matchVote;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private MatchVoteOption matchVoteOption;
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private MatchVoteOption matchVoteOption;
 
-    private MatchVoteUserEntity(UserEntity voter,
-                                MatchVoteEntity matchVote) {
-        super(voter);
-        this.matchVote = matchVote;
-        this.matchVoteOption = MatchVoteOption.NOT_VOTED;
-    }
+	private MatchVoteUserEntity(
+		UserEntity voter, MatchVoteEntity matchVote
+	) {
+		super(voter);
+		this.matchVote = matchVote;
+		this.matchVoteOption = MatchVoteOption.NOT_VOTED;
+	}
 
-    public static MatchVoteUserEntity create(final UserEntity rawVoter,
-                                             final MatchVoteEntity matchVote) {
-        return new MatchVoteUserEntity(rawVoter, matchVote);
-    }
+	public static MatchVoteUserEntity create(
+		final UserEntity rawVoter, final MatchVoteEntity matchVote
+	) {
+		return new MatchVoteUserEntity(rawVoter, matchVote);
+	}
 
-    public static List<MatchVoteUserEntity> createAll(final List<UserEntity> rawVoters,
-                                                      final MatchVoteEntity matchVote) {
-        return rawVoters.stream().map(
-                rawVoter -> create(rawVoter, matchVote)
-        ).collect(Collectors.toList());
-    }
+	public static List<MatchVoteUserEntity> createAll(
+		final List<UserEntity> rawVoters, final MatchVoteEntity matchVote
+	) {
+		return rawVoters.stream().map(
+			rawVoter -> create(rawVoter, matchVote)
+		).collect(Collectors.toList());
+	}
 
-    public void updateOption(MatchVoteOption option) {
-        this.matchVoteOption = option;
-    }
+	public void updateOption(MatchVoteOption option) {
+		this.matchVoteOption = option;
+	}
 }
