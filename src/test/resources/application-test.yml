@@ -1,27 +1,23 @@
 spring:
+  test:
+    database:
+      replace: none
+
   datasource:
     url: jdbc:h2:mem:testdb;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driver-class-name: org.h2.Driver
     username: sa
     password:
+
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
-    show-sql: true
   h2:
     console:
       path: /h2-console
       enabled: true
-
-jangmo:
-  jwt:
-    secret: dGVzdF9qc29uX3dlYl90b2tlbl9zZWNyZXRfa2V5X2Zvcl9obWFj
-    valid-time: 1h
-  admin:
-    name: "황준상"
-    mobile: "01012340001"
-    password: "1231231!@"
