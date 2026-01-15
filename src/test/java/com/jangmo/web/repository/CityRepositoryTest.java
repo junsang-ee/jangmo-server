@@ -1,22 +1,18 @@
 package com.jangmo.web.repository;
 
-import com.jangmo.web.config.JpaConfiguration;
 import com.jangmo.web.model.entity.administrative.City;
+import com.jangmo.web.repository.base.BaseRepositoryTest;
+
 import lombok.extern.slf4j.Slf4j;
+
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @Slf4j
-@DataJpaTest
-@ActiveProfiles("test")
-@Import(JpaConfiguration.class)
-public class CityRepositoryTest {
+public class CityRepositoryTest extends BaseRepositoryTest {
 
 	@Autowired
 	private CityRepository cityRepository;
