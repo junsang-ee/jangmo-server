@@ -6,7 +6,6 @@ import com.jangmo.web.constants.user.MemberStatus;
 import com.jangmo.web.constants.UserRole;
 import com.jangmo.web.constants.message.ErrorMessage;
 import com.jangmo.web.exception.NotFoundException;
-import com.jangmo.web.model.dto.request.MemberSignUpRequest;
 import com.jangmo.web.model.entity.administrative.City;
 import com.jangmo.web.model.entity.administrative.District;
 import com.jangmo.web.model.entity.user.MemberEntity;
@@ -19,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +36,7 @@ public class AdminInitializationConfig implements ApplicationRunner {
 	private final DistrictRepository districtRepository;
 
 	private final AdminProperties adminProperties;
+	private final PasswordEncoder passwordEncoder;
 
 	@Override
 	@Transactional
@@ -48,23 +49,23 @@ public class AdminInitializationConfig implements ApplicationRunner {
 			}, () -> {
 				log.info("Administrator's Account is Not! exists");
 				log.info("Create Administrator`s Account...");
+
 				City city = cityRepository.findById(1L).orElseThrow(
 					() -> new NotFoundException(ErrorMessage.CITY_NOT_FOUND)
 				);
 				District district = districtRepository.findById(21L).orElseThrow(
 					() -> new NotFoundException(ErrorMessage.DISTRICT_NOT_FOUND)
 				);
-				MemberSignUpRequest signup = new MemberSignUpRequest(
+
+				String encodedPassword = passwordEncoder.encode(adminProperties.password());
+				MemberEntity admin = MemberEntity.create(
 					adminProperties.name(),
 					adminProperties.mobile(),
 					Gender.MALE,
 					LocalDate.of(1994, 3, 16),
-					adminProperties.password(),
-					city.getId(),
-					district.getId()
-				);
-				MemberEntity admin = MemberEntity.create(
-								signup, city, district
+					encodedPassword,
+					city,
+					district
 				);
 				memberRepository.save(admin);
 				initializeAdmin(admin);

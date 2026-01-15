@@ -3,13 +3,11 @@ package com.jangmo.web.model.entity.user;
 import com.jangmo.web.constants.Gender;
 import com.jangmo.web.constants.user.MemberStatus;
 import com.jangmo.web.constants.UserRole;
-import com.jangmo.web.model.dto.request.MemberSignUpRequest;
 
 import com.jangmo.web.model.entity.UniformEntity;
 import com.jangmo.web.model.entity.administrative.City;
 import com.jangmo.web.model.entity.administrative.District;
 import com.jangmo.web.model.entity.api.KakaoApiUsageEntity;
-import com.jangmo.web.utils.EncryptUtil;
 
 import com.jangmo.web.validation.DomainPreconditions;
 
@@ -79,25 +77,18 @@ public class MemberEntity extends UserEntity implements Serializable {
 	}
 
 	public static MemberEntity create(
-		final MemberSignUpRequest signup,
+		final String name,
+		final String mobile,
+		final Gender gender,
+		final LocalDate birth,
+		final String encodedPassword,
 		final City city,
-		final District district) {
-		validate(
-			signup.getName(),
-			signup.getMobile(),
-			signup.getGender(),
-			signup.getBirth(),
-			signup.getPassword()
-		);
+		final District district
+	) {
+		validate(name, mobile, gender, birth, encodedPassword);
 
 		return new MemberEntity(
-			signup.getName(),
-			signup.getMobile(),
-			signup.getGender(),
-			signup.getBirth(),
-			EncryptUtil.encode(signup.getPassword()),
-			city,
-			district
+			name, mobile, gender, birth, encodedPassword, city, district
 		);
 	}
 
@@ -105,8 +96,8 @@ public class MemberEntity extends UserEntity implements Serializable {
 		this.status = status;
 	}
 
-	public void updatePassword(String newPassword) {
-		this.password = EncryptUtil.encode(newPassword);
+	public void updatePassword(String newEncodedPassword) {
+		this.password = newEncodedPassword;
 	}
 
 	public void registerUniform(int backNumber) {

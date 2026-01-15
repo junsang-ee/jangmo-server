@@ -32,11 +32,12 @@ import com.jangmo.web.repository.user.MemberRepository;
 import com.jangmo.web.repository.user.MercenaryRepository;
 import com.jangmo.web.repository.user.UserRepository;
 import com.jangmo.web.utils.CodeGeneratorUtil;
-import com.jangmo.web.utils.EncryptUtil;
 
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,22 +48,15 @@ import java.util.Random;
 @RequiredArgsConstructor
 @Service
 public class AuthServiceImpl implements AuthService {
-
 	private final MemberRepository memberRepository;
-
 	private final MercenaryRepository mercenaryRepository;
-
 	private final UserRepository userRepository;
-
 	private final CityRepository cityRepository;
-
 	private final DistrictRepository districtRepository;
-
 	private final SmsProvider smsProvider;
-
 	private final CacheAccessor cacheAccessor;
-
 	private final JwtTokenProvider jwtTokenProvider;
+	private final PasswordEncoder passwordEncoder;
 
 
 	@Override
@@ -71,8 +65,14 @@ public class AuthServiceImpl implements AuthService {
 		validateVerifiedMobile(CacheType.SIGNUP_VERIFIED, signup.getMobile());
 		City city = getCity(signup.getCityId());
 		District district = getDistrict(signup.getDistrictId());
+
+		String encodedPassword = passwordEncoder.encode(signup.getPassword());
 		MemberEntity member = MemberEntity.create(
-			signup,
+			signup.getName(),
+			signup.getMobile(),
+			signup.getGender(),
+			signup.getBirth(),
+			encodedPassword,
 			city,
 			district
 		);
@@ -149,7 +149,8 @@ public class AuthServiceImpl implements AuthService {
 	public void resetMemberPassword(ResetPasswordRequest reset) {
 		validateVerifiedMobile(CacheType.RESET_VERIFIED, reset.getMobile());
 		MemberEntity member = getMemberByMobile(reset.getMobile());
-		member.updatePassword(reset.getNewPassword());
+		String encodedPassword = passwordEncoder.encode(reset.getNewPassword());
+		member.updatePassword(encodedPassword);
 	}
 
 	@Override
@@ -158,10 +159,12 @@ public class AuthServiceImpl implements AuthService {
 		String mobile = reset.getMobile();
 		validateVerifiedMobile(CacheType.RESET_VERIFIED, mobile);
 		MercenaryEntity mercenary = getMercenaryByMobile(mobile);
-		String newCode = CodeGeneratorUtil.getMercenaryCode();
+		String requestedCode = CodeGeneratorUtil.getMercenaryCode();
+		String encodedCode = passwordEncoder.encode(requestedCode);
 		MercenaryTransientEntity transientEntity = mercenary.getMercenaryTransient();
-		transientEntity.updateCode(newCode);
-		smsProvider.send(mobile, newCode, SmsType.MERCENARY_CODE);
+
+		transientEntity.updateCode(encodedCode);
+		smsProvider.send(mobile, requestedCode, SmsType.MERCENARY_CODE);
 	}
 
 	private String getRandomCode() {
@@ -182,7 +185,7 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	private void validateMember(MemberEntity member, String password) {
-		if (EncryptUtil.matches(password, member.getPassword())) {
+		if (passwordEncoder.matches(password, member.getPassword())) {
 			switch (member.getStatus()) {
 				case DISABLED:
 					throw new AuthException(ErrorMessage.AUTH_DISABLED);
@@ -215,7 +218,7 @@ public class AuthServiceImpl implements AuthService {
 		if (transientEntity.getCode() == null)
 			throw new NotFoundException(ErrorMessage.AUTH_MERCENARY_CODE_NOT_ISSUED);
 
-		if (!EncryptUtil.matches(code, transientEntity.getCode()))
+		if (!passwordEncoder.matches(code, transientEntity.getCode()))
 			throw new AuthException(ErrorMessage.AUTH_MERCENARY_CODE_INVALID);
 	}
 

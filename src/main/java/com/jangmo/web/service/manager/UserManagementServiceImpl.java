@@ -34,6 +34,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,18 +48,13 @@ import java.util.List;
 public class UserManagementServiceImpl implements UserManagementService {
 
 	private final MercenaryRepository mercenaryRepository;
-
 	private final MercenaryTransientRepository mercenaryTransientRepository;
-
 	private final MemberRepository memberRepository;
-
 	private final MatchRepository matchRepository;
-
 	private final UserRepository userRepository;
-
 	private final KakaoApiUsageRepository kakaoApiUsageRepository;
-
 	private final SmsProvider smsProvider;
+	private final PasswordEncoder passwordEncoder;
 
 	@Value("${jangmo.admin.mobile}")
 	private String adminMobile;
@@ -171,8 +167,9 @@ public class UserManagementServiceImpl implements UserManagementService {
 	@Transactional
 	private void activateMercenary(MercenaryEntity mercenary, MatchEntity match) {
 		String mercenaryCode = CodeGeneratorUtil.getMercenaryCode();
+		String encodedMercenaryCode = passwordEncoder.encode(mercenaryCode);
 		MercenaryTransientEntity mercenaryTransient =
-			MercenaryTransientEntity.create(mercenaryCode, match);
+			MercenaryTransientEntity.create(encodedMercenaryCode, match);
 
 		mercenaryTransientRepository.save(mercenaryTransient);
 
