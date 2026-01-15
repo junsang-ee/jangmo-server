@@ -20,8 +20,7 @@ import com.jangmo.web.repository.user.UserRepository;
 import com.jangmo.web.repository.CityRepository;
 import com.jangmo.web.repository.DistrictRepository;
 
-import com.jangmo.web.utils.EncryptUtil;
-
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +41,7 @@ public class UserServiceImpl implements UserService {
 	private final CityRepository cityRepository;
 
 	private final DistrictRepository districtRepository;
+	private final PasswordEncoder passwordEncoder;
 
 	@Override
 	public Optional<MemberEntity> findMemberById(String memberId) {
@@ -147,7 +147,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private void checkMemberAccount(MemberEntity member, String oldPassword) {
-		if (EncryptUtil.matches(oldPassword, member.getPassword())) {
+		if (passwordEncoder.matches(oldPassword, member.getPassword())) {
 			switch (member.getStatus()) {
 				case DISABLED:
 					throw new AuthException(ErrorMessage.AUTH_DISABLED);

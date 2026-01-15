@@ -159,10 +159,12 @@ public class AuthServiceImpl implements AuthService {
 		String mobile = reset.getMobile();
 		validateVerifiedMobile(CacheType.RESET_VERIFIED, mobile);
 		MercenaryEntity mercenary = getMercenaryByMobile(mobile);
-		String newCode = CodeGeneratorUtil.getMercenaryCode();
+		String requestedCode = CodeGeneratorUtil.getMercenaryCode();
+		String encodedCode = passwordEncoder.encode(requestedCode);
 		MercenaryTransientEntity transientEntity = mercenary.getMercenaryTransient();
-		transientEntity.updateCode(newCode);
-		smsProvider.send(mobile, newCode, SmsType.MERCENARY_CODE);
+
+		transientEntity.updateCode(encodedCode);
+		smsProvider.send(mobile, requestedCode, SmsType.MERCENARY_CODE);
 	}
 
 	private String getRandomCode() {

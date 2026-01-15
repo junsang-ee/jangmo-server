@@ -3,7 +3,6 @@ package com.jangmo.web.model.entity.user;
 import com.jangmo.web.model.SequentialEntity;
 import com.jangmo.web.model.entity.MatchEntity;
 
-import com.jangmo.web.utils.EncryptUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,16 +30,16 @@ public class MercenaryTransientEntity extends SequentialEntity {
 	private MatchEntity match;
 
 	public static MercenaryTransientEntity create(
-		final String code,
+		final String encodedCode,
 		final MatchEntity match
 	) {
 		return new MercenaryTransientEntity(
-			EncryptUtil.encode(code),
+			encodedCode,
 			match
 		);
 	}
 
-	public void updateCode(String code) {
-		this.code = EncryptUtil.encode(code);
+	public void updateCode(String encodedCode) {
+		this.code = encodedCode;
 	}
 }
