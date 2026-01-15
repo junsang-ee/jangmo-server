@@ -1,5 +1,6 @@
 package com.jangmo.web.config.admin;
 
+import com.jangmo.web.config.properties.AdminProperties;
 import com.jangmo.web.constants.Gender;
 import com.jangmo.web.constants.user.MemberStatus;
 import com.jangmo.web.constants.UserRole;
@@ -11,13 +12,13 @@ import com.jangmo.web.model.entity.administrative.District;
 import com.jangmo.web.model.entity.user.MemberEntity;
 import com.jangmo.web.repository.CityRepository;
 import com.jangmo.web.repository.DistrictRepository;
-import com.jangmo.web.repository.MemberRepository;
+import com.jangmo.web.repository.user.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,55 +26,59 @@ import java.time.LocalDate;
 
 @Slf4j
 @RequiredArgsConstructor
+@Profile("!test")
 @Component
 public class AdminInitializationConfig implements ApplicationRunner {
-    private final MemberRepository memberRepository;
+	private final MemberRepository memberRepository;
 
-    private final CityRepository cityRepository;
+	private final CityRepository cityRepository;
 
-    private final DistrictRepository districtRepository;
+	private final DistrictRepository districtRepository;
 
-    @Value("${jangmo.admin.mobile}")
-    private String mobile;
+	private final AdminProperties adminProperties;
 
-    @Value("${jangmo.admin.password}")
-    private String password;
+	@Override
+	@Transactional
+	public void run(ApplicationArguments args) throws Exception {
+		log.info("Administrator Account initialize...");
+		memberRepository.findByMobile(adminProperties.mobile()).ifPresentOrElse(
+			admin -> {
+				log.info("Administrator's Account is already exists!");
+				initializeAdmin(admin);
+			}, () -> {
+				log.info("Administrator's Account is Not! exists");
+				log.info("Create Administrator`s Account...");
+				City city = cityRepository.findById(1L).orElseThrow(
+					() -> new NotFoundException(ErrorMessage.CITY_NOT_FOUND)
+				);
+				District district = districtRepository.findById(21L).orElseThrow(
+					() -> new NotFoundException(ErrorMessage.DISTRICT_NOT_FOUND)
+				);
+				MemberSignUpRequest signup = new MemberSignUpRequest(
+					adminProperties.name(),
+					adminProperties.mobile(),
+					Gender.MALE,
+					LocalDate.of(1994, 3, 16),
+					adminProperties.password(),
+					city.getId(),
+					district.getId()
+				);
+				MemberEntity admin = MemberEntity.create(
+								signup, city, district
+				);
+				memberRepository.save(admin);
+				initializeAdmin(admin);
+			}
+		);
+		log.info("Complete Create Administrator Account!");
+		log.info("Exit Administrator initialize");
+	}
 
-    @Value("${jangmo.admin.name}")
-    private String name;
-
-    @Override
-    @Transactional
-    public void run(ApplicationArguments args) throws Exception {
-        log.info("Administrator Account initialize...");
-        if (memberRepository.findByMobile("01043053451").isPresent()) {
-            log.info("Administrator's Account is already exists!");
-            log.info("Exit Administrator initialize");
-            return;
-        }
-        City city = cityRepository.findById(1L).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.CITY_NOT_FOUND)
-        );
-        District district = districtRepository.findById(21L).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.DISTRICT_NOT_FOUND)
-        );
-        MemberSignUpRequest signup = new MemberSignUpRequest(
-                name,
-                mobile,
-                Gender.MALE,
-                LocalDate.of(1994, 3, 16),
-                password,
-                city.getId(),
-                district.getId()
-        );
-
-        MemberEntity admin = MemberEntity.create(
-                signup, city, district
-        );
-        admin.updateStatus(MemberStatus.ENABLED);
-        admin.updateRole(UserRole.ADMIN);
-        memberRepository.save(admin);
-        log.info("Complete Create Administrator Account!");
-        log.info("Exit initialize");
-    }
+	private void initializeAdmin(MemberEntity admin) {
+		admin.updateRole(UserRole.ADMIN);
+		admin.updateStatus(MemberStatus.ENABLED);
+		if (admin.getKakaoApiUsage() == null) {
+			admin.createKakaoApiUsage();
+		}
+	}
 }

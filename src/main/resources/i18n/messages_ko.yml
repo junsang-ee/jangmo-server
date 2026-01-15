@@ -32,6 +32,10 @@ response:
         mercenary.code:
           code: "114"
           message: "용병 코드는 숫자, 영문(대/소문자)만을 포함하며, 10자리여야 합니다."
+    invalid.domain.field:
+        code: "300"
+        message: "도메인 필드 오류 : {0}"
+
     bad:
       request:
         code: "400"
@@ -50,10 +54,10 @@ response:
         code: "4000"
         message: "세션이 만료되었습니다."
       permission.denied:
-        code: "4002"
+        code: "4001"
         message: "접근 권한이 없습니다."
       invalid:
-        code: "4003"
+        code: "4002"
         message: "올바르지 않은 인증 정보입니다."
       password.invalid:
         code: "4003"
@@ -86,6 +90,13 @@ response:
       user.duplicated:
         code: "4012"
         message: "해당 휴대폰 번호로 등록된 유저가 이미 존재합니다."
+      kakao.api:
+        denied:
+          code: "4013"
+          message: "해당 유저는 카카오 맵 사용 설정이 정상적으로 적용되어 있지 않습니다. 관리자에게 문의하새요."
+        exceeded:
+          code: "4014"
+          message: "카카오 API 호출 가능 횟수를 초과했습니다."
       code.invalid:
         code: "4020"
         message: "잘못된 인증 코드 입니다."
@@ -97,16 +108,54 @@ response:
       not.found:
         code: "5000"
         message: "해당 유저를 찾을 수 없습니다."
+    match:
+      not.found:
+        code: "5010"
+        message: "해당 매치를 찾을 수 없습니다."
+    board:
+      not.found:
+        code: "5050"
+        message: "해당 게시판을 찾을 수 없습니다."
+    post:
+      not.found:
+        code: "5060"
+        message: "해당 게시글을 찾을 수 없습니다."
+    vote:
+      not.found:
+        code: "5020"
+        message: "해당 투표를 찾을 수 없습니다."
+    match.vote:
+      not.found:
+        code: "5030"
+        message: "해당 매치 투표를 찾을 수 없습니다."
+      user.not.found:
+        code: "5031"
+        message: "해당 유저는 해당 매치 투표에 참여할 수 없습니다. 관리자에게 문의하세요."
+      invalid.option:
+        code: "5032"
+        message: "유효하지 않은 투표 옵션입니다(현재 미투표 상태). 올바른 투표 옵션을 선택해주세요."
+
     member:
       not.found:
         code: "5001"
         message: "해당 회원을 찾을 수 없습니다."
       disabled:
-        code: " 6001"
+        code: "6001"
         message: "해당 회원은 이용 제한된 회원입니다."
       retired:
         code: "6002"
         message: "해당 회원은 탈퇴한 회원입니다."
+      already.has:
+        role:
+          code: "6003"
+          message: "해당 회원은 이미 동일한 권한입니다."
+        uniform:
+          code: "6004"
+          message: "이미 유니폼을 보유하고 있는 중입니다."
+      uniform:
+        not.found:
+          code: "6005"
+          message: "유니폼을 보유하고 있지 않습니다."
     mercenary:
       not.found:
         code: "5002"

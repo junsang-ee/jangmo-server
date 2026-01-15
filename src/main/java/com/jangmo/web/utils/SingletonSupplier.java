@@ -11,13 +11,13 @@ import static lombok.AccessLevel.PRIVATE;
 @RequiredArgsConstructor(staticName = "of")
 public final class SingletonSupplier<T> implements Supplier<T> {
 
-    private @NonNull Supplier<T> supplier;
+	private @NonNull Supplier<T> supplier;
 
-    @Getter(value = PRIVATE, lazy = true)
-    private final T instance = supplier.get();
+	@Getter(value = PRIVATE, lazy = true)
+	private final T instance = supplier.get();
 
-    @Override
-    public T get() {
-        return getInstance();
-    }
+	@Override
+	public T get() {
+		return getInstance();
+	}
 }

@@ -15,19 +15,19 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 @Configuration
 public class WebMvcConfiguration implements WebMvcConfigurer {
-    @Override
-    public void addCorsMappings(CorsRegistry registry){
-        registry.addMapping("/**")
-                .allowedOriginPatterns(CorsConfiguration.ALL)
-                .allowedHeaders(CorsConfiguration.ALL)
-                .allowedMethods(CorsConfiguration.ALL)
-                .allowCredentials(true)
-                .maxAge(3600L);
-    }
+	@Override
+	public void addCorsMappings(CorsRegistry registry){
+		registry.addMapping("/**")
+			.allowedOriginPatterns(CorsConfiguration.ALL)
+			.allowedHeaders(CorsConfiguration.ALL)
+			.allowedMethods(CorsConfiguration.ALL)
+			.allowCredentials(true)
+			.maxAge(3600L);
+	}
 
-    @Override
-    public void addFormatters(FormatterRegistry registry){
-        registry.addConverter(String.class, Instant.class, new StringToInstantConverter());
-        registry.addConverter(String.class, LocalDate.class, new StringToLocalDateConverter());
-    }
+	@Override
+	public void addFormatters(FormatterRegistry registry){
+		registry.addConverter(String.class, Instant.class, new StringToInstantConverter());
+		registry.addConverter(String.class, LocalDate.class, new StringToLocalDateConverter());
+	}
 }

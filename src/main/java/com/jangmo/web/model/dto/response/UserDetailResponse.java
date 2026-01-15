@@ -11,15 +11,15 @@ import static lombok.AccessLevel.PRIVATE;
 @Getter
 @RequiredArgsConstructor(access = PRIVATE)
 public class UserDetailResponse {
-    private final String name;
-    private final String mobile;
-    private final UserRole role;
-    public static UserDetailResponse of(final UserEntity user) {
-        return new UserDetailResponse(
-                user.getName(),
-                user.getMobile(),
-                user.getRole()
-        );
-    }
+	private final String name;
+	private final String mobile;
+	private final UserRole role;
+	public static UserDetailResponse of(final UserEntity user) {
+		return new UserDetailResponse(
+			user.getName(),
+			user.getMobile(),
+			user.getRole()
+		);
+	}
 
 }

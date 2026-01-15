@@ -9,27 +9,30 @@ import static lombok.AccessLevel.PRIVATE;
 @Getter
 @RequiredArgsConstructor(access = PRIVATE)
 public class SearchPlaceResponse {
-    private final String placeId;
-    private final String placeName;
-    private final String addressName;
-    private final String roadAddressName;
-    private final Double longitude;
-    private final Double latitude;
-    private final Long cityId;
-    private final Long districtId;
+	private final String placeId;
+	private final String placeName;
+	private final String addressName;
+	private final String roadAddressName;
+	private final Double longitude;
+	private final Double latitude;
+	private final Long cityId;
+	private final Long districtId;
 
-    public static SearchPlaceResponse of(final KakaoPlaceSearchResponse.Document document,
-                                         final Long cityId,
-                                         final Long districtId) {
-        return new SearchPlaceResponse(
-                document.getPlaceId(),
-                document.getPlaceName(),
-                document.getAddressName(),
-                document.getRoadAddressName(),
-                document.getLongitude(),
-                document.getLatitude(),
-                cityId,
-                districtId
-        );
-    }
+	public static SearchPlaceResponse of(
+		final KakaoPlaceSearchResponse.Document document,
+		final Long cityId,
+    final Long districtId
+	) {
+		return new SearchPlaceResponse(
+			document.getPlaceId(),
+			document.getPlaceName(),
+			document.getAddressName(),
+			document.getRoadAddressName(),
+			document.getLongitude(),
+			document.getLatitude(),
+			cityId,
+			districtId
+		);
+	}
+
 }

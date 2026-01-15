@@ -13,11 +13,11 @@ import java.time.Duration;
 @ConfigurationProperties(prefix = "jangmo.jwt")
 @Component
 public class JwtConfig {
-    private String secret;
+	private String secret;
 
-    private Duration validTime;
+	private Duration validTime;
 
-    public SecretKey getSecretKey() {
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(getSecret()));
-    }
+	public SecretKey getSecretKey() {
+		return Keys.hmacShaKeyFor(Decoders.BASE64.decode(getSecret()));
+	}
 }

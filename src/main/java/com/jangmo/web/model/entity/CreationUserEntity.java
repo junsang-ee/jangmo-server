@@ -1,27 +1,28 @@
 package com.jangmo.web.model.entity;
 
 import com.jangmo.web.model.ModificationTimestampEntity;
-import com.jangmo.web.model.entity.user.UserEntity;
+import com.jangmo.web.model.entity.user.MemberEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @MappedSuperclass
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class CreationUserEntity extends ModificationTimestampEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by", nullable = false, updatable = false)
-    private UserEntity createdBy;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "created_by", nullable = false, updatable = false)
+	private MemberEntity createdBy;
 
-    protected CreationUserEntity(final UserEntity user) {
-        this.createdBy = user;
-    }
+	protected CreationUserEntity(final MemberEntity createdBy) {
+		this.createdBy = createdBy;
+	}
 
 }

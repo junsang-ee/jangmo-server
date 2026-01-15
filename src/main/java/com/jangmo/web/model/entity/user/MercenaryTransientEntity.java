@@ -8,11 +8,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.Column;
-import javax.persistence.ManyToOne;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Column;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
 
 import static lombok.AccessLevel.PRIVATE;
 import static lombok.AccessLevel.PROTECTED;
@@ -23,22 +23,24 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity(name = "mercenary_transient")
 public class MercenaryTransientEntity extends SequentialEntity {
 
-    @Column(nullable = false)
-    private String code;
+	@Column(nullable = false)
+	private String code;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "match", nullable = false)
-    private MatchEntity match;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "match", nullable = false)
+	private MatchEntity match;
 
-    public static MercenaryTransientEntity create(final String code,
-                                                  final MatchEntity match) {
-        return new MercenaryTransientEntity(
-                EncryptUtil.encode(code),
-                match
-        );
-    }
+	public static MercenaryTransientEntity create(
+		final String code,
+		final MatchEntity match
+	) {
+		return new MercenaryTransientEntity(
+			EncryptUtil.encode(code),
+			match
+		);
+	}
 
-    public void updateCode(String code) {
-        this.code = EncryptUtil.encode(code);
-    }
+	public void updateCode(String code) {
+		this.code = EncryptUtil.encode(code);
+	}
 }

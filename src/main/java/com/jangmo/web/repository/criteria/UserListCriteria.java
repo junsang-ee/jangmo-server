@@ -12,19 +12,19 @@ import org.apache.commons.lang3.StringUtils;
 @Setter
 @Accessors(chain = true, fluent = true)
 public class UserListCriteria extends Criteria {
-    private static final QUserEntity USER = QUserEntity.userEntity;
+	private static final QUserEntity USER = QUserEntity.userEntity;
 
-    private String myId;
-    private UserRole role;
+	private String myId;
+	private UserRole role;
 
-    @Override
-    protected void build(PredicateBuilder predicates) {
-        if (StringUtils.isNotEmpty(myId)) {
-            predicates.and(ne(USER.id, myId));
-        }
+	@Override
+	protected void build(PredicateBuilder predicates) {
+		if (StringUtils.isNotEmpty(myId)) {
+			predicates.and(ne(USER.id, myId));
+		}
 
-        if (ObjectUtils.isNotEmpty(role)) {
-            predicates.and(eq(USER.role, role));
-        }
-    }
+		if (ObjectUtils.isNotEmpty(role)) {
+			predicates.and(eq(USER.role, role));
+		}
+	}
 }

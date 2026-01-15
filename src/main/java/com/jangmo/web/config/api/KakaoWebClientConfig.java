@@ -1,9 +1,9 @@
 package com.jangmo.web.config.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Setter;
+import com.jangmo.web.config.properties.KakaoApiProperties;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -14,34 +14,32 @@ import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Slf4j
-@Setter
-@ConfigurationProperties(prefix = "spring.kakao.rest.api")
+@RequiredArgsConstructor
 @DependsOn("webClientConfiguration")
 @Configuration
 public class KakaoWebClientConfig {
-    private String key;
-    private String uri;
 
-    @Bean(name = "kakaoWebClient")
-    public WebClient kakaoWebClient(WebClient.Builder webClientBuilder,
-                                    ObjectMapper objectMapper,
-                                    ExchangeStrategies defaultExchangeStrategies) {
-        ExchangeStrategies strategies = defaultExchangeStrategies.mutate()
-                .codecs(config -> {
-                    config.defaultCodecs().jackson2JsonEncoder(
-                            new Jackson2JsonEncoder(objectMapper, MediaType.APPLICATION_JSON)
-                    );
-                    config.defaultCodecs().jackson2JsonDecoder(
-                            new Jackson2JsonDecoder(objectMapper, MediaType.APPLICATION_JSON)
-                    );
-                })
-                .build();
+	private final KakaoApiProperties kakaoProperties;
 
-        return webClientBuilder
-                .baseUrl(uri)
-                .exchangeStrategies(strategies)
-                .defaultHeader("Authorization", "KakaoAK " + key)
-                .build();
-    }
+	@Bean(name = "kakaoWebClient")
+	public WebClient kakaoWebClient(WebClient.Builder webClientBuilder,
+																	ObjectMapper objectMapper,
+																	ExchangeStrategies defaultExchangeStrategies) {
+		ExchangeStrategies strategies = defaultExchangeStrategies.mutate()
+			.codecs(config -> {
+				config.defaultCodecs().jackson2JsonEncoder(
+					new Jackson2JsonEncoder(objectMapper, MediaType.APPLICATION_JSON)
+				);
+				config.defaultCodecs().jackson2JsonDecoder(
+					new Jackson2JsonDecoder(objectMapper, MediaType.APPLICATION_JSON)
+				);
+			}).build();
+
+		return webClientBuilder
+						.baseUrl(kakaoProperties.uri())
+						.exchangeStrategies(strategies)
+						.defaultHeader("Authorization", "KakaoAK " + kakaoProperties.key())
+						.build();
+	}
 
 }

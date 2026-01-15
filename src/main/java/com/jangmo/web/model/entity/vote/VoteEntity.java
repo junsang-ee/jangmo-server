@@ -1,40 +1,63 @@
 package com.jangmo.web.model.entity.vote;
 
-import com.jangmo.web.constants.VoteType;
-import com.jangmo.web.model.entity.CreationUserEntity;
+import com.jangmo.web.constants.vote.VoteModeType;
+import com.jangmo.web.constants.vote.VoteType;
+import com.jangmo.web.model.entity.ReplyTargetEntity;
 
-import com.jangmo.web.model.entity.user.UserEntity;
+import com.jangmo.web.model.entity.user.MemberEntity;
+
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 
 import java.time.LocalDate;
 
-import static javax.persistence.InheritanceType.JOINED;
 import static lombok.AccessLevel.PROTECTED;
 
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-@Inheritance(strategy = JOINED)
+@Inheritance(strategy = InheritanceType.JOINED)
 @Entity(name = "vote")
-public class VoteEntity extends CreationUserEntity {
+public class VoteEntity extends ReplyTargetEntity {
 
-    @Column(name = "title", nullable = false)
-    private String title;
+	@Column(nullable = false)
+	private String title;
 
-    @Column(name = "end_at", nullable = false)
-    private LocalDate endAt;
+	@Column(nullable = false)
+	private LocalDate startAt;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "type", nullable = false)
-    private VoteType type;
+	@Column(nullable = false)
+	private LocalDate endAt;
 
-    protected VoteEntity(UserEntity user, String title, LocalDate endAt, VoteType type) {
-        super(user);
-        this.title = title;
-        this.endAt = endAt;
-        this.type = type;
-    }
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private VoteModeType modeType;
+
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private VoteType voteType;
+
+	protected VoteEntity(
+		MemberEntity createdBy,
+		String title,
+		LocalDate startAt,
+		LocalDate endAt,
+		VoteModeType modeType,
+		VoteType voteType
+	) {
+		super(createdBy);
+		this.title = title;
+		this.startAt = startAt;
+		this.endAt = endAt;
+		this.modeType = modeType;
+		this.voteType = voteType;
+	}
 
 }

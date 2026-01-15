@@ -6,5 +6,5 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class MercenaryMatchRequest {
-    private String matchId;
+  private String matchId;
 }
